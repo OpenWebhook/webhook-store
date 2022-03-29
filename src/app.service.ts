@@ -1,13 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { Webhook } from '@prisma/client';
 import { PrismaService } from './prisma.service';
+import { pubSub } from './pubsub';
 @Injectable()
 export class AppService {
   constructor(private prisma: PrismaService) {}
 
   async getHello(): Promise<string> {
-    await this.prisma.webhook.create({});
     const webhooks = await this.prisma.webhook.findMany({});
-    await this.prisma.webhook.deleteMany({});
-    return `${webhooks} Hello World!`;
+    return `${webhooks.length} Hello World!`;
+  }
+
+  async addWebhook(): Promise<Webhook> {
+    const webhook = await this.prisma.webhook.create({});
+    pubSub.publish('webhookAdded', { webhookAdded: webhook });
+    return webhook;
+  }
+
+  async getWebhooks() {
+    return this.prisma.webhook.findMany({});
   }
 }

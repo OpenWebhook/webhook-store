@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  webhooks: [WebhookModel!]!
+}
+
+type Subscription {
+  webhookAdded: WebhookModel!
+}
+
+type WebhookModel {
+  id: ID!
+}

@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
+import { Webhook } from '@prisma/client';
 import { AppService } from './app.service';
 
 @Controller()
@@ -8,5 +9,10 @@ export class AppController {
   @Get()
   getHello(): Promise<string> {
     return this.appService.getHello();
+  }
+
+  @Post()
+  createWebhook(): Promise<Webhook> {
+    return this.appService.addWebhook();
   }
 }
