@@ -11,7 +11,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post()
+  @Post('/webhook/*')
   createWebhook(): Promise<Webhook> {
     return this.appService.addWebhook();
   }
