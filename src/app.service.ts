@@ -20,4 +20,8 @@ export class AppService {
   async getWebhooks() {
     return this.prisma.webhook.findMany({});
   }
+
+  async deleteWebhooks() {
+    return this.prisma.webhook.deleteMany({});
+  }
 }

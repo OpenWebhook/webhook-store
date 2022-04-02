@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Post } from '@nestjs/common';
 import { Webhook } from '@prisma/client';
 import { AppService } from './app.service';
 
@@ -14,5 +14,10 @@ export class AppController {
   @Post()
   createWebhook(): Promise<Webhook> {
     return this.appService.addWebhook();
+  }
+
+  @Delete()
+  deleteWebhooks(): Promise<{ count: number }> {
+    return this.appService.deleteWebhooks();
   }
 }
