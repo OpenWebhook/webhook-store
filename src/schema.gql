@@ -11,5 +11,8 @@ type Subscription {
 }
 
 type WebhookModel {
+  body: String!
+  headers: String!
   id: ID!
+  path: String!
 }
