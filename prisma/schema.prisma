@@ -11,9 +11,11 @@ datasource db {
 }
 
 model Webhook {
-  id      Int    @id @default(autoincrement())
-  path    String
-  body    Json
-  headers Json
-  ip      String
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  path      String
+  body      Json
+  headers   Json
+  ip        String
 }
