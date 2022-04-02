@@ -11,5 +11,9 @@ datasource db {
 }
 
 model Webhook {
-  id Int @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
+  path    String
+  body    Json
+  headers Json
+  ip      String
 }
