@@ -19,7 +19,7 @@ git push heroku
 ### Test your deployment
 
 ```sh
-curl -X POST https://webhook-store-YOURORG.herokuapp.com/webhook -d 'yolo=croute'
+curl -X POST https://webhook-store-YOURORG.herokuapp.com/webhook/some-url -d 'yolo=croute'
 ```
 
 ### See and replay your webhooks
