@@ -22,6 +22,12 @@ git push heroku
 curl -X POST https://webhook-store-YOURORG.herokuapp.com/webhook -d 'yolo=croute'
 ```
 
-### See your webhooks
+### See and replay your webhooks
+
+Start a local proxy:
+
+```sh
+npx local-cors-proxy --proxyUrl=http://localhost:MY_DEV_PORT
+```
 
 Go to to https://openwebhook.github.io/client/ and update the webhook store URL.
