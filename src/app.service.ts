@@ -27,6 +27,7 @@ export class AppService {
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
+      orderBy: { createdAt: 'desc' },
     });
     return webhooks.map(mapWebhookSchemaToModel);
   }
