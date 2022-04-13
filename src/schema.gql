@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Query {
-  webhooks: [WebhookModel!]!
+  webhooks(first: Int, offset: Int): [WebhookModel!]!
 }
 
 type Subscription {

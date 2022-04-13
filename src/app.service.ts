@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Webhook } from '@prisma/client';
+import { PaginationArgs } from './pagination';
 import { PrismaService } from './prisma.service';
 import { pubSub } from './pubsub';
 import { mapWebhookSchemaToModel } from './webhook.mapper';
@@ -21,8 +22,12 @@ export class AppService {
     return webhook;
   }
 
-  async getWebhooks(): Promise<WebhookModel[]> {
-    const webhooks = await this.prisma.webhook.findMany({});
+  async getWebhooks(paginationArgs: PaginationArgs): Promise<WebhookModel[]> {
+    const { first, offset } = paginationArgs;
+    const webhooks = await this.prisma.webhook.findMany({
+      skip: offset,
+      take: first,
+    });
     return webhooks.map(mapWebhookSchemaToModel);
   }
 
