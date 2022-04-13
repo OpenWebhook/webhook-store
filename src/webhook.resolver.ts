@@ -1,5 +1,6 @@
-import { Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { AppService } from './app.service';
+import { PaginationArgs } from './pagination';
 import { pubSub } from './pubsub';
 import { WebhookModel } from './webhook.model';
 
@@ -8,8 +9,8 @@ export class WebhookResolver {
   constructor(private readonly appService: AppService) {}
 
   @Query(() => [WebhookModel])
-  webhooks(): Promise<WebhookModel[]> {
-    return this.appService.getWebhooks();
+  webhooks(@Args() paginationArgs: PaginationArgs): Promise<WebhookModel[]> {
+    return this.appService.getWebhooks(paginationArgs);
   }
 
   @Subscription(() => WebhookModel)
