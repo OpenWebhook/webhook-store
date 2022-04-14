@@ -30,4 +30,4 @@ Start a local proxy:
 npx local-cors-proxy --proxyUrl=http://localhost:MY_DEV_PORT
 ```
 
-Go to to https://openwebhook.github.io/client/ and update the webhook store URL.
+Go to to https://www.openwebhook.io and update the webhook store URL.
