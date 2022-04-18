@@ -6,5 +6,6 @@ export const mapWebhookSchemaToModel = (webhook: Webhook): WebhookModel => {
     ...webhook,
     body: JSON.stringify(webhook.body),
     headers: JSON.stringify(webhook.headers),
+    receivedAt: webhook.createdAt,
   };
 };

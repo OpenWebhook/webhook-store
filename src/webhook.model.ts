@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Prisma, Webhook } from '@prisma/client';
+import { Webhook } from '@prisma/client';
 
 @ObjectType()
 export class WebhookModel implements Partial<Webhook> {
@@ -14,4 +14,7 @@ export class WebhookModel implements Partial<Webhook> {
 
   @Field()
   headers: string;
+
+  @Field()
+  receivedAt: Date;
 }
