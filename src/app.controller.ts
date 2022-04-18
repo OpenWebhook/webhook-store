@@ -31,6 +31,15 @@ export class AppController {
     return this.appService.addWebhook({ body, headers, ip, path });
   }
 
+  @Post('/')
+  createWebhookWithoutPath(
+    @Body() body,
+    @Ip() ip,
+    @Headers() headers,
+  ): Promise<Webhook> {
+    return this.appService.addWebhook({ body, headers, ip, path: '' });
+  }
+
   @Delete()
   deleteWebhooks(): Promise<{ count: number }> {
     return this.appService.deleteWebhooks();
