@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { WebhookResolver } from './webhook.resolver';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { WebhookResolver } from './webhook.resolver';
         'subscriptions-transport-ws': true,
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [PrismaService, AppService, WebhookResolver],

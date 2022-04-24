@@ -9,7 +9,9 @@ import {
   Param,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { AppService } from './app.service';
@@ -19,6 +21,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   getHello(): Promise<string> {
     return this.appService.getHello();
   }
