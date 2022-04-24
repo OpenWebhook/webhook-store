@@ -5,10 +5,14 @@ import {
   Get,
   Headers,
   Ip,
+  Next,
   Param,
   Post,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { Webhook } from '@prisma/client';
+import { NextFunction, Response } from 'express';
 import { AppService } from './app.service';
 
 @Controller()
@@ -20,24 +24,27 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('/webhook/*')
-  createWebhook(
-    @Param() params,
+  @Post('/*')
+  async createWebhookWithoutPath(
     @Body() body,
     @Ip() ip,
     @Headers() headers,
-  ): Promise<Webhook> {
+    @Param() params: string[],
+    @Next() next: NextFunction,
+    @Res() res,
+  ): Promise<Webhook | void> {
     const path = params['0'];
-    return this.appService.addWebhook({ body, headers, ip, path });
-  }
+    if (path === 'graphql') {
+      return next();
+    }
 
-  @Post('/')
-  createWebhookWithoutPath(
-    @Body() body,
-    @Ip() ip,
-    @Headers() headers,
-  ): Promise<Webhook> {
-    return this.appService.addWebhook({ body, headers, ip, path: '' });
+    const webhook = await this.appService.addWebhook({
+      body,
+      headers,
+      ip,
+      path,
+    });
+    return res.send(webhook);
   }
 
   @Delete()
