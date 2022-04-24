@@ -7,9 +7,12 @@ import { AppService } from './app.service';
 import { PrismaService } from './prisma.service';
 import { WebhookResolver } from './webhook.resolver';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import authConfiguration from './config/auth.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ load: [authConfiguration] }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
