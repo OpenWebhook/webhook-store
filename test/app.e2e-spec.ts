@@ -29,9 +29,13 @@ describe('AppController (e2e)', () => {
       .expect('0 Hello World!');
   });
 
-  it('/webhook (POST)', () => {
+  it('/* (POST)', () => {
     return request(app.getHttpServer())
-      .post('/webhook/path-to/webhook')
+      .post('/any-path/path-to/webhook')
       .expect(201);
+  });
+
+  it('/* (POST)', () => {
+    return request(app.getHttpServer()).post('/').expect(201);
   });
 });
