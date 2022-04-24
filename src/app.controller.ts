@@ -8,11 +8,10 @@ import {
   Next,
   Param,
   Post,
-  Req,
   Res,
 } from '@nestjs/common';
 import { Webhook } from '@prisma/client';
-import { NextFunction, Response } from 'express';
+import { NextFunction } from 'express';
 import { AppService } from './app.service';
 
 @Controller()
