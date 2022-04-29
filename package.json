@@ -38,6 +38,7 @@
     "apollo-server-express": "^3.6.6",
     "graphql": "^16.3.0",
     "graphql-subscriptions": "^2.0.0",
+    "jwks-rsa": "^2.1.0",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
