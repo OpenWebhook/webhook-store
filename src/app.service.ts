@@ -10,8 +10,8 @@ export class AppService {
   constructor(private prisma: PrismaService) {}
 
   async getHello(): Promise<string> {
-    const webhooks = await this.prisma.webhook.findMany({});
-    return `${webhooks.length} Hello World!`;
+    const webhooksCount = await this.prisma.webhook.count({});
+    return `${webhooksCount} Hello World!`;
   }
 
   async addWebhook(data: Prisma.WebhookCreateInput): Promise<Webhook> {
