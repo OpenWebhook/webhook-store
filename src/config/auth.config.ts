@@ -1,5 +1,11 @@
 import { registerAs } from '@nestjs/config';
 
-export default registerAs('auth', () => ({
-  jwtPublicKey: process.env.JWT_PUBLIC_KEY,
-}));
+const authConfig = () => ({
+  jwksUri:
+    process.env.JWKS_URI ||
+    `https://openwebhook-auth.herokuapp.com/.well-known/jwks.json`,
+});
+
+export type AuthConfig = ReturnType<typeof authConfig>;
+
+export default registerAs('auth', authConfig);
