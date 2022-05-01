@@ -3,7 +3,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
-import { AppModule } from '../src/app.module';
+import { AppModule } from '../app.module';
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
@@ -17,7 +17,7 @@ describe('CustomerResolver (e2e)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 

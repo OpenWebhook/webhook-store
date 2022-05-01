@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { PrismaService } from './../src/prisma.service';
+import { AppModule } from '../app.module';
+import { PrismaService } from '../prisma.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -16,10 +16,11 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     prismaService = app.get(PrismaService);
     await app.init();
+    await prismaService.webhook.deleteMany();
   });
 
   afterEach(async () => {
-    await prismaService.webhook.deleteMany();
+    await app.close();
   });
 
   it('/ (GET)', () => {
@@ -35,7 +36,7 @@ describe('AppController (e2e)', () => {
       .expect(201);
   });
 
-  it('/* (POST)', () => {
+  it('/ (POST)', () => {
     return request(app.getHttpServer()).post('/').expect(201);
   });
 });
