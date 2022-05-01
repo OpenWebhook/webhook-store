@@ -8,6 +8,7 @@ import {
   Next,
   Param,
   Post,
+  Req,
   Res,
 } from '@nestjs/common';
 import { Webhook } from '@prisma/client';
@@ -31,6 +32,7 @@ export class AppController {
     @Param() params: string[],
     @Next() next: NextFunction,
     @Res() res,
+    @Req() req,
   ): Promise<Webhook | void> {
     const path = params['0'];
     if (path === 'graphql') {
@@ -42,6 +44,7 @@ export class AppController {
       headers,
       ip,
       path,
+      host: req.hostname,
     });
     return res.send(webhook);
   }

@@ -3,7 +3,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
-import { AppModule } from '../src/app.module';
+import { AppModule } from '../app.module';
+import { PrismaService } from '../prisma.service';
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
@@ -14,10 +15,12 @@ describe('CustomerResolver (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    const prismaService = app.get(PrismaService);
     await app.init();
+    await prismaService.webhook.deleteMany();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -32,7 +35,7 @@ describe('CustomerResolver (e2e)', () => {
         })
         .expect(200)
         .expect((res) => {
-          expect(res.body.data.webhooks).toEqual([]);
+          expect(Array.isArray(res.body.data.webhooks)).toBe(true);
         });
     });
   });
