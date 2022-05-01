@@ -31,3 +31,26 @@ npx local-cors-proxy --proxyUrl=http://localhost:MY_DEV_PORT
 ```
 
 Go to to https://www.openwebhook.io and update the webhook store URL.
+
+# Develop
+
+## Install dependencies
+
+`yarn`
+
+## Create DB and set env
+
+`createdb webhook-store`
+Add env var
+
+```
+DATABASE_URL="postgresql://sammyteillet@localhost:5432/webhook-store?schema=public"
+```
+
+### Run migrations
+
+`yarn prisma migrate dev`
+
+## Start server
+
+`yarn start:dev`
