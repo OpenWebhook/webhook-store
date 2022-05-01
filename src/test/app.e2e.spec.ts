@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
+import { Webhook } from '@prisma/client';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -38,5 +39,19 @@ describe('AppController (e2e)', () => {
 
   it('/ (POST)', () => {
     return request(app.getHttpServer()).post('/').expect(201);
+  });
+
+  it.only('/* (POST)', async () => {
+    const testRequest = request(app.getHttpServer()).post(
+      '/any-path/path-to/webhook',
+    );
+    const requestHost = new URL(testRequest.url).host;
+    const response = await testRequest.expect(201);
+    const newWebhook: Webhook = response.body;
+    const storedWebhook = await prismaService.webhook.findUnique({
+      where: { id: newWebhook.id },
+    });
+
+    expect(storedWebhook.host).toBe(requestHost);
   });
 });
