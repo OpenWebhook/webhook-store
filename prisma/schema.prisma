@@ -18,4 +18,5 @@ model Webhook {
   body      Json
   headers   Json
   ip        String
+  host      String
 }

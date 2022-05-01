@@ -41,11 +41,11 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer()).post('/').expect(201);
   });
 
-  it.only('/* (POST)', async () => {
+  it('/* (POST)', async () => {
     const testRequest = request(app.getHttpServer()).post(
       '/any-path/path-to/webhook',
     );
-    const requestHost = new URL(testRequest.url).host;
+    const requestHost = new URL(testRequest.url).hostname;
     const response = await testRequest.expect(201);
     const newWebhook: Webhook = response.body;
     const storedWebhook = await prismaService.webhook.findUnique({
