@@ -6,7 +6,7 @@
   "private": true,
   "license": "GPL-3.0-or-later",
   "engines": {
-    "node": "16"
+    "node": ">=16"
   },
   "scripts": {
     "prebuild": "rimraf dist",
