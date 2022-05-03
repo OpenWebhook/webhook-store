@@ -19,7 +19,7 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
+  @Get('/hello')
   getHello(): Promise<string> {
     return this.appService.getHello();
   }
