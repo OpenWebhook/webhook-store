@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: webhook-store
+  name: webhook-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: webhook-store
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.yml
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: webhook-store
+    spec:
+      containers:
+        - env:
+            - name: DATABASE_URL
+              value: postgresql://postgres:postgres@postgres:5432/webhook-store?schema=public
+          image: openwebhook/webhook-store:0.0.1
+          name: webhook-store
+          ports:
+            - containerPort: 3000
+          resources: {}
+          stdin: true
+      restartPolicy: Always
+status: {}
