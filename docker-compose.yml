@@ -1,0 +1,58 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: webhook-store
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    ports:
+      - "5555:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: yarn prisma migrate deploy
+    container_name: run-prisma-migrations-job
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/webhook-store?schema=public
+    depends_on:
+      - postgres
+
+  webhook-store:
+    stdin_open: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webhook-store
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/webhook-store?schema=public
+    restart: always
+
+volumes:
+  postgres-data:
+  pgadmin-data:
