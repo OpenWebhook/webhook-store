@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  name: migrations
+spec:
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.yml
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+
+    spec:
+      containers:
+        - args:
+            - yarn
+            - prisma
+            - migrate
+            - deploy
+          env:
+            - name: DATABASE_URL
+              value: postgresql://postgres:postgres@postgres:5432/webhook-store?schema=public
+          image: openwebhook/webhook-store:0.0.1
+          name: run-prisma-migrations-job
+          resources: {}
+      restartPolicy: Never
+status: {}
