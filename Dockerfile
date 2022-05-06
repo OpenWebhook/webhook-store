@@ -17,7 +17,7 @@ COPY --from=ts-compiler /usr/build/app/package.json ./
 COPY --from=ts-compiler /usr/build/app/yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-FROM node:16 as ts-remover
+FROM --platform=linux/amd64 node:16 as ts-remover
 WORKDIR /usr/src/app
 COPY --from=ts-compiler /usr/build/app/package.json ./
 COPY --from=ts-node-module-prod /usr/src/app/node_modules ./node_modules
