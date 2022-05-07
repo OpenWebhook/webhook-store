@@ -2,6 +2,8 @@
 
 [Openwebhook.io](https://www.openwebhook.io/) is an open source project for developpers working with webhooks.
 
+Checkout the [demo](https://demo.openwebhook.io/).
+
 Join the beta-tester list by sending an email to contact@openwebhook.io.
 
 # Deployment
