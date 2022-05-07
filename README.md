@@ -1,56 +1,49 @@
-# Description
+# OpenWebhook
 
-Webhook store is an open source projects that aims at improving DX when working with webhook, by creating a webhooks store with a fixed URL, and allowing the user to sends those webhooks to the localhost.
+[Openwebhook.io](https://www.openwebhook.io/) is an open source project for developpers working with webhooks.
+
+Join the beta-tester list by sending an email to contact@openwebhook.io.
 
 # Deployment
 
-## Heroku (free)
-
-### Deploy the service
-
-Clone the repo, then create a heroku app with a database
-
-```sh
-heroku create webhook-store-YOURORG
-heroku addons:create heroku-postgresql:hobby-dev
-git push heroku
-```
-
-### Test your deployment
-
-```sh
-curl -X POST https://webhook-store-YOURORG.herokuapp.com/webhook/some-url -d 'yolo=croute'
-```
-
-### See and replay your webhooks
-
-Start a local proxy:
-
-```sh
-npx local-cors-proxy --proxyUrl=http://localhost:MY_DEV_PORT
-```
-
-Go to to https://www.openwebhook.io and update the webhook store URL.
+Documentation for self [hosted webhook store](https://www.openwebhook.io/docs/install-webhook-store).
 
 # Develop
 
 ## Install dependencies
 
-`yarn`
+```
+$ yarn
+```
 
 ## Create DB and set env
 
-`createdb webhook-store`
-Add env var
+### Using postgresql
 
 ```
-DATABASE_URL="postgresql://sammyteillet@localhost:5432/webhook-store?schema=public"
+createdb webhook-store
+```
+
+Add env file and configure `DATABASE_URL`:
+
+```
+cp .env.test .env
+```
+
+Configure `DATABASE_URL`, replace `USER`.
+
+```
+DATABASE_URL="postgresql://USER[:PASSWORD]@localhost:5432/webhook-store?schema=public"
 ```
 
 ### Run migrations
 
-`yarn prisma migrate dev`
+```
+yarn prisma migrate dev
+```
 
 ## Start server
 
-`yarn start:dev`
+```
+yarn start:dev
+```
