@@ -22,12 +22,16 @@ export class AppService {
     return webhook;
   }
 
-  async getWebhooks(paginationArgs: PaginationArgs): Promise<WebhookModel[]> {
+  async getWebhooks(
+    host: string,
+    paginationArgs: PaginationArgs,
+  ): Promise<WebhookModel[]> {
     const { first, offset } = paginationArgs;
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
       orderBy: { createdAt: 'desc' },
+      where: { host },
     });
     return webhooks.map(mapWebhookSchemaToModel);
   }

@@ -5,9 +5,11 @@ import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
+import { Prisma } from '@prisma/client';
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
+  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -15,7 +17,7 @@ describe('CustomerResolver (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    const prismaService = app.get(PrismaService);
+    prismaService = app.get(PrismaService);
     await app.init();
     await prismaService.webhook.deleteMany();
   });
@@ -37,6 +39,25 @@ describe('CustomerResolver (e2e)', () => {
         .expect((res) => {
           expect(Array.isArray(res.body.data.webhooks)).toBe(true);
         });
+    });
+
+    it('should get empty array with webhooks from other hosts in database', async () => {
+      const webhook: Prisma.WebhookCreateInput = {
+        host: 'not_localhost',
+        path: 'somepath',
+        body: {},
+        headers: {},
+        ip: '23.23.123.12',
+      };
+      await prismaService.webhook.create({ data: webhook });
+      const res = await request(app.getHttpServer())
+        .post(gql)
+        .send({
+          query: 'query {webhooks {id}}',
+        })
+        .expect(200);
+      expect(Array.isArray(res.body.data.webhooks)).toBe(true);
+      expect(res.body.data.webhooks.length).toBe(0);
     });
   });
 });
