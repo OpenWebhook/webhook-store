@@ -20,8 +20,8 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('/hello')
-  getHello(): Promise<string> {
-    return this.appService.getHello();
+  getHello(@Req() req): Promise<string> {
+    return this.appService.getCount(req.hostname);
   }
 
   @Post('/*')

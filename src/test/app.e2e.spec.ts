@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
-import { Webhook } from '@prisma/client';
+import { Prisma, Webhook } from '@prisma/client';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -28,7 +28,7 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/hello')
       .expect(200)
-      .expect('0 Hello World!');
+      .expect('There are 0 webhooks on 127.0.0.1!');
   });
 
   it('/* (POST)', () => {
@@ -41,7 +41,7 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer()).post('/').expect(201);
   });
 
-  it('/* (POST)', async () => {
+  it('/* (POST) with hostname', async () => {
     const testRequest = request(app.getHttpServer()).post(
       '/any-path/path-to/webhook',
     );
@@ -53,5 +53,21 @@ describe('AppController (e2e)', () => {
     });
 
     expect(storedWebhook.host).toBe(requestHost);
+  });
+
+  it('/ gets only webhooks on same host', async () => {
+    const webhook: Prisma.WebhookCreateInput = {
+      host: 'not_localhost',
+      path: 'somepath',
+      body: {},
+      headers: {},
+      ip: '23.23.123.12',
+    };
+    await prismaService.webhook.create({ data: webhook });
+
+    return request(app.getHttpServer())
+      .get('/hello')
+      .expect(200)
+      .expect('There are 0 webhooks on 127.0.0.1!');
   });
 });

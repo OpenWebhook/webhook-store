@@ -9,9 +9,9 @@ import { WebhookModel } from './webhook.model';
 export class AppService {
   constructor(private prisma: PrismaService) {}
 
-  async getHello(): Promise<string> {
-    const webhooksCount = await this.prisma.webhook.count({});
-    return `${webhooksCount} Hello World!`;
+  async getCount(host: string): Promise<string> {
+    const webhooksCount = await this.prisma.webhook.count({ where: { host } });
+    return `There are ${webhooksCount} webhooks on ${host}!`;
   }
 
   async addWebhook(data: Prisma.WebhookCreateInput): Promise<Webhook> {
