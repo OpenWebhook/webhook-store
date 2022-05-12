@@ -12,8 +12,13 @@ import { pubSub } from './pubsub';
 import { WebhookModel } from './webhook.model';
 
 const Hostname = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext) => {
-    return GqlExecutionContext.create(ctx).getContext().req.hostname;
+  (_data: unknown, executionContext: ExecutionContext) => {
+    const ctx = GqlExecutionContext.create(executionContext);
+    const context = ctx.getContext();
+    if (context && context.extractedHost) {
+      return context.extractedHost;
+    }
+    return context.req.hostname;
   },
 );
 
@@ -30,7 +35,8 @@ export class WebhookResolver {
   }
 
   @Subscription(() => WebhookModel)
-  webhookAdded() {
+  webhookAdded(@Hostname() hostname) {
+    console.log('hostname dans le webhook', hostname);
     return pubSub.asyncIterator('webhookAdded');
   }
 }

@@ -80,11 +80,13 @@ describe('CustomerResolver (e2e)', () => {
           query: 'subscription {webhookAdded{id}}',
         },
         {
-          next: () => {
+          next: (res) => {
+            expect(res).toHaveProperty('data');
+            expect(res).not.toHaveProperty('errors');
             client.dispose();
           },
           error: (err) => {
-            console.error(err);
+            console.error('Error on subscription', err);
             done.fail();
           },
           complete: () => {

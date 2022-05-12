@@ -46,14 +46,13 @@ describe('AppController (e2e)', () => {
     const testRequest = request(app.getHttpServer()).post(
       '/any-path/path-to/webhook',
     );
-    const requestHost = new URL(testRequest.url).hostname;
     const response = await testRequest.expect(201);
     const newWebhook: Webhook = response.body;
     const storedWebhook = await prismaService.webhook.findUnique({
       where: { id: newWebhook.id },
     });
 
-    expect(storedWebhook.host).toBe(requestHost);
+    expect(storedWebhook.host).toBe('localhost');
   });
 
   it('/ gets only webhooks on same host', async () => {

@@ -5,6 +5,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { getHostnameOrLocalhost } from './get-hostname';
 import { PrismaService } from './prisma.service';
 import { WebhookResolver } from './webhook.resolver';
 
@@ -19,8 +20,20 @@ import { WebhookResolver } from './webhook.resolver';
       subscriptions: {
         'graphql-ws': {
           path: '/graphql',
+          onConnect: (context: any) => {
+            const { extra } = context;
+            extra.extractedHost = getHostnameOrLocalhost(
+              extra?.request?.headers?.host,
+            );
+            return extra;
+          },
         },
         'subscriptions-transport-ws': true,
+      },
+      context: ({ extra }) => {
+        if (extra) {
+          return { extractedHost: extra.extractedHost };
+        }
       },
     }),
     ServeStaticModule.forRoot({

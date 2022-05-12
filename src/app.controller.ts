@@ -14,6 +14,7 @@ import {
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { AppService } from './app.service';
+import { getHostnameOrLocalhost } from './get-hostname';
 
 @Controller()
 export class AppController {
@@ -44,7 +45,7 @@ export class AppController {
       headers,
       ip,
       path,
-      host: req.hostname,
+      host: getHostnameOrLocalhost(req.hostname),
     });
     return res.send(webhook);
   }
