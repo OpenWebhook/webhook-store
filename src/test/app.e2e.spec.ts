@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
-import { Webhook } from '@prisma/client';
+import { Prisma, Webhook } from '@prisma/client';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -24,11 +24,12 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
+  it('/ (GET)', async () => {
+    const { text } = await request(app.getHttpServer())
       .get('/hello')
-      .expect(200)
-      .expect('0 Hello World!');
+      .expect(200);
+    expect(text).toMatch(/(There are)/i);
+    expect(text).toMatch(/(webhooks on)/i);
   });
 
   it('/* (POST)', () => {
@@ -41,17 +42,32 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer()).post('/').expect(201);
   });
 
-  it('/* (POST)', async () => {
+  it('/* (POST) with hostname', async () => {
     const testRequest = request(app.getHttpServer()).post(
       '/any-path/path-to/webhook',
     );
-    const requestHost = new URL(testRequest.url).hostname;
     const response = await testRequest.expect(201);
     const newWebhook: Webhook = response.body;
     const storedWebhook = await prismaService.webhook.findUnique({
       where: { id: newWebhook.id },
     });
 
-    expect(storedWebhook.host).toBe(requestHost);
+    expect(storedWebhook.host).toBe('localhost');
+  });
+
+  it('/ gets only webhooks on same host', async () => {
+    const webhook: Prisma.WebhookCreateInput = {
+      host: 'not_localhost',
+      path: 'somepath',
+      body: {},
+      headers: {},
+      ip: '23.23.123.12',
+    };
+    await prismaService.webhook.create({ data: webhook });
+
+    return request(app.getHttpServer())
+      .get('/hello')
+      .expect(200)
+      .expect('There are 0 webhooks on 127.0.0.1!');
   });
 });

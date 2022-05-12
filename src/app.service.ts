@@ -9,25 +9,29 @@ import { WebhookModel } from './webhook.model';
 export class AppService {
   constructor(private prisma: PrismaService) {}
 
-  async getHello(): Promise<string> {
-    const webhooksCount = await this.prisma.webhook.count({});
-    return `${webhooksCount} Hello World!`;
+  async getCount(host: string): Promise<string> {
+    const webhooksCount = await this.prisma.webhook.count({ where: { host } });
+    return `There are ${webhooksCount} webhooks on ${host}!`;
   }
 
   async addWebhook(data: Prisma.WebhookCreateInput): Promise<Webhook> {
     const webhook = await this.prisma.webhook.create({ data });
-    pubSub.publish('webhookAdded', {
+    pubSub.publish(`webhookAdded_${webhook.host}`, {
       webhookAdded: mapWebhookSchemaToModel(webhook),
     });
     return webhook;
   }
 
-  async getWebhooks(paginationArgs: PaginationArgs): Promise<WebhookModel[]> {
+  async getWebhooks(
+    host: string,
+    paginationArgs: PaginationArgs,
+  ): Promise<WebhookModel[]> {
     const { first, offset } = paginationArgs;
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
       orderBy: { createdAt: 'desc' },
+      where: { host },
     });
     return webhooks.map(mapWebhookSchemaToModel);
   }

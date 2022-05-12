@@ -10,6 +10,9 @@ export class WebhookModel implements Partial<Webhook> {
   path: string;
 
   @Field()
+  host: string;
+
+  @Field()
   body: string;
 
   @Field()

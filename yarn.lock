@@ -787,6 +787,14 @@
     multer "1.4.4"
     tslib "2.3.1"
 
+"@nestjs/platform-ws@^8.4.4":
+  version "8.4.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-ws/-/platform-ws-8.4.4.tgz#ec158f2f2410a847385376173f28a80fe8bf5e96"
+  integrity sha512-fMrBlBiBkFX0I8Glm17B38bG0XUk0yOajzh2DNAtZG/q0Jn1WSsDDnvleHQaThffJ3PVmEdDcSPd+k2uQA/N7A==
+  dependencies:
+    tslib "2.3.1"
+    ws "7.5.6"
+
 "@nestjs/schematics@^8.0.0", "@nestjs/schematics@^8.0.3":
   version "8.0.8"
   resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-8.0.8.tgz#b1612b535c1007d1503b7e624795708055460432"
@@ -811,6 +819,15 @@
   integrity sha512-6+b2UCObr5onv7TG398VUdkNeU9n+f+TeTvlzmZlp9LKIAS4ZxDxwpdLDl5m/AssdkaZpfb0u755BJfKP5wbNw==
   dependencies:
     optional "0.1.4"
+    tslib "2.3.1"
+
+"@nestjs/websockets@^8.4.4":
+  version "8.4.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-8.4.4.tgz#11d6384a3bde5f97ac8a401032cf5c011901b53b"
+  integrity sha512-c7GPbdxDaAR9uTfZHibIIyhFli+YopUVC0nrKGisS8rSsId1wuEIvWo73RLcRekcO85LPGZGf2f+wsP/SxD3yw==
+  dependencies:
+    iterare "1.2.1"
+    object-hash "3.0.0"
     tslib "2.3.1"
 
 "@nodelib/fs.scandir@2.1.5":
@@ -5411,6 +5428,11 @@ write-file-atomic@^3.0.0:
     is-typedarray "^1.0.0"
     signal-exit "^3.0.2"
     typedarray-to-buffer "^3.1.5"
+
+ws@7.5.6:
+  version "7.5.6"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.6.tgz#e59fc509fb15ddfb65487ee9765c5a51dec5fe7b"
+  integrity sha512-6GLgCqo2cy2A2rjCNFlxQS6ZljG/coZfZXclldI8FB/1G3CCI36Zd8xy2HrFVACi8tfk5XrgLQEk+P0Tnz9UcA==
 
 ws@8.5.0:
   version "8.5.0"

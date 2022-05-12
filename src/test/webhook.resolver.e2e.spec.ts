@@ -5,9 +5,14 @@ import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
+import { Prisma } from '@prisma/client';
+import { createClient } from 'graphql-ws';
+import { WsAdapter } from '@nestjs/platform-ws';
+import * as WebSocket from 'ws';
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
+  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -15,7 +20,8 @@ describe('CustomerResolver (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    const prismaService = app.get(PrismaService);
+    prismaService = app.get(PrismaService);
+    app.useWebSocketAdapter(new WsAdapter(app));
     await app.init();
     await prismaService.webhook.deleteMany();
   });
@@ -37,6 +43,63 @@ describe('CustomerResolver (e2e)', () => {
         .expect((res) => {
           expect(Array.isArray(res.body.data.webhooks)).toBe(true);
         });
+    });
+
+    it('should get empty array with webhooks from other hosts in database', async () => {
+      const webhook: Prisma.WebhookCreateInput = {
+        host: 'not_localhost',
+        path: 'somepath',
+        body: {},
+        headers: {},
+        ip: '23.23.123.12',
+      };
+      await prismaService.webhook.create({ data: webhook });
+      const res = await request(app.getHttpServer())
+        .post(gql)
+        .send({
+          query: 'query {webhooks {host}}',
+        })
+        .expect(200);
+      expect(Array.isArray(res.body.data.webhooks)).toBe(true);
+      for (const receivedWebhook of res.body.data.webhooks) {
+        expect(receivedWebhook.host).not.toBe(webhook.host);
+      }
+    });
+
+    it('should register to subscription based on the host', (done) => {
+      const address = app.getHttpServer().listen().address();
+      const baseAddress = `ws://[${address.address}]:${address.port}/graphql`;
+
+      const client = createClient({
+        url: baseAddress,
+        webSocketImpl: WebSocket,
+      });
+
+      client.subscribe(
+        {
+          query: 'subscription {webhookAdded{id}}',
+        },
+        {
+          next: (res) => {
+            expect(res).toHaveProperty('data');
+            expect(res).not.toHaveProperty('errors');
+            client.dispose();
+          },
+          error: (err) => {
+            console.error('Error on subscription', err);
+            done.fail();
+          },
+          complete: () => {
+            done();
+          },
+        },
+      );
+
+      client.on('connected', async () => {
+        await request(app.getHttpServer())
+          .post('/any-path/path-to/webhook')
+          .expect(201);
+      });
     });
   });
 });
