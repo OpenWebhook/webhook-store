@@ -24,11 +24,12 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
+  it('/ (GET)', async () => {
+    const { text } = await request(app.getHttpServer())
       .get('/hello')
-      .expect(200)
-      .expect('There are 0 webhooks on 127.0.0.1!');
+      .expect(200);
+    expect(text).toMatch(/(There are)/i);
+    expect(text).toMatch(/(webhooks on)/i);
   });
 
   it('/* (POST)', () => {

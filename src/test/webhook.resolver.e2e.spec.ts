@@ -57,11 +57,13 @@ describe('CustomerResolver (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
-          query: 'query {webhooks {id}}',
+          query: 'query {webhooks {host}}',
         })
         .expect(200);
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
-      expect(res.body.data.webhooks.length).toBe(0);
+      for (const receivedWebhook of res.body.data.webhooks) {
+        expect(receivedWebhook.host).not.toBe(webhook.host);
+      }
     });
 
     it('should register to subscription based on the host', (done) => {

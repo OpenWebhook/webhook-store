@@ -18,6 +18,7 @@ type Subscription {
 type WebhookModel {
   body: String!
   headers: String!
+  host: String!
   id: ID!
   path: String!
   receivedAt: DateTime!
