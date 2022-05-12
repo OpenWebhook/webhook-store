@@ -36,7 +36,6 @@ export class WebhookResolver {
 
   @Subscription(() => WebhookModel)
   webhookAdded(@Hostname() hostname) {
-    console.log('hostname dans le webhook', hostname);
-    return pubSub.asyncIterator('webhookAdded');
+    return pubSub.asyncIterator(`webhookAdded_${hostname}`);
   }
 }

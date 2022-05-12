@@ -16,7 +16,7 @@ export class AppService {
 
   async addWebhook(data: Prisma.WebhookCreateInput): Promise<Webhook> {
     const webhook = await this.prisma.webhook.create({ data });
-    pubSub.publish('webhookAdded', {
+    pubSub.publish(`webhookAdded_${webhook.host}`, {
       webhookAdded: mapWebhookSchemaToModel(webhook),
     });
     return webhook;
