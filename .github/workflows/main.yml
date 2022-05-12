@@ -38,4 +38,4 @@ jobs:
           node-version: 16
           cache: "yarn"
       - run: yarn
-      - run: yarn test --runInBand
+      - run: yarn test:e2e
