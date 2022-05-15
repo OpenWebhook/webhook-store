@@ -25,6 +25,11 @@ export class AppController {
     return this.appService.getCount(req.hostname);
   }
 
+  @Get('/webhooks-per-host')
+  getWebhooksGroupByHosts(): Promise<any> {
+    return this.appService.getWebhooksPerHosts();
+  }
+
   @Post('/*')
   async createWebhookWithoutPath(
     @Body() body,
