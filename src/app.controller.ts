@@ -56,7 +56,7 @@ export class AppController {
   }
 
   @Delete()
-  deleteWebhooks(): Promise<{ count: number }> {
-    return this.appService.deleteWebhooks();
+  deleteWebhooks(@Req() req): Promise<{ count: number }> {
+    return this.appService.deleteWebhooks(req.hostname);
   }
 }

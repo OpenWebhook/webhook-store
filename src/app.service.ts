@@ -51,7 +51,7 @@ export class AppService {
     return webhooks.map(mapWebhookSchemaToModel);
   }
 
-  async deleteWebhooks() {
-    return this.prisma.webhook.deleteMany({});
+  async deleteWebhooks(host: string) {
+    return this.prisma.webhook.deleteMany({ where: { host } });
   }
 }
