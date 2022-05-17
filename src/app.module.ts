@@ -1,5 +1,8 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import webhookConfig from './config/webhook.config';
+
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -39,6 +42,7 @@ import { WebhookResolver } from './webhook.resolver';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
+    ConfigModule.forRoot({ load: [webhookConfig] }),
   ],
   controllers: [AppController],
   providers: [PrismaService, AppService, WebhookResolver],
