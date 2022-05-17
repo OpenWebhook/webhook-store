@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Webhook } from '@prisma/client';
 import { PaginationArgs } from './pagination';
 import { PrismaService } from './prisma.service';
@@ -65,22 +65,5 @@ export class AppService {
 
   async deleteWebhooks(host: string) {
     return this.prisma.webhook.deleteMany({ where: { host } });
-  }
-
-  @OnEvent('webhook.created')
-  async afterWebhookCreated(payload: WebhookCreatedEvent) {
-    await this.deleteOldWebhooks(payload.host, 100);
-  }
-
-  async deleteOldWebhooks(host: WebhookModel['host'], limitToKeep: number) {
-    const ids = await this.prisma.webhook.findMany({
-      select: { id: true },
-      where: { host },
-      take: limitToKeep,
-      orderBy: { createdAt: 'desc' },
-    });
-    await this.prisma.webhook.deleteMany({
-      where: { id: { notIn: ids.map((webhook) => webhook.id) } },
-    });
   }
 }
