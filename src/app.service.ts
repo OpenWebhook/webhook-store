@@ -14,6 +14,21 @@ export class AppService {
     return `There are ${webhooksCount} webhooks on ${host}!`;
   }
 
+  async getWebhooksPerHosts(): Promise<any> {
+    const webhooksCount = await this.prisma.webhook.groupBy({
+      by: ['host'],
+      _count: {
+        host: true,
+      },
+      orderBy: {
+        _count: {
+          host: 'desc',
+        },
+      },
+    });
+    return webhooksCount;
+  }
+
   async addWebhook(data: Prisma.WebhookCreateInput): Promise<Webhook> {
     const webhook = await this.prisma.webhook.create({ data });
     pubSub.publish(`webhookAdded_${webhook.host}`, {
@@ -36,7 +51,7 @@ export class AppService {
     return webhooks.map(mapWebhookSchemaToModel);
   }
 
-  async deleteWebhooks() {
-    return this.prisma.webhook.deleteMany({});
+  async deleteWebhooks(host: string) {
+    return this.prisma.webhook.deleteMany({ where: { host } });
   }
 }
