@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { getHostnameOrLocalhost } from './get-hostname';
 import { PrismaService } from './prisma.service';
 import { WebhookResolver } from './webhook.resolver';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { WebhookResolver } from './webhook.resolver';
       rootPath: join(__dirname, '..', 'client'),
     }),
     ConfigModule.forRoot({ load: [webhookConfig] }),
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [PrismaService, AppService, WebhookResolver],
