@@ -67,7 +67,7 @@ describe('AppController (e2e)', () => {
       path: 'somepath',
       body: {},
       headers: {},
-      ip: '23.23.123.12',
+      ip: 'random.ip',
     };
 
     const webhook: Prisma.WebhookCreateInput = {
@@ -75,7 +75,7 @@ describe('AppController (e2e)', () => {
       path: 'somepath',
       body: {},
       headers: {},
-      ip: '23.23.123.12',
+      ip: 'random.ip',
     };
     const storedWebhookNotLocalhost = await prismaService.webhook.create({
       data: webhookNotLocalhost,

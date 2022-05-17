@@ -51,7 +51,7 @@ describe('CustomerResolver (e2e)', () => {
         path: 'somepath',
         body: {},
         headers: {},
-        ip: '23.23.123.12',
+        ip: 'random.ip',
       };
       await prismaService.webhook.create({ data: webhook });
       const res = await request(app.getHttpServer())
