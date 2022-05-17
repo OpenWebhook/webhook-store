@@ -7,6 +7,7 @@ import { pubSub } from './pubsub';
 import { mapWebhookSchemaToModel } from './webhook.mapper';
 import { WebhookModel } from './webhook.model';
 import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
+
 @Injectable()
 export class AppService {
   constructor(
@@ -67,7 +68,19 @@ export class AppService {
   }
 
   @OnEvent('webhook.created')
-  handleOrderCreatedEvent(payload: WebhookCreatedEvent) {
-    console.log('WebhookCreatedEven', payload);
+  async afterWebhookCreated(payload: WebhookCreatedEvent) {
+    await this.deleteOldWebhooks(payload.host, 100);
+  }
+
+  async deleteOldWebhooks(host: WebhookModel['host'], limitToKeep: number) {
+    const ids = await this.prisma.webhook.findMany({
+      select: { id: true },
+      where: { host },
+      take: limitToKeep,
+      orderBy: { createdAt: 'desc' },
+    });
+    await this.prisma.webhook.deleteMany({
+      where: { id: { notIn: ids.map((webhook) => webhook.id) } },
+    });
   }
 }
