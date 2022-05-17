@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Webhook } from '@prisma/client';
 import { PaginationArgs } from './pagination';
 import { PrismaService } from './prisma.service';
 import { pubSub } from './pubsub';
 import { mapWebhookSchemaToModel } from './webhook.mapper';
 import { WebhookModel } from './webhook.model';
+import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
+
 @Injectable()
 export class AppService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   async getCount(host: string): Promise<string> {
     const webhooksCount = await this.prisma.webhook.count({ where: { host } });
@@ -34,6 +40,12 @@ export class AppService {
     pubSub.publish(`webhookAdded_${webhook.host}`, {
       webhookAdded: mapWebhookSchemaToModel(webhook),
     });
+
+    this.eventEmitter.emit(
+      'webhook.created',
+      new WebhookCreatedEvent(webhook.id, webhook.host),
+    );
+
     return webhook;
   }
 

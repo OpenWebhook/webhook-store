@@ -738,6 +738,16 @@
     tslib "2.3.1"
     uuid "8.3.2"
 
+"@nestjs/config@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/config/-/config-2.0.0.tgz#a8fbec48a2b55488ac50ad5ed4cf2df89d398171"
+  integrity sha512-Hi1k/1S5ogsS5c0OtNm72thiLSngijOaLDFaGI5ZPxNGpF23lctPg6ox3pYIOhXVRX/u+eiUIp71gswH2k8YNw==
+  dependencies:
+    dotenv "16.0.0"
+    dotenv-expand "8.0.2"
+    lodash "4.17.21"
+    uuid "8.3.2"
+
 "@nestjs/core@^8.0.0":
   version "8.4.3"
   resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-8.4.3.tgz#f0a2722a70b237173a28ee16004a809552b046fd"
@@ -750,6 +760,13 @@
     path-to-regexp "3.2.0"
     tslib "2.3.1"
     uuid "8.3.2"
+
+"@nestjs/event-emitter@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/event-emitter/-/event-emitter-1.1.1.tgz#430b1493de6febd0644b9f6406eaf63def34e1fe"
+  integrity sha512-fOcV1sjOSeLA6hj7c++Ga3pZG62BcmSKn5sAE/M0fYwuKn3T3Bx9BQm9siLTRLwSY/kJjwHbhTgfnL1bfEqY3w==
+  dependencies:
+    eventemitter2 "6.4.5"
 
 "@nestjs/graphql@^10.0.8":
   version "10.0.8"
@@ -2326,12 +2343,17 @@ dotenv-cli@^5.1.0:
     dotenv-expand "^8.0.1"
     minimist "^1.2.5"
 
+dotenv-expand@8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-8.0.2.tgz#c75c6f695cff061a9ed9a95a520c6cc84b912188"
+  integrity sha512-vKKAk+VOzAWOV/dPIeSYqhgC/TQY+6L6Ibkzfsr8xd1stdBsTuGu9asCOXgbYbBeS+f2Y6lqqEuw7riOA+xEUQ==
+
 dotenv-expand@^8.0.1:
   version "8.0.3"
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-8.0.3.tgz#29016757455bcc748469c83a19b36aaf2b83dd6e"
   integrity sha512-SErOMvge0ZUyWd5B0NXMQlDkN+8r+HhVUsxgOO7IoPDOdDRD2JjExpN6y3KnFR66jsJMwSn1pqIivhU5rcJiNg==
 
-dotenv@^16.0.0:
+dotenv@16.0.0, dotenv@^16.0.0:
   version "16.0.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.0.tgz#c619001253be89ebb638d027b609c75c26e47411"
   integrity sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==
@@ -2558,6 +2580,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
+
+eventemitter2@6.4.5:
+  version "6.4.5"
+  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.4.5.tgz#97380f758ae24ac15df8353e0cc27f8b95644655"
+  integrity sha512-bXE7Dyc1i6oQElDG0jMRZJrRAn9QR2xyyFGmBdZleNmyQX0FqGYmhZIrIrpPfm/w//LTo4tVQGOGQcGCb5q9uw==
 
 eventemitter3@^3.1.0:
   version "3.1.2"
