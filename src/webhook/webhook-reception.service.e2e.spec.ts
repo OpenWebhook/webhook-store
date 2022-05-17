@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
-import { Webhook } from '@prisma/client';
+import { Prisma, Webhook } from '@prisma/client';
 import { WebhookReceptionService } from './webhook-reception.service';
 import { PrismaService } from '../prisma.service';
 
@@ -59,5 +59,34 @@ describe('AppController (e2e)', () => {
       .expect(200);
 
     expect(text).toBe('There are 0 webhooks on 127.0.0.1!');
+  });
+
+  it('Does not delete webhooks from other hosts', async () => {
+    const webhookNotLocalhost: Prisma.WebhookCreateInput = {
+      host: 'not_localhost',
+      path: 'somepath',
+      body: {},
+      headers: {},
+      ip: '23.23.123.12',
+    };
+
+    const webhook: Prisma.WebhookCreateInput = {
+      host: 'localhost',
+      path: 'somepath',
+      body: {},
+      headers: {},
+      ip: '23.23.123.12',
+    };
+    const storedWebhookNotLocalhost = await prismaService.webhook.create({
+      data: webhookNotLocalhost,
+    });
+    const storedWebhook = await prismaService.webhook.create({ data: webhook });
+
+    await webhookReceptionService.deleteOldWebhooks(storedWebhook.host, 10);
+    const stillPresentWebhook = await prismaService.webhook.findUnique({
+      where: { id: storedWebhookNotLocalhost.id },
+    });
+
+    expect(stillPresentWebhook).not.toBeNull();
   });
 });
