@@ -6,6 +6,14 @@ Checkout the [demo](https://demo.openwebhook.io/).
 
 Join the beta-tester list by sending an email to contact@openwebhook.io.
 
+## Usage
+
+```
+npx webhook-store-cli --port 9000
+```
+
+![Demo with cli](demo.gif)
+
 ```mermaid
 sequenceDiagram
     Third party API->>OpenWebhook Store: Sends webhook
