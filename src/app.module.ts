@@ -13,6 +13,8 @@ import { PrismaService } from './prisma.service';
 import { WebhookResolver } from './webhook.resolver';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { WebhookReceptionService } from './webhook/webhook-reception.service';
+import { ProxyService } from './proxy.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -46,11 +48,13 @@ import { WebhookReceptionService } from './webhook/webhook-reception.service';
     }),
     ConfigModule.forRoot({ load: [webhookConfig] }),
     EventEmitterModule.forRoot(),
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [
     PrismaService,
     AppService,
+    ProxyService,
     WebhookResolver,
     WebhookReceptionService,
   ],
