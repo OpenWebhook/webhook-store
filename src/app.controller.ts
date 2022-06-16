@@ -11,14 +11,23 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { AppService } from './app.service';
 import { getHostnameOrLocalhost } from './get-hostname';
+import { ProxyService } from './proxy.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  private readonly defaultHost: string | null;
+  constructor(
+    private readonly appService: AppService,
+    private readonly proxyService: ProxyService,
+    configService: ConfigService,
+  ) {
+    this.defaultHost = configService.get('defaultHost');
+  }
 
   @Get('/hello')
   getHello(@Req() req): Promise<string> {
@@ -43,6 +52,9 @@ export class AppController {
     const path = params['0'];
     if (path === 'graphql') {
       return next();
+    }
+    if (this.defaultHost) {
+      this.proxyService.sendWebhook(this.defaultHost, body, headers, path);
     }
 
     const webhook = await this.appService.addWebhook({
