@@ -1,0 +1,25 @@
+{
+    "configurations":[
+        {
+            "name": "Attach",
+            "port": 9229,
+            "request": "attach",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+       {
+          "name":"Attach Docker",
+          "port":9229,
+          "request":"attach",
+          "skipFiles":[
+             "<node_internals>/**"
+          ],
+          "type":"pwa-node",
+          "localRoot":"${workspaceFolder}/dist",
+          "remoteRoot":"/usr/src/app",
+          "sourceMaps":true
+       }
+    ]
+ }
