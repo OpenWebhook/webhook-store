@@ -53,6 +53,7 @@ export class AppController {
     if (path === 'graphql') {
       return next();
     }
+    console.log(`Webhook received on ${path}`);
     if (this.defaultHost) {
       this.proxyService.sendWebhook(this.defaultHost, body, headers, path);
     }
