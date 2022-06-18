@@ -7,9 +7,9 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { AppService } from './app.service';
-import { PaginationArgs } from './pagination';
 import { pubSub } from './pubsub';
 import { WebhookModel } from './webhook.model';
+import { WebhooksQueryArgs } from './webhooks.query-args';
 
 const Hostname = createParamDecorator(
   (_data: unknown, executionContext: ExecutionContext) => {
@@ -28,10 +28,10 @@ export class WebhookResolver {
 
   @Query(() => [WebhookModel])
   webhooks(
-    @Args() paginationArgs: PaginationArgs,
+    @Args() webhooksQueryArgs: WebhooksQueryArgs,
     @Hostname() hostname,
   ): Promise<WebhookModel[]> {
-    return this.appService.getWebhooks(hostname, paginationArgs);
+    return this.appService.getWebhooks(hostname, webhooksQueryArgs);
   }
 
   @Subscription(() => WebhookModel)
