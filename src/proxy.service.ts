@@ -7,14 +7,14 @@ export class ProxyService {
   constructor(private readonly httpService: HttpService) {}
   async sendWebhook(
     host: string,
-    body: Record<string, any>,
-    headers: Record<string, string>,
+    body: Readonly<Record<string, any>>,
+    headers: Readonly<Record<string, string>>,
     path: string | null,
   ) {
     try {
-      delete headers.host;
+      const safeHeader = Object.assign({}, headers, { host: null });
       await this.httpService
-        .post(path, body, { baseURL: host, headers })
+        .post(path, body, { baseURL: host, headers: safeHeader })
         .toPromise();
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
