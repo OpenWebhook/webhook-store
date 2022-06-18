@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Webhook } from '@prisma/client';
+import { pathToRegexp } from 'path-to-regexp';
 import { PrismaService } from './prisma.service';
 import { pubSub } from './pubsub';
 import { mapWebhookSchemaToModel } from './webhook.mapper';
@@ -54,8 +55,14 @@ export class AppService {
     paginationArgs: WebhooksQueryArgs,
   ): Promise<WebhookModel[]> {
     const { first, offset, path } = paginationArgs;
-    console.log(path);
-    console.log(first);
+    try {
+      console.log('path', path);
+      const regexp = pathToRegexp(path);
+      console.log('regexp', regexp);
+      console.log(regexp.exec('/test/route/croute'));
+    } catch (err) {
+      console.error('oupsy la regexp');
+    }
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
