@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Webhook } from '@prisma/client';
-import { PaginationArgs } from './pagination';
 import { PrismaService } from './prisma.service';
 import { pubSub } from './pubsub';
 import { mapWebhookSchemaToModel } from './webhook.mapper';
 import { WebhookModel } from './webhook.model';
 import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
+import { WebhooksQueryArgs } from './webhooks.query-args';
 
 @Injectable()
 export class AppService {
@@ -51,14 +51,16 @@ export class AppService {
 
   async getWebhooks(
     host: string,
-    paginationArgs: PaginationArgs,
+    paginationArgs: WebhooksQueryArgs,
   ): Promise<WebhookModel[]> {
-    const { first, offset } = paginationArgs;
+    const { first, offset, path } = paginationArgs;
+    console.log(path);
+    console.log(first);
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
       orderBy: { createdAt: 'desc' },
-      where: { host },
+      where: { host, path },
     });
     return webhooks.map(mapWebhookSchemaToModel);
   }
