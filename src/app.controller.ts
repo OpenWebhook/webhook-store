@@ -49,8 +49,8 @@ export class AppController {
     @Res() res,
     @Req() req,
   ): Promise<Webhook | void> {
-    const path = params['0'];
-    if (path === 'graphql') {
+    const path = params['0'] ? `/${params['0']}` : '/';
+    if (path === '/graphql') {
       return next();
     }
     console.log(`Webhook received on ${path}`);
