@@ -12,7 +12,14 @@ export class ProxyService {
     path: string | null,
   ) {
     try {
-      const safeHeader = Object.assign({}, headers, { host: null });
+      const safeHeader = Object.assign({}, headers, {
+        host: null,
+        origin: null,
+        cookie: null,
+        'user-agent': null,
+        'content-length': null,
+        version: null,
+      });
       await this.httpService
         .post(path, body, { baseURL: host, headers: safeHeader })
         .toPromise();
