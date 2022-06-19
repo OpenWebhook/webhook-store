@@ -22,7 +22,7 @@
     "test:cov": "dotenv -e .env.test -- jest --silent --runInBand --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "pretest:e2e": "dotenv -e .env.test -- npx prisma migrate dev",
-    "test:e2e": "dotenv -e .env.test -- jest --runInBand --silent --coverage",
+    "test:e2e": "dotenv -e .env.test -- jest --config ./jest-e2e.json",
     "test:e2e:watch": "dotenv -e .env.test -- jest --config ./jest-e2e.json --watchAll"
   },
   "dependencies": {
