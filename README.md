@@ -1,3 +1,5 @@
+[![webhook-store](https://github.com/OpenWebhook/webhook-store/actions/workflows/main.yml/badge.svg)](https://github.com/OpenWebhook/webhook-store/actions/workflows/main.yml) [![Coverage Status](https://coveralls.io/repos/github/OpenWebhook/webhook-store/badge.svg?branch=main)](https://coveralls.io/github/OpenWebhook/webhook-store?branch=main)
+
 # OpenWebhook
 
 [Openwebhook.io](https://www.openwebhook.io/) is an open source project for developpers working with webhooks.
