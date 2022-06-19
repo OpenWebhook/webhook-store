@@ -8,7 +8,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { getHostnameOrLocalhost } from './get-hostname';
+import { getHostnameOrLocalhost } from './helpers/get-hostname/get-hostname.helper';
 import { PrismaService } from './prisma.service';
 import { WebhookResolver } from './webhook.resolver';
 import { EventEmitterModule } from '@nestjs/event-emitter';
