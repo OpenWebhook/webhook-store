@@ -1,4 +1,4 @@
-import { getHostnameOrLocalhost } from './get-hostname';
+import { getHostnameOrLocalhost } from './get-hostname.helper';
 
 describe('getHostnameOrLocalhost', () => {
   it('returns localhost in test conditions', () => {

@@ -15,7 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { AppService } from './app.service';
-import { getHostnameOrLocalhost } from './get-hostname';
+import { getHostnameOrLocalhost } from './helpers/get-hostname/get-hostname.helper';
 import { ProxyService } from './proxy.service';
 
 @Controller()
