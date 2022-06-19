@@ -54,14 +54,14 @@ export class AppService {
     paginationArgs: WebhooksQueryArgs,
   ): Promise<WebhookModel[]> {
     const { first, offset, path } = paginationArgs;
-    console.log(path);
-    console.log(first);
+
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
       orderBy: { createdAt: 'desc' },
       where: { host, path },
     });
+
     return webhooks.map(mapWebhookSchemaToModel);
   }
 

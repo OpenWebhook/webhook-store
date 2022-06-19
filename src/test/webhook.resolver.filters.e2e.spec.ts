@@ -31,14 +31,15 @@ describe('CustomerResolver (e2e)', () => {
     };
     const webhookPath2 = Object.assign({}, webhookPath1, { path: 'path2' });
     await prismaService.webhook.createMany({
+      data: [webhookPath2, webhookPath2],
+    });
+    await prismaService.webhook.createMany({
       data: [
         webhookPath1,
         webhookPath1,
         webhookPath1,
         webhookPath1,
         webhookPath1,
-        webhookPath2,
-        webhookPath2,
       ],
     });
   });
@@ -103,7 +104,7 @@ describe('CustomerResolver (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
-          query: 'query {webhooks(first: 3, offset: 5) {path}}',
+          query: 'query {webhooks(first: 3, offset: 5) {path id}}',
         })
         .expect(200);
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
