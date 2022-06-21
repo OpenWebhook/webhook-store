@@ -7,6 +7,7 @@ import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
 import { Prisma } from '@prisma/client';
 import { WsAdapter } from '@nestjs/platform-ws';
+import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
@@ -24,12 +25,16 @@ describe('CustomerResolver (e2e)', () => {
     await prismaService.webhook.deleteMany();
     const webhookPath1: Prisma.WebhookCreateInput = {
       host: '127.0.0.1',
-      path: 'path1',
+      path: '/path1',
       body: {},
       headers: {},
       ip: 'random.ip',
+      searchablePath: pathToSearchablePath('/path1'),
     };
-    const webhookPath2 = Object.assign({}, webhookPath1, { path: 'path2' });
+    const webhookPath2 = Object.assign({}, webhookPath1, {
+      path: '/path2',
+      searchablePath: pathToSearchablePath('/path2'),
+    });
     await prismaService.webhook.createMany({
       data: [
         webhookPath1,
@@ -75,13 +80,13 @@ describe('CustomerResolver (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
-          query: 'query {webhooks(path: "path2") {path}}',
+          query: 'query {webhooks(path: "/path2") {path}}',
         })
         .expect(200);
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
       expect(res.body.data.webhooks).toHaveLength(2);
       for (const receivedWebhook of res.body.data.webhooks) {
-        expect(receivedWebhook.path).toBe('path2');
+        expect(receivedWebhook.path).toBe('/path2');
       }
     });
 
@@ -89,13 +94,13 @@ describe('CustomerResolver (e2e)', () => {
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
-          query: 'query {webhooks(path: "path2", first: 3) {path}}',
+          query: 'query {webhooks(path: "/path2", first: 3) {path}}',
         })
         .expect(200);
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
       expect(res.body.data.webhooks).toHaveLength(2);
       for (const receivedWebhook of res.body.data.webhooks) {
-        expect(receivedWebhook.path).toBe('path2');
+        expect(receivedWebhook.path).toBe('/path2');
       }
     });
 
@@ -109,7 +114,7 @@ describe('CustomerResolver (e2e)', () => {
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
       expect(res.body.data.webhooks).toHaveLength(2);
       for (const receivedWebhook of res.body.data.webhooks) {
-        expect(receivedWebhook.path).toBe('path2');
+        expect(receivedWebhook.path).toBe('/path2');
       }
     });
   });
