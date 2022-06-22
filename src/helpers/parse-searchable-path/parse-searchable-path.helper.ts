@@ -14,7 +14,7 @@ export const pathToPSQLTsQuery = (
   path: `/${string}` | undefined,
 ): string | undefined => {
   if (typeof path === 'string') {
-    const pathWithoutFirstSlash = path.slice(1).split('/').join(' - ');
+    const pathWithoutFirstSlash = path.slice(1).split('/').join(' <-> ');
     return pathWithoutFirstSlash;
   }
 };

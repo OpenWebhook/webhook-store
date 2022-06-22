@@ -6,6 +6,6 @@ describe('pathToPSQLTsQuery', () => {
   });
 
   it('Should return - / - except for the first character', () => {
-    expect(pathToPSQLTsQuery('/croute/lol')).toBe('croute - lol');
+    expect(pathToPSQLTsQuery('/croute/lol')).toBe('croute <-> lol');
   });
 });

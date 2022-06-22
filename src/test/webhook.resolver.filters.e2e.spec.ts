@@ -36,14 +36,15 @@ describe('CustomerResolver (e2e)', () => {
       searchablePath: pathToSearchablePath('/path2'),
     });
     await prismaService.webhook.createMany({
+      data: [webhookPath2, webhookPath2],
+    });
+    await prismaService.webhook.createMany({
       data: [
         webhookPath1,
         webhookPath1,
         webhookPath1,
         webhookPath1,
         webhookPath1,
-        webhookPath2,
-        webhookPath2,
       ],
     });
   });
@@ -116,6 +117,31 @@ describe('CustomerResolver (e2e)', () => {
       for (const receivedWebhook of res.body.data.webhooks) {
         expect(receivedWebhook.path).toBe('/path2');
       }
+    });
+  });
+
+  describe('Search in path', () => {
+    it('should find the only', async () => {
+      const webhookWithComplexPath: Prisma.WebhookCreateInput = {
+        host: '127.0.0.1',
+        path: '/path/to/search/for/this/path',
+        body: {},
+        headers: {},
+        ip: 'random.ip',
+        searchablePath: pathToSearchablePath('/path/to/search/for/this/path'),
+      };
+      await prismaService.webhook.create({ data: webhookWithComplexPath });
+      const res = await request(app.getHttpServer())
+        .post(gql)
+        .send({
+          query: 'query {webhooks(path: "/path/to/search/*/this") {path}}',
+        })
+        .expect(200);
+      expect(Array.isArray(res.body.data.webhooks)).toBe(true);
+      expect(res.body.data.webhooks).toHaveLength(1);
+      expect(res.body.data.webhooks[0].path).toBe(
+        '/path/to/search/for/this/path',
+      );
     });
   });
 });
