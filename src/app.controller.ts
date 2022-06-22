@@ -27,11 +27,11 @@ export class AppController {
     private readonly proxyService: ProxyService,
     configService: ConfigService,
   ) {
-    this.defaultHost = configService.get('defaultHost');
+    this.defaultHost = configService.get('defaultHost') || null;
   }
 
   @Get('/hello')
-  getHello(@Req() req): Promise<string> {
+  getHello(@Req() req: any): Promise<string> {
     return this.appService.getCount(req.hostname);
   }
 
@@ -42,13 +42,13 @@ export class AppController {
 
   @Post('/*')
   async createWebhookWithoutPath(
-    @Body() body,
-    @Ip() ip,
-    @Headers() headers,
+    @Body() body: any,
+    @Ip() ip: string,
+    @Headers() headers: Record<string, string>,
     @Param() params: string[],
     @Next() next: NextFunction,
-    @Res() res,
-    @Req() req,
+    @Res() res: any,
+    @Req() req: any,
   ): Promise<Webhook | void> {
     const path = params['0'] ? `/${params['0']}` : '/';
     if (path === '/graphql') {
@@ -71,7 +71,7 @@ export class AppController {
   }
 
   @Delete()
-  deleteWebhooks(@Req() req): Promise<{ count: number }> {
+  deleteWebhooks(@Req() req: any): Promise<{ count: number }> {
     return this.appService.deleteWebhooks(req.hostname);
   }
 }

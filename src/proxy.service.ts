@@ -11,7 +11,7 @@ export class ProxyService {
     host: string,
     body: Readonly<Record<string, any>>,
     headers: Readonly<Record<string, string>>,
-    path: string | null,
+    path: string,
   ) {
     try {
       const safeHeaders = copySafeHeaders(headers);

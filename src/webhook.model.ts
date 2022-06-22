@@ -4,20 +4,20 @@ import { Webhook } from '@prisma/client';
 @ObjectType()
 export class WebhookModel implements Partial<Webhook> {
   @Field(() => ID)
-  id: number;
+  id!: number;
 
   @Field()
-  path: string;
+  path!: string;
 
   @Field()
-  host: string;
+  host!: string;
 
   @Field()
-  body: string;
+  body!: string;
 
   @Field()
-  headers: string;
+  headers!: string;
 
   @Field()
-  receivedAt: Date;
+  receivedAt!: Date;
 }

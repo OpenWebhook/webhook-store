@@ -52,7 +52,7 @@ describe('AppController (e2e)', () => {
     const storedWebhook = await prismaService.webhook.findUnique({
       where: { id: newWebhook.id },
     });
-
+    if (storedWebhook == null) throw new Error('Webhook not found in test');
     expect(storedWebhook.host).toBe('localhost');
   });
 
