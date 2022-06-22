@@ -43,3 +43,10 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Code Climate Coverage Action
+        uses: paambaati/codeclimate-action@v3.0.0
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/*.lcov:lcov
+        env:
+          CC_TEST_REPORTER_ID: a6b0d56370d23dae1132a04c0a5c3045b6b4055b07a9a331a455da86e84f4dbd
