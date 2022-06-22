@@ -5,6 +5,7 @@ import { AppModule } from '../app.module';
 import { Prisma, Webhook } from '@prisma/client';
 import { WebhookReceptionService } from './webhook-reception.service';
 import { PrismaService } from '../prisma.service';
+import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -51,7 +52,7 @@ describe('AppController (e2e)', () => {
     const storedWebhook = await prismaService.webhook.findUnique({
       where: { id: newWebhook.id },
     });
-
+    if (storedWebhook == null) throw new Error('Webhook not found in test');
     await webhookReceptionService.deleteOldWebhooks(storedWebhook.host, 10);
 
     const { text } = await request(app.getHttpServer())
@@ -64,18 +65,20 @@ describe('AppController (e2e)', () => {
   it('Does not delete webhooks from other hosts', async () => {
     const webhookNotLocalhost: Prisma.WebhookCreateInput = {
       host: 'not_localhost',
-      path: 'somepath',
+      path: '/somepath',
       body: {},
       headers: {},
       ip: 'random.ip',
+      searchablePath: pathToSearchablePath('/somepath'),
     };
 
     const webhook: Prisma.WebhookCreateInput = {
       host: 'localhost',
-      path: 'somepath',
+      path: '/somepath',
       body: {},
       headers: {},
       ip: 'random.ip',
+      searchablePath: pathToSearchablePath('/somepath'),
     };
     const storedWebhookNotLocalhost = await prismaService.webhook.create({
       data: webhookNotLocalhost,

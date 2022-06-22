@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../app.module';
 import { PrismaService } from '../prisma.service';
 import { Prisma, Webhook } from '@prisma/client';
+import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -51,17 +52,18 @@ describe('AppController (e2e)', () => {
     const storedWebhook = await prismaService.webhook.findUnique({
       where: { id: newWebhook.id },
     });
-
+    if (storedWebhook == null) throw new Error('Webhook not found in test');
     expect(storedWebhook.host).toBe('localhost');
   });
 
   it('/ gets only webhooks on same host', async () => {
     const webhook: Prisma.WebhookCreateInput = {
       host: 'not_localhost',
-      path: 'somepath',
+      path: '/somepath',
       body: {},
       headers: {},
       ip: 'random.ip',
+      searchablePath: pathToSearchablePath('/somepath'),
     };
     await prismaService.webhook.create({ data: webhook });
 

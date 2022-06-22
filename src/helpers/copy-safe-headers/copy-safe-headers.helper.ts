@@ -9,6 +9,6 @@ export const copySafeHeaders = (
     }
 
     return acc;
-  }, {});
+  }, {} as Record<string, string>);
   return safeHeaders;
 };

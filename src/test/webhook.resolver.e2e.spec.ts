@@ -1,5 +1,3 @@
-// /test/customer.e2e-spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
@@ -9,6 +7,7 @@ import { Prisma } from '@prisma/client';
 import { createClient } from 'graphql-ws';
 import { WsAdapter } from '@nestjs/platform-ws';
 import * as WebSocket from 'ws';
+import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
@@ -48,10 +47,11 @@ describe('CustomerResolver (e2e)', () => {
     it('should get empty array with webhooks from other hosts in database', async () => {
       const webhook: Prisma.WebhookCreateInput = {
         host: 'not_localhost',
-        path: 'somepath',
+        path: '/somepath',
         body: {},
         headers: {},
         ip: 'random.ip',
+        searchablePath: pathToSearchablePath('/somepath'),
       };
       await prismaService.webhook.create({ data: webhook });
       const res = await request(app.getHttpServer())

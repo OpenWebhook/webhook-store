@@ -29,13 +29,13 @@ export class WebhookResolver {
   @Query(() => [WebhookModel])
   webhooks(
     @Args() webhooksQueryArgs: WebhooksQueryArgs,
-    @Hostname() hostname,
+    @Hostname() hostname: string,
   ): Promise<WebhookModel[]> {
     return this.appService.getWebhooks(hostname, webhooksQueryArgs);
   }
 
   @Subscription(() => WebhookModel)
-  webhookAdded(@Hostname() hostname) {
+  webhookAdded(@Hostname() hostname: string) {
     return pubSub.asyncIterator(`webhookAdded_${hostname}`);
   }
 }

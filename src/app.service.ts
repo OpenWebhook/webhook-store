@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Webhook } from '@prisma/client';
+import {
+  pathIsValid,
+  pathToPSQLTsQuery,
+} from './helpers/parse-searchable-path/parse-searchable-path.helper';
 import { PrismaService } from './prisma.service';
 import { pubSub } from './pubsub';
 import { mapWebhookSchemaToModel } from './webhook.mapper';
@@ -54,13 +58,15 @@ export class AppService {
     paginationArgs: WebhooksQueryArgs,
   ): Promise<WebhookModel[]> {
     const { first, offset, path } = paginationArgs;
-    console.log(path);
-    console.log(first);
+    const validPath = pathIsValid(path) ? path : undefined;
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
       orderBy: { createdAt: 'desc' },
-      where: { host, path },
+      where: {
+        host,
+        searchablePath: { search: pathToPSQLTsQuery(validPath) },
+      },
     });
     return webhooks.map(mapWebhookSchemaToModel);
   }
