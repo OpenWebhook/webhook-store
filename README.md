@@ -1,4 +1,4 @@
-[![webhook-store](https://github.com/OpenWebhook/webhook-store/actions/workflows/main.yml/badge.svg)](https://github.com/OpenWebhook/webhook-store/actions/workflows/main.yml) [![Coverage Status](https://coveralls.io/repos/github/OpenWebhook/webhook-store/badge.svg?branch=main)](https://coveralls.io/github/OpenWebhook/webhook-store?branch=main)
+[![webhook-store](https://github.com/OpenWebhook/webhook-store/actions/workflows/main.yml/badge.svg)](https://github.com/OpenWebhook/webhook-store/actions/workflows/main.yml) [![Maintainability](https://api.codeclimate.com/v1/badges/bc33884e66ac77707905/maintainability)](https://codeclimate.com/github/OpenWebhook/webhook-store/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/bc33884e66ac77707905/test_coverage)](https://codeclimate.com/github/OpenWebhook/webhook-store/test_coverage)
 
 # OpenWebhook
 
