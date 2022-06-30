@@ -46,7 +46,7 @@ export class AppService {
     });
 
     this.eventEmitter.emit(
-      'webhook.created',
+      WebhookCreatedEvent.name,
       new WebhookCreatedEvent(webhook.id, webhook.host),
     );
 

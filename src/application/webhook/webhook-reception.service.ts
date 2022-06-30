@@ -12,7 +12,7 @@ export class WebhookReceptionService {
     private configService: ConfigService,
   ) {}
 
-  @OnEvent('webhook.created')
+  @OnEvent(WebhookCreatedEvent.name)
   async afterWebhookCreated(payload: WebhookCreatedEvent) {
     const storageLimitOfWebhook = this.configService.get(
       'maxStoredWebhookPerHost',
