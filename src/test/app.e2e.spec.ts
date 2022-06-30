@@ -6,6 +6,13 @@ import { PrismaService } from '../infrastructure/prisma.service';
 import { Prisma, Webhook } from '@prisma/client';
 import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
+jest.mock('../helpers/get-hostname/get-hostname.helper');
+import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+
+const hostname = 'app.e2e.spec';
+// @ts-ignore
+getHostnameOrLocalhost.mockImplementation(() => hostname);
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
@@ -18,7 +25,7 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     prismaService = app.get(PrismaService);
     await app.init();
-    await prismaService.webhook.deleteMany();
+    await prismaService.webhook.deleteMany({ where: { host: hostname } });
   });
 
   afterEach(async () => {
@@ -53,7 +60,7 @@ describe('AppController (e2e)', () => {
       where: { id: newWebhook.id },
     });
     if (storedWebhook == null) throw new Error('Webhook not found in test');
-    expect(storedWebhook.host).toBe('localhost');
+    expect(storedWebhook.host).toBe(hostname);
   });
 
   it('/ gets only webhooks on same host', async () => {
@@ -70,6 +77,6 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/hello')
       .expect(200)
-      .expect('There are 0 webhooks on 127.0.0.1!');
+      .expect(`There are 0 webhooks on ${hostname}!`);
   });
 });

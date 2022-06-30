@@ -9,6 +9,13 @@ import { WsAdapter } from '@nestjs/platform-ws';
 import * as WebSocket from 'ws';
 import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
+jest.mock('../helpers/get-hostname/get-hostname.helper');
+import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+
+const hostname = 'webhook.resolver.e2e.spec';
+// @ts-ignore
+getHostnameOrLocalhost.mockImplementation(() => hostname);
+
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
@@ -22,7 +29,7 @@ describe('CustomerResolver (e2e)', () => {
     prismaService = app.get(PrismaService);
     app.useWebSocketAdapter(new WsAdapter(app));
     await app.init();
-    await prismaService.webhook.deleteMany();
+    await prismaService.webhook.deleteMany({ where: { host: hostname } });
   });
 
   afterEach(async () => {

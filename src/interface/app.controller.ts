@@ -32,7 +32,7 @@ export class AppController {
 
   @Get('/hello')
   getHello(@Req() req: any): Promise<string> {
-    return this.appService.getCount(req.hostname);
+    return this.appService.getCount(getHostnameOrLocalhost(req.hostname));
   }
 
   @Get('/webhooks-per-host')
@@ -72,6 +72,6 @@ export class AppController {
 
   @Delete()
   deleteWebhooks(@Req() req: any): Promise<{ count: number }> {
-    return this.appService.deleteWebhooks(req.hostname);
+    return this.appService.deleteWebhooks(getHostnameOrLocalhost(req.hostname));
   }
 }

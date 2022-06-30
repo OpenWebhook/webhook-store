@@ -7,6 +7,13 @@ import { WebhookReceptionService } from './webhook-reception.service';
 import { PrismaService } from '../../infrastructure/prisma.service';
 import { pathToSearchablePath } from '../../helpers/parse-searchable-path/parse-searchable-path.helper';
 
+jest.mock('../../helpers/get-hostname/get-hostname.helper');
+import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.helper';
+
+const hostname = 'webhook-reception.service.e2e.spec';
+// @ts-ignore
+getHostnameOrLocalhost.mockImplementation(() => hostname);
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
@@ -21,7 +28,7 @@ describe('AppController (e2e)', () => {
     prismaService = app.get(PrismaService);
     webhookReceptionService = app.get(WebhookReceptionService);
     await app.init();
-    await prismaService.webhook.deleteMany();
+    await prismaService.webhook.deleteMany({ where: { host: hostname } });
   });
 
   afterEach(async () => {
@@ -59,7 +66,7 @@ describe('AppController (e2e)', () => {
       .get('/hello')
       .expect(200);
 
-    expect(text).toBe('There are 0 webhooks on 127.0.0.1!');
+    expect(text).toBe(`There are 10 webhooks on ${hostname}!`);
   });
 
   it('Does not delete webhooks from other hosts', async () => {
@@ -73,7 +80,7 @@ describe('AppController (e2e)', () => {
     };
 
     const webhook: Prisma.WebhookCreateInput = {
-      host: 'localhost',
+      host: hostname,
       path: '/somepath',
       body: {},
       headers: {},
