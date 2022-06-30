@@ -1,9 +1,13 @@
 import { getHostnameOrLocalhost } from './get-hostname.helper';
 
 describe('getHostnameOrLocalhost', () => {
-  it('returns localhost in test conditions', () => {
-    const host = getHostnameOrLocalhost('yolocroutelol');
-    expect(host).toBe('localhost');
+  it('throw an error in test conditions', () => {
+    expect(() => {
+      getHostnameOrLocalhost('127.0.0.1');
+    }).toThrowError('The function should be mocked in a test');
+    expect(() => {
+      getHostnameOrLocalhost('::1');
+    }).toThrowError('The function should be mocked in a test');
   });
 
   it('returns localhost if host is not defined', () => {
