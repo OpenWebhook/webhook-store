@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
 import { AppModule } from '../app.module';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../infrastructure/prisma.service';
 import { Prisma } from '@prisma/client';
 import { createClient } from 'graphql-ws';
 import { WsAdapter } from '@nestjs/platform-ws';

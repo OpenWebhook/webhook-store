@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../app.module';
+import { AppModule } from '../../app.module';
 import { Prisma, Webhook } from '@prisma/client';
 import { WebhookReceptionService } from './webhook-reception.service';
-import { PrismaService } from '../prisma.service';
-import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
+import { PrismaService } from '../../infrastructure/prisma.service';
+import { pathToSearchablePath } from '../../helpers/parse-searchable-path/parse-searchable-path.helper';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;

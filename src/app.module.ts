@@ -6,21 +6,21 @@ import webhookConfig from './config/webhook.config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './interface/app.controller';
+import { AppService } from './application/app.service';
 import { getHostnameOrLocalhost } from './helpers/get-hostname/get-hostname.helper';
-import { PrismaService } from './prisma.service';
-import { WebhookResolver } from './webhook.resolver';
+import { PrismaService } from './infrastructure/prisma.service';
+import { WebhookResolver } from './interface/webhook.resolver';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { WebhookReceptionService } from './webhook/webhook-reception.service';
-import { ProxyService } from './proxy.service';
+import { WebhookReceptionService } from './application/webhook/webhook-reception.service';
+import { ProxyService } from './infrastructure/proxy.service';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'src/interface/schema.gql'),
       sortSchema: true,
       introspection: true,
       playground: true,

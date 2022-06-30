@@ -1,4 +1,4 @@
-import { WebhookModel } from 'src/webhook.model';
+import { WebhookModel } from 'src/interface/webhook.model';
 
 export class WebhookCreatedEvent {
   constructor(

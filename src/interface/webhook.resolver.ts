@@ -6,8 +6,8 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { AppService } from './app.service';
-import { pubSub } from './pubsub';
+import { AppService } from '../application/app.service';
+import { pubSub } from '../infrastructure/pubsub';
 import { WebhookModel } from './webhook.model';
 import { WebhooksQueryArgs } from './webhooks.query-args';
 

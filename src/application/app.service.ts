@@ -4,13 +4,13 @@ import { Prisma, Webhook } from '@prisma/client';
 import {
   pathIsValid,
   pathToPSQLTsQuery,
-} from './helpers/parse-searchable-path/parse-searchable-path.helper';
-import { PrismaService } from './prisma.service';
-import { pubSub } from './pubsub';
-import { mapWebhookSchemaToModel } from './webhook.mapper';
-import { WebhookModel } from './webhook.model';
+} from '../helpers/parse-searchable-path/parse-searchable-path.helper';
+import { PrismaService } from '../infrastructure/prisma.service';
+import { pubSub } from '../infrastructure/pubsub';
+import { mapWebhookSchemaToModel } from '../interface/webhook.mapper';
+import { WebhookModel } from '../interface/webhook.model';
 import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
-import { WebhooksQueryArgs } from './webhooks.query-args';
+import { WebhooksQueryArgs } from '../interface/webhooks.query-args';
 
 @Injectable()
 export class AppService {
