@@ -128,27 +128,31 @@ describe('CustomerResolver (e2e)', () => {
   });
 
   describe('Search in path', () => {
-    it('should find the only', async () => {
-      const webhookWithComplexPath: Prisma.WebhookCreateInput = {
-        host: hostname,
-        path: '/path/to/search/for/this/path',
-        body: {},
-        headers: {},
-        ip: 'random.ip',
-        searchablePath: pathToSearchablePath('/path/to/search/for/this/path'),
-      };
-      await prismaService.webhook.create({ data: webhookWithComplexPath });
+    it('should find the webhook that starts with the search param', async () => {
+      const paths = [
+        '/path/to/search/for/this/path',
+        '/path/to/search/for/that/path',
+        '/path/not/to/search/for/that/path',
+      ];
+      const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
+        (path) => ({
+          host: hostname,
+          path,
+          body: {},
+          headers: {},
+          ip: 'random.ip',
+          searchablePath: pathToSearchablePath(path),
+        }),
+      );
+      await prismaService.webhook.createMany({ data: webhookWithComplexPath });
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
-          query: 'query {webhooks(path: "/path/to/search/*/this") {path}}',
+          query: 'query {webhooks(path: "/path/to/search") {path}}',
         })
         .expect(200);
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
-      expect(res.body.data.webhooks).toHaveLength(1);
-      expect(res.body.data.webhooks[0].path).toBe(
-        '/path/to/search/for/this/path',
-      );
+      expect(res.body.data.webhooks).toHaveLength(2);
     });
   });
 });
