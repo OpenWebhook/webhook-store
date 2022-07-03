@@ -3,7 +3,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Webhook } from '@prisma/client';
 import {
   pathIsValid,
-  pathToPSQLTsQuery,
   pathToSearchablePath,
 } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 import { PrismaService } from '../infrastructure/prisma.service';

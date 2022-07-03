@@ -156,8 +156,8 @@ describe('CustomerResolver (e2e)', () => {
     });
     it('should find webhooks with id instead of wildcard', async () => {
       const paths = [
-        '/organisation/1234/invoice/5432/',
-        '/organisation/0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/invoice/05108a6f-d8ac-43b0-92d1-bb16d4c79c25/',
+        '/organisation/1234/invoice/5432',
+        '/organisation/0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/invoice/05108a6f-d8ac-43b0-92d1-bb16d4c79c25',
         '/sould/not/be/in/path',
       ];
       const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(

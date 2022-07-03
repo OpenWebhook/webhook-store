@@ -1,5 +1,7 @@
 export const pathToSearchablePath = (path: string): string => {
-  const pathWithoutUUIDs = path.replace(
+  const pathWithATrailingSlash =
+    path[path.length - 1] === '/' ? path : `${path}/`;
+  const pathWithoutUUIDs = pathWithATrailingSlash.replace(
     /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\//g,
     '/:id/',
   );
@@ -9,7 +11,11 @@ export const pathToSearchablePath = (path: string): string => {
     '/:id/',
   );
 
-  return pathWithoutNumeralIds;
+  const pathWithoutTrailingSlash = pathWithoutNumeralIds.substring(
+    0,
+    pathWithoutNumeralIds.length - 1,
+  );
+  return pathWithoutTrailingSlash;
 };
 
 export const pathIsValid = (path: string | undefined): path is `/${string}` => {
@@ -17,14 +23,5 @@ export const pathIsValid = (path: string | undefined): path is `/${string}` => {
     return path.startsWith('/');
   } else {
     return false;
-  }
-};
-
-export const pathToPSQLTsQuery = (
-  path: `/${string}` | undefined,
-): string | undefined => {
-  if (typeof path === 'string') {
-    const pathWithoutFirstSlash = path.slice(1).split('/').join(' <-> ');
-    return pathWithoutFirstSlash;
   }
 };
