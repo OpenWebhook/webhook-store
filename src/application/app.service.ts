@@ -4,6 +4,7 @@ import { Prisma, Webhook } from '@prisma/client';
 import {
   pathIsValid,
   pathToPSQLTsQuery,
+  pathToSearchablePath,
 } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 import { PrismaService } from '../infrastructure/prisma.service';
 import { pubSub } from '../infrastructure/pubsub';
@@ -11,6 +12,11 @@ import { mapWebhookSchemaToModel } from '../interface/webhook.mapper';
 import { WebhookModel } from '../interface/webhook.model';
 import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
 import { WebhooksQueryArgs } from '../interface/webhooks.query-args';
+
+type CreateWebhookInput = Pick<
+  Prisma.WebhookCreateInput,
+  'body' | 'headers' | 'host' | 'path' | 'ip'
+>;
 
 @Injectable()
 export class AppService {
@@ -39,7 +45,10 @@ export class AppService {
     return webhooksCount;
   }
 
-  async addWebhook(data: Prisma.WebhookCreateInput): Promise<Webhook> {
+  async addWebhook(webhookInput: CreateWebhookInput): Promise<Webhook> {
+    const data = Object.assign({}, webhookInput, {
+      searchablePath: pathToSearchablePath(webhookInput.path),
+    });
     const webhook = await this.prisma.webhook.create({ data });
     pubSub.publish(`webhookAdded_${webhook.host}`, {
       webhookAdded: mapWebhookSchemaToModel(webhook),
