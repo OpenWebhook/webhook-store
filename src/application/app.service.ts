@@ -64,18 +64,15 @@ export class AppService {
 
   async getWebhooks(
     host: string,
-    paginationArgs: WebhooksQueryArgs,
+    queryArgs: WebhooksQueryArgs,
   ): Promise<WebhookModel[]> {
-    const { first, offset, path } = paginationArgs;
-    const validPath = pathIsValid(path) ? path : undefined;
+    const { first, offset, path } = queryArgs;
+    const where = whereConditionFactory(host, path);
     const webhooks = await this.prisma.webhook.findMany({
       skip: offset,
       take: first,
       orderBy: { createdAt: 'desc' },
-      where: {
-        host,
-        searchablePath: { search: pathToPSQLTsQuery(validPath) },
-      },
+      where,
     });
     return webhooks.map(mapWebhookSchemaToModel);
   }
@@ -84,3 +81,25 @@ export class AppService {
     return this.prisma.webhook.deleteMany({ where: { host } });
   }
 }
+
+const whereConditionFactory = (
+  host: string,
+  path: string | undefined,
+): Prisma.WebhookWhereInput => {
+  const validPath = pathIsValid(path) ? path : undefined;
+  if (validPath == undefined) {
+    return { host };
+  }
+  return {
+    OR: [
+      {
+        host,
+        searchablePath: { startsWith: validPath },
+      },
+      {
+        host,
+        path: { startsWith: validPath },
+      },
+    ],
+  };
+};
