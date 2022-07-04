@@ -13,8 +13,7 @@ jest.mock('../helpers/get-hostname/get-hostname.helper');
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 
 const hostname = 'webhook.resolver.filters.e2e.spec';
-// @ts-ignore
-getHostnameOrLocalhost.mockImplementation(() => hostname);
+(getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
