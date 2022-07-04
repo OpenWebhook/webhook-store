@@ -14,10 +14,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
-import { AppService } from './app.service';
-import { getHostnameOrLocalhost } from './helpers/get-hostname/get-hostname.helper';
-import { pathToSearchablePath } from './helpers/parse-searchable-path/parse-searchable-path.helper';
-import { ProxyService } from './proxy.service';
+import { AppService } from '../application/app.service';
+import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { ProxyService } from '../infrastructure/proxy.service';
 
 @Controller()
 export class AppController {
@@ -32,7 +31,7 @@ export class AppController {
 
   @Get('/hello')
   getHello(@Req() req: any): Promise<string> {
-    return this.appService.getCount(req.hostname);
+    return this.appService.getCount(getHostnameOrLocalhost(req.hostname));
   }
 
   @Get('/webhooks-per-host')
@@ -65,13 +64,12 @@ export class AppController {
       ip,
       path,
       host: getHostnameOrLocalhost(req.hostname),
-      searchablePath: pathToSearchablePath(path),
     });
     return res.send(webhook);
   }
 
   @Delete()
   deleteWebhooks(@Req() req: any): Promise<{ count: number }> {
-    return this.appService.deleteWebhooks(req.hostname);
+    return this.appService.deleteWebhooks(getHostnameOrLocalhost(req.hostname));
   }
 }

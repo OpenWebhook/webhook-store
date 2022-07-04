@@ -1,26 +1,9 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import {
-  Args,
-  GqlExecutionContext,
-  Query,
-  Resolver,
-  Subscription,
-} from '@nestjs/graphql';
-import { AppService } from './app.service';
-import { pubSub } from './pubsub';
+import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { AppService } from '../application/app.service';
+import { pubSub } from '../infrastructure/pubsub';
+import { Hostname } from './decorators/hostname.decorator';
 import { WebhookModel } from './webhook.model';
 import { WebhooksQueryArgs } from './webhooks.query-args';
-
-const Hostname = createParamDecorator(
-  (_data: unknown, executionContext: ExecutionContext) => {
-    const ctx = GqlExecutionContext.create(executionContext);
-    const context = ctx.getContext();
-    if (context && context.extractedHost) {
-      return context.extractedHost;
-    }
-    return context.req.hostname;
-  },
-);
 
 @Resolver(() => WebhookModel)
 export class WebhookResolver {

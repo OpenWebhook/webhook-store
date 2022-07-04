@@ -17,12 +17,12 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "dotenv -e .env.test -- jest --runInBand --silent",
+    "test": "dotenv -e .env.test -- jest --silent",
     "test:watch": "dotenv -e .env.test -- jest --watch",
-    "test:cov": "dotenv -e .env.test -- jest --silent --runInBand --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:cov": "dotenv -e .env.test -- jest --silent --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest",
     "pretest:ci": "dotenv -e .env.test -- npx prisma migrate dev",
-    "test:ci": "dotenv -e .env.test -- jest --runInBand --silent --coverage"
+    "test:ci": "dotenv -e .env.test -- jest --silent --coverage"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.16",

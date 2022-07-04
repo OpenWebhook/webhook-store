@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { firstValueFrom } from 'rxjs';
-import { copySafeHeaders } from './helpers/copy-safe-headers/copy-safe-headers.helper';
+import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.helper';
 
 @Injectable()
 export class ProxyService {

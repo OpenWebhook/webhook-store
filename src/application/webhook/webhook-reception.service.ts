@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { WebhookModel } from '../webhook.model';
-import { PrismaService } from '../prisma.service';
+import { WebhookModel } from '../../interface/webhook.model';
+import { PrismaService } from '../../infrastructure/prisma.service';
 import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { ConfigService } from '@nestjs/config';
 
@@ -12,7 +12,7 @@ export class WebhookReceptionService {
     private configService: ConfigService,
   ) {}
 
-  @OnEvent('webhook.created')
+  @OnEvent(WebhookCreatedEvent.name)
   async afterWebhookCreated(payload: WebhookCreatedEvent) {
     const storageLimitOfWebhook = this.configService.get(
       'maxStoredWebhookPerHost',

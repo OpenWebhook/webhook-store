@@ -4,10 +4,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request = require('supertest');
 import { AppModule } from '../app.module';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../infrastructure/prisma.service';
 import { Prisma } from '@prisma/client';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
+
+jest.mock('../helpers/get-hostname/get-hostname.helper');
+import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+
+const hostname = 'webhook.resolver.filters.e2e.spec';
+(getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
 
 describe('CustomerResolver (e2e)', () => {
   let app: INestApplication;
@@ -22,9 +28,9 @@ describe('CustomerResolver (e2e)', () => {
     prismaService = app.get(PrismaService);
     app.useWebSocketAdapter(new WsAdapter(app));
     await app.init();
-    await prismaService.webhook.deleteMany();
+    await prismaService.webhook.deleteMany({ where: { host: hostname } });
     const webhookPath1: Prisma.WebhookCreateInput = {
-      host: '127.0.0.1',
+      host: hostname,
       path: '/path1',
       body: {},
       headers: {},
@@ -121,27 +127,58 @@ describe('CustomerResolver (e2e)', () => {
   });
 
   describe('Search in path', () => {
-    it('should find the only', async () => {
-      const webhookWithComplexPath: Prisma.WebhookCreateInput = {
-        host: '127.0.0.1',
-        path: '/path/to/search/for/this/path',
-        body: {},
-        headers: {},
-        ip: 'random.ip',
-        searchablePath: pathToSearchablePath('/path/to/search/for/this/path'),
-      };
-      await prismaService.webhook.create({ data: webhookWithComplexPath });
+    it('should find the webhook that starts with the search param', async () => {
+      const paths = [
+        '/path/to/search/for/this/path',
+        '/path/to/search/for/that/path',
+        '/path/not/to/search/for/that/path',
+      ];
+      const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
+        (path) => ({
+          host: hostname,
+          path,
+          body: {},
+          headers: {},
+          ip: 'random.ip',
+          searchablePath: pathToSearchablePath(path),
+        }),
+      );
+      await prismaService.webhook.createMany({ data: webhookWithComplexPath });
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
-          query: 'query {webhooks(path: "/path/to/search/*/this") {path}}',
+          query: 'query {webhooks(path: "/path/to/search") {path}}',
         })
         .expect(200);
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
-      expect(res.body.data.webhooks).toHaveLength(1);
-      expect(res.body.data.webhooks[0].path).toBe(
-        '/path/to/search/for/this/path',
+      expect(res.body.data.webhooks).toHaveLength(2);
+    });
+    it('should find webhooks with id instead of wildcard', async () => {
+      const paths = [
+        '/organisation/1234/invoice/5432',
+        '/organisation/0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/invoice/05108a6f-d8ac-43b0-92d1-bb16d4c79c25',
+        '/sould/not/be/in/path',
+      ];
+      const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
+        (path) => ({
+          host: hostname,
+          path,
+          body: {},
+          headers: {},
+          ip: 'random.ip',
+          searchablePath: pathToSearchablePath(path),
+        }),
       );
+      await prismaService.webhook.createMany({ data: webhookWithComplexPath });
+      const res = await request(app.getHttpServer())
+        .post(gql)
+        .send({
+          query:
+            'query {webhooks(path: "/organisation/:id/invoice/:id") {path}}',
+        })
+        .expect(200);
+      expect(Array.isArray(res.body.data.webhooks)).toBe(true);
+      expect(res.body.data.webhooks).toHaveLength(2);
     });
   });
 });
