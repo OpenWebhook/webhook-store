@@ -1,3 +1,7 @@
+function removeTrailingSlash(str: string): string {
+  return str.replace(/\/+$/, '');
+}
+
 export const pathToSearchablePath = (path: string): string => {
   const pathWithATrailingSlash =
     path[path.length - 1] === '/' ? path : `${path}/`;
@@ -11,10 +15,7 @@ export const pathToSearchablePath = (path: string): string => {
     '/:id/',
   );
 
-  const pathWithoutTrailingSlash = pathWithoutNumeralIds.substring(
-    0,
-    pathWithoutNumeralIds.length - 1,
-  );
+  const pathWithoutTrailingSlash = removeTrailingSlash(pathWithoutNumeralIds);
   return pathWithoutTrailingSlash;
 };
 

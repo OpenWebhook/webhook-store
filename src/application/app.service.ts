@@ -93,11 +93,11 @@ const whereConditionFactory = (
     OR: [
       {
         host,
-        searchablePath: { startsWith: validPath },
+        searchablePath: { contains: validPath },
       },
       {
         host,
-        path: { startsWith: validPath },
+        path: { contains: validPath },
       },
     ],
   };

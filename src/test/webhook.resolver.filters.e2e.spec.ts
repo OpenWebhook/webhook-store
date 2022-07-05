@@ -180,5 +180,32 @@ describe('CustomerResolver (e2e)', () => {
       expect(Array.isArray(res.body.data.webhooks)).toBe(true);
       expect(res.body.data.webhooks).toHaveLength(2);
     });
+
+    it('should find webhooks with exact id', async () => {
+      const paths = [
+        '/organisation/123432/update',
+        '/organisation/123432/create',
+        '/organisation/123432/delete',
+      ];
+      const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
+        (path) => ({
+          host: hostname,
+          path,
+          body: {},
+          headers: {},
+          ip: 'random.ip',
+          searchablePath: pathToSearchablePath(path),
+        }),
+      );
+      await prismaService.webhook.createMany({ data: webhookWithComplexPath });
+      const res = await request(app.getHttpServer())
+        .post(gql)
+        .send({
+          query: 'query {webhooks(path: "/123432") {path}}',
+        })
+        .expect(200);
+      expect(Array.isArray(res.body.data.webhooks)).toBe(true);
+      expect(res.body.data.webhooks).toHaveLength(3);
+    });
   });
 });
