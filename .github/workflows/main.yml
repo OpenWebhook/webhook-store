@@ -55,8 +55,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git Semantic Version
+        id: semver
         uses: PaulHatch/semantic-version@v5.0.0-alpha2
       - run: echo croute
       - run: echo $croute
-      - run: echo $croute2
+      - run: |
+          echo "Semantic version detected: ${{ steps.semver.outputs.version }}"
+
         
