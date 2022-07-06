@@ -56,4 +56,6 @@ jobs:
     steps:
       - name: Git Semantic Version
         uses: PaulHatch/semantic-version@v5.0.0-alpha2
+      - run: echo croute
+      - run: echo $croute
         
