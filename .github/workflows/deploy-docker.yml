@@ -29,7 +29,9 @@ jobs:
         with:
           major-wording:  'MAJOR'
           minor-wording:  'MINOR'
-          patch-wording:  'patch,feature,bugfix' 
+          patch-wording:  'patch,feature,bugfix'
+          skip-commit: ${{ github.ref != 'main' }}
+          skip-push: ${{ github.ref != 'main' }}
 
       - name: Output Step                             # Optional: Prints the new version
         env:
