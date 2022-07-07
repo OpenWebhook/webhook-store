@@ -1,6 +1,11 @@
 {
   "name": "webhook-store",
-  "version": "0.0.1",
+  "version": "0.1.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenWebhook/webhook-store.git"
+  },
+  "homepage": "https://github.com/OpenWebhook/webhook-store",
   "description": "",
   "author": "",
   "private": true,

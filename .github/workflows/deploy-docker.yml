@@ -15,7 +15,7 @@ jobs:
       - name: Checkout source code                     # Checksout the repository in the GitHub runner
         uses: 'actions/checkout@v2'
         with:
-          ref: ${{ github.ref }}                
+          ref: ${{ github.ref }}
 
       - name: Automated Version Bump                  # This action step reads and updates the version number acc to commit message
         id: version-bump
