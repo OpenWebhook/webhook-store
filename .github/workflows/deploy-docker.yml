@@ -1,0 +1,56 @@
+name: Docker                                           # Name of the workflow
+on:
+  push:
+    branches: [ docker-deploy/** ]     
+  workflow_run:
+    workflows: [Webhook Store Test]
+    types: [completed]
+    branches: [main]                            # Workflow to run only when changes are made to `main` branch
+
+env:
+  REGISTRY: docker.io                                  # Image registry, ghcr.io incase of GitHub Container Registry
+  IMAGE_NAME: openwebhook/webhook-store                # Name of the image comes from the repository name
+
+jobs:
+  release:
+    runs-on: ubuntu-latest                            # GitHub Runner OS
+
+    steps:
+      - name: Checkout source code                     # Checksout the repository in the GitHub runner
+        uses: 'actions/checkout@v2'
+        with:
+          ref: ${{ github.ref }}
+          submodule: true
+
+      - name: Automated Version Bump                  # This action step reads and updates the version number acc to commit message
+        id: version-bump
+        uses: 'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          major-wording:  'MAJOR'
+          minor-wording:  'MINOR'
+          patch-wording:  'patch,feature,bugfix'
+          skip-commit: ${{ github.ref != 'main' }}
+          skip-push: ${{ github.ref != 'main' }}
+          skip-tag: ${{ github.ref != 'main' }}
+
+      - name: Output Step                             # Optional: Prints the new version
+        env:
+          NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
+        run: echo "new tag $NEW_TAG"
+
+      - name: Log into registry ${{ env.REGISTRY }}   # Log into the container registry from GitHub runner
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}              # Uses the env defined above
+          username: ${{ secrets.DOCKER_USERNAME }}   # GitHub Secret added to the repository
+          password: ${{ secrets.DOCKER_PASSWORD }}   # GitHub Secret added to the repository
+
+      - name: Build and push Docker image            # Builds and pushes the image to the conatiner registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./                          # Folder where the Dockerfile resides, use `/` if in root path
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.IMAGE_NAME }}:latest, ${{ env.IMAGE_NAME }}:${{ steps.version-bump.outputs.newTag }}
+          # Pushed the image with `latest` tag and the new semantic version obtained from the version-bump step

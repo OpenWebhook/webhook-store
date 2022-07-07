@@ -1,4 +1,4 @@
-name: webhook-store
+name: Webhook Store Test
 on: push
 
 jobs:
