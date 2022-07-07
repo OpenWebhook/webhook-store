@@ -51,14 +51,3 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: a6b0d56370d23dae1132a04c0a5c3045b6b4055b07a9a331a455da86e84f4dbd
 
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Git Semantic Version
-        id: semver
-        uses: PaulHatch/semantic-version@v5.0.0-alpha2
-        with:
-          bump_each_commit: true
-
-        
