@@ -1,7 +1,11 @@
 name: Docker                                           # Name of the workflow
 on:
   push:
-    branches: [ docker-autopublish ]                                 # Workflow to run only when changes are made to `main` branch
+    branches: [ docker-deploy/** ]     
+  workflow_run:
+    workflows: [Webhook Store Test]
+    types: [completed]
+    branches: [main]                            # Workflow to run only when changes are made to `main` branch
 
 env:
   REGISTRY: docker.io                                  # Image registry, ghcr.io incase of GitHub Container Registry
