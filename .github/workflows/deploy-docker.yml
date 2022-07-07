@@ -5,7 +5,7 @@ on:
 
 env:
   REGISTRY: docker.io                                  # Image registry, ghcr.io incase of GitHub Container Registry
-  IMAGE_NAME: ${{ github.repository }}                 # Name of the image comes from the repository name
+  IMAGE_NAME: openwebhook/webhook-store                # Name of the image comes from the repository name
 
 jobs:
   release:
