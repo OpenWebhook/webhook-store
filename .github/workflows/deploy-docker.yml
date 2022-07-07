@@ -20,6 +20,7 @@ jobs:
         uses: 'actions/checkout@v2'
         with:
           ref: ${{ github.ref }}
+          submodule: true
 
       - name: Automated Version Bump                  # This action step reads and updates the version number acc to commit message
         id: version-bump
