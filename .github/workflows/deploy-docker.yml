@@ -42,7 +42,7 @@ jobs:
       - name: Build and push Docker image            # Builds and pushes the image to the conatiner registry
         uses: docker/build-push-action@v2
         with:
-          context: ./docker                          # Folder where the Dockerfile resides, use `/` if in root path
+          context: ./                          # Folder where the Dockerfile resides, use `/` if in root path
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.IMAGE_NAME }}:latest, ${{ env.IMAGE_NAME }}:${{ steps.version-bump.outputs.newTag }}
           # Pushed the image with `latest` tag and the new semantic version obtained from the version-bump step
