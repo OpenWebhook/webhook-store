@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout source code                     # Checksout the repository in the GitHub runner
-        uses: 'actions/checkout@v2'
+        uses: 'actions/checkout@v3'
         with:
           ref: ${{ github.ref }}
-          submodule: true
+          submodules: true
 
       - name: Automated Version Bump                  # This action step reads and updates the version number acc to commit message
         id: version-bump
@@ -31,9 +31,9 @@ jobs:
           major-wording:  'MAJOR'
           minor-wording:  'MINOR'
           patch-wording:  'patch,feature,bugfix'
-          skip-commit: ${{ github.ref != 'main' }}
-          skip-push: ${{ github.ref != 'main' }}
-          skip-tag: ${{ github.ref != 'main' }}
+          skip-commit: ${{ github.ref != 'refs/head/main' }}
+          skip-push: ${{ github.ref != 'refs/head/main' }}
+          skip-tag: ${{ github.ref != 'refs/head/main' }}
 
       - name: Output Step                             # Optional: Prints the new version
         env:
