@@ -8,18 +8,18 @@ import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.
 export class ProxyService {
   constructor(private readonly httpService: HttpService) {}
   async sendWebhook(
-    host: string,
+    targetUrl: string,
     body: Readonly<Record<string, any>>,
     headers: Readonly<Record<string, string>>,
     path: string,
   ) {
     try {
       const safeHeaders = copySafeHeaders(headers);
-      console.log(`Sending webhook to proxy ${host} ${path}`);
+      console.log(`Sending webhook to proxy ${targetUrl} ${path}`);
       const response = await firstValueFrom(
         this.httpService.post(path, body, {
           headers: safeHeaders,
-          baseURL: host,
+          baseURL: targetUrl,
         }),
       );
       console.log(`Proxy responded ${response.status}`);

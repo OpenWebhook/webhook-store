@@ -28,7 +28,7 @@ sequenceDiagram
 
 Documentation for self [hosted webhook store](https://www.openwebhook.io/docs/install-webhook-store).
 
-# Develop
+# Development
 
 ## Install dependencies
 
@@ -66,4 +66,27 @@ yarn prisma migrate dev
 
 ```
 yarn start:dev
+```
+
+# Configuration
+
+## Hosts
+
+Webhook-store is designed to work for multiple hosts. For instance all `*.webhook.store` requests go to the same infrastructure. The webhook-store will associate all the webhooks to a host making it easy to gather all the webhooks for an host.
+You can have the same infrastructure for all your team and envs. If you use \*.sandbox.org.com, then your dev team-a can work on team-a.sandbox.org.com and another team on team-b.sandbox.org.com without the need to configure or manage multiple webhook-stores.
+
+## Targets
+
+Webhook-store is designed as a proxy, all the incoming webhooks can be sent to targets. For instance you want a third party to send webhooks to all your sandbox environments:
+
+payment-sandbox-webhooks => staging.org.com
+payment-sandbox-webhooks => sandbox.org.com
+payment-sandbox-webhooks => sandbox-2.org.com
+
+## Env
+
+```
+# Configuration
+MAX_STORED_WEBHOOKS_PER_HOST=100                            # Will keep only 100 webhooks (per hosts)
+DEFAULT_TARGETS=production.org.com, preproduction.org.com   # Will send all the webhooks to these urls
 ```
