@@ -1,0 +1,19 @@
+name: Semver                                           # Name of the workflow
+on:
+  push:
+    branches: [ semver-without-commit ]     
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest                            # GitHub Runner OS
+
+    steps:
+      - name: Checkout source code                     # Checksout the repository in the GitHub runner
+        uses: 'actions/checkout@v2'
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+          fetch-depth: 0
+
+      - name: Git Semantic Version
+        uses: PaulHatch/semantic-version@v5.0.0-alpha2
