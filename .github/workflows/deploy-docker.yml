@@ -21,23 +21,15 @@ jobs:
         with:
           ref: ${{ github.ref }}
           submodules: true
+          fetch-depth: 0
 
-      - name: Automated Version Bump                  # This action step reads and updates the version number acc to commit message
+      - name: Git Semantic Version
         id: version-bump
-        uses: 'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          major-wording:  'MAJOR'
-          minor-wording:  'MINOR'
-          patch-wording:  'patch,feature,bugfix'
-          skip-commit: ${{ github.ref != 'refs/heads/main' }}
-          skip-push: ${{ github.ref != 'refs/heads/main' }}
-          skip-tag: ${{ github.ref != 'refs/heads/main' }}
+        uses: PaulHatch/semantic-version@v5.0.0-alpha2
 
       - name: Output Step                             # Optional: Prints the new version
         env:
-          NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
+          NEW_TAG: ${{ steps.version-bump.outputs.version }}
         run: echo "new tag $NEW_TAG"
 
       - name: Log into registry ${{ env.REGISTRY }}   # Log into the container registry from GitHub runner
@@ -52,5 +44,5 @@ jobs:
         with:
           context: ./                          # Folder where the Dockerfile resides, use `/` if in root path
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ env.IMAGE_NAME }}:latest, ${{ env.IMAGE_NAME }}:${{ steps.version-bump.outputs.newTag }}
+          tags: ${{ env.IMAGE_NAME }}:latest, ${{ env.IMAGE_NAME }}:${{ steps.version-bump.outputs.version }}
           # Pushed the image with `latest` tag and the new semantic version obtained from the version-bump step
