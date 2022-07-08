@@ -8,6 +8,7 @@ import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-sea
 
 jest.mock('../helpers/get-hostname/get-hostname.helper');
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { whUuid } from '../helpers/uuid-generator/uuid-generator.helper';
 
 const hostname = 'app.e2e.spec';
 (getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
@@ -64,6 +65,7 @@ describe('AppController (e2e)', () => {
 
   it('/ gets only webhooks on same host', async () => {
     const webhook: Prisma.WebhookCreateInput = {
+      id: whUuid(),
       host: 'not_localhost',
       path: '/somepath',
       body: {},

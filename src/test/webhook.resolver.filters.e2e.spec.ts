@@ -11,6 +11,7 @@ import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-sea
 
 jest.mock('../helpers/get-hostname/get-hostname.helper');
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { whUuid } from '../helpers/uuid-generator/uuid-generator.helper';
 
 const hostname = 'webhook.resolver.filters.e2e.spec';
 (getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
@@ -29,7 +30,7 @@ describe('CustomerResolver (e2e)', () => {
     app.useWebSocketAdapter(new WsAdapter(app));
     await app.init();
     await prismaService.webhook.deleteMany({ where: { host: hostname } });
-    const webhookPath1: Prisma.WebhookCreateInput = {
+    const webhookPath1 = {
       host: hostname,
       path: '/path1',
       body: {},
@@ -42,16 +43,14 @@ describe('CustomerResolver (e2e)', () => {
       searchablePath: pathToSearchablePath('/path2'),
     });
     await prismaService.webhook.createMany({
-      data: [webhookPath2, webhookPath2],
+      data: new Array(2).fill(undefined).map(() => {
+        return { id: whUuid(), ...webhookPath2 };
+      }),
     });
     await prismaService.webhook.createMany({
-      data: [
-        webhookPath1,
-        webhookPath1,
-        webhookPath1,
-        webhookPath1,
-        webhookPath1,
-      ],
+      data: new Array(5).fill(undefined).map(() => {
+        return { id: whUuid(), ...webhookPath1 };
+      }),
     });
   });
 
@@ -135,6 +134,7 @@ describe('CustomerResolver (e2e)', () => {
       ];
       const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
         (path) => ({
+          id: whUuid(),
           host: hostname,
           path,
           body: {},
@@ -161,6 +161,7 @@ describe('CustomerResolver (e2e)', () => {
       ];
       const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
         (path) => ({
+          id: whUuid(),
           host: hostname,
           path,
           body: {},
@@ -189,6 +190,7 @@ describe('CustomerResolver (e2e)', () => {
       ];
       const webhookWithComplexPath: Prisma.WebhookCreateInput[] = paths.map(
         (path) => ({
+          id: whUuid(),
           host: hostname,
           path,
           body: {},

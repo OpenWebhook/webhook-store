@@ -11,7 +11,7 @@ import { mapWebhookSchemaToModel } from '../interface/webhook.mapper';
 import { WebhookModel } from '../interface/webhook.model';
 import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
 import { WebhooksQueryArgs } from '../interface/webhooks.query-args';
-import { v4 as uuidv4 } from 'uuid';
+import { whUuid } from '../helpers/uuid-generator/uuid-generator.helper';
 
 type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
@@ -48,7 +48,7 @@ export class AppService {
   async addWebhook(webhookInput: CreateWebhookInput): Promise<Webhook> {
     const data = Object.assign({}, webhookInput, {
       searchablePath: pathToSearchablePath(webhookInput.path),
-      branded_uuid: `wh-${uuidv4()}`,
+      id: whUuid(),
     });
     const webhook = await this.prisma.webhook.create({ data });
     pubSub.publish(`webhookAdded_${webhook.host}`, {
