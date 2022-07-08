@@ -20,13 +20,13 @@ import { ProxyService } from '../infrastructure/proxy.service';
 
 @Controller()
 export class AppController {
-  private readonly defaultHosts: [string] | null;
+  private readonly proxyTargets: [string] | null;
   constructor(
     private readonly appService: AppService,
     private readonly proxyService: ProxyService,
     configService: ConfigService,
   ) {
-    this.defaultHosts = configService.get('defaultHost') || null;
+    this.proxyTargets = configService.get('defaultHost') || null;
   }
 
   @Get('/hello')
@@ -54,9 +54,9 @@ export class AppController {
       return next();
     }
     console.log(`Webhook received on ${path}`);
-    if (this.defaultHosts) {
-      this.defaultHosts.forEach((host) => {
-        this.proxyService.sendWebhook(host, body, headers, path);
+    if (this.proxyTargets) {
+      this.proxyTargets.forEach((target) => {
+        this.proxyService.sendWebhook(target, body, headers, path);
       });
     }
 
