@@ -10,6 +10,7 @@ datasource db {
 
 model Webhook {
   id             Int      @id @default(autoincrement())
+  branded_uuid   String   @unique
   body           Json
   headers        Json
   ip             String
