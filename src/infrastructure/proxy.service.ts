@@ -12,7 +12,7 @@ export class ProxyService {
     body: Readonly<Record<string, any>>,
     headers: Readonly<Record<string, string>>,
     path: string,
-  ) {
+  ): Promise<void> {
     try {
       const safeHeaders = copySafeHeaders(headers);
       console.log(`Sending webhook to proxy ${targetUrl} ${path}`);
