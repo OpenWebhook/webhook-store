@@ -39,10 +39,6 @@ jobs:
           cache: "yarn"
       - run: yarn
       - run: yarn test:ci
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Code Climate Coverage Action
         uses: paambaati/codeclimate-action@v3.0.0
         with:
