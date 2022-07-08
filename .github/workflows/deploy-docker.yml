@@ -22,6 +22,9 @@ jobs:
           ref: ${{ github.ref }}
           submodules: true
 
+      - name: Debug
+        run: echo ${{ github.ref }}
+
       - name: Automated Version Bump                  # This action step reads and updates the version number acc to commit message
         id: version-bump
         uses: 'phips28/gh-action-bump-version@master'
