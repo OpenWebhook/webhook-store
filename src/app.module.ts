@@ -15,6 +15,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { WebhookReceptionService } from './application/webhook/webhook-reception.service';
 import { ProxyService } from './infrastructure/proxy.service';
 import { HttpModule } from '@nestjs/axios';
+import { ProxyResponseService } from './application/proxy-response/proxy-response.service';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { HttpModule } from '@nestjs/axios';
   providers: [
     PrismaService,
     AppService,
+    ProxyResponseService,
     ProxyService,
     WebhookResolver,
     WebhookReceptionService,
