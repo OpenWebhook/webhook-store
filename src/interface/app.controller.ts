@@ -40,7 +40,7 @@ export class AppController {
   }
 
   @Post('/*')
-  async createWebhookWithoutPath(
+  async createWebhook(
     @Body() body: any,
     @Ip() ip: string,
     @Headers() headers: Record<string, string>,
