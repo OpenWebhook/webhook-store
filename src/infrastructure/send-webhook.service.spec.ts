@@ -1,16 +1,16 @@
 import { HttpService } from '@nestjs/axios';
 import { AxiosError, AxiosResponse } from 'axios';
-import { ProxyService } from './proxy.service';
+import { SendWebhookService } from './send-webhook.service';
 import { of, throwError } from 'rxjs';
 import { right, left } from 'fp-ts/lib/Either';
 
 describe('proxy.service.ts', () => {
-  let proxyService: ProxyService;
+  let proxyService: SendWebhookService;
   let httpService: HttpService;
 
   beforeAll(() => {
     httpService = new HttpService();
-    proxyService = new ProxyService(httpService);
+    proxyService = new SendWebhookService(httpService);
   });
 
   describe('Happy path', () => {

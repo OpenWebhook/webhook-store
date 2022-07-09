@@ -17,7 +17,7 @@ import { NextFunction } from 'express';
 import { ProxyResponseService } from '../application/proxy-response/proxy-response.service';
 import { AppService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
-import { ProxyService } from '../infrastructure/proxy.service';
+import { SendWebhookService } from '../infrastructure/send-webhook.service';
 
 @Controller()
 export class AppController {
@@ -25,7 +25,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly proxyResponseService: ProxyResponseService,
-    private readonly proxyService: ProxyService,
+    private readonly sendWebhookService: SendWebhookService,
     configService: ConfigService,
   ) {
     this.proxyTargets = configService.get('defaultHost') || null;
@@ -67,7 +67,7 @@ export class AppController {
 
     if (this.proxyTargets) {
       this.proxyTargets.forEach(async (target) => {
-        const proxyResponse = await this.proxyService.sendWebhook(
+        const proxyResponse = await this.sendWebhookService.sendWebhook(
           target,
           body,
           headers,

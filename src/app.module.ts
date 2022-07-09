@@ -13,7 +13,7 @@ import { PrismaService } from './infrastructure/prisma.service';
 import { WebhookResolver } from './interface/webhook.resolver';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { WebhookReceptionService } from './application/webhook/webhook-reception.service';
-import { ProxyService } from './infrastructure/proxy.service';
+import { SendWebhookService } from './infrastructure/send-webhook.service';
 import { HttpModule } from '@nestjs/axios';
 import { ProxyResponseService } from './application/proxy-response/proxy-response.service';
 
@@ -56,7 +56,7 @@ import { ProxyResponseService } from './application/proxy-response/proxy-respons
     PrismaService,
     AppService,
     ProxyResponseService,
-    ProxyService,
+    SendWebhookService,
     WebhookResolver,
     WebhookReceptionService,
   ],

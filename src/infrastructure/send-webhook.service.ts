@@ -7,7 +7,7 @@ import { ProxyResponse } from '../application/proxy-response/proxy-response.serv
 import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.helper';
 
 @Injectable()
-export class ProxyService {
+export class SendWebhookService {
   constructor(private readonly httpService: HttpService) {}
   async sendWebhook(
     targetUrl: string,
