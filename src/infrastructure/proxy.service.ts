@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { Either, left, right } from 'fp-ts/lib/Either';
 import { firstValueFrom } from 'rxjs';
 import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.helper';
 
@@ -12,7 +13,7 @@ export class ProxyService {
     body: Readonly<Record<string, any>>,
     headers: Readonly<Record<string, string>>,
     path: string,
-  ): Promise<void> {
+  ): Promise<Either<'err', 'OK'>> {
     try {
       const safeHeaders = copySafeHeaders(headers);
       console.log(`Sending webhook to proxy ${targetUrl} ${path}`);
@@ -23,13 +24,16 @@ export class ProxyService {
         }),
       );
       console.log(`Proxy responded ${response.status}`);
+      return right('OK');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(
           new Error('Could not send the webhook: ' + error.message),
         );
+        return left('err');
       } else {
         console.error(new Error('Could not send the webhook: ' + error));
+        return left('err');
       }
     }
   }
