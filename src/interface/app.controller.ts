@@ -73,7 +73,11 @@ export class AppController {
           headers,
           path,
         );
-        this.proxyResponseService.storeResponse(webhook.id, proxyResponse);
+        this.proxyResponseService.storeResponse(
+          webhook.id,
+          proxyResponse,
+          target,
+        );
       });
     }
     return res.send(webhook);

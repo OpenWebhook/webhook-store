@@ -1,16 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { Webhook } from '@prisma/client';
+import { Prisma, Webhook } from '@prisma/client';
 import { Either } from 'fp-ts/lib/Either';
+import { rsUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
+import { PrismaService } from '../../infrastructure/prisma.service';
 
 export type ProxyResponse = Either<'err', 'OK'>;
 
+type CreateResponseInput = Omit<Prisma.ResponseUncheckedCreateInput, 'id'>;
+
 @Injectable()
 export class ProxyResponseService {
-  public storeResponse(
+  constructor(private prisma: PrismaService) {}
+  public async storeResponse(
     webhookId: Webhook['id'],
     response: ProxyResponse,
-  ): void {
-    console.log(webhookId);
+    target: string,
+  ): Promise<void> {
     console.log(response);
+    const data: CreateResponseInput = {
+      webhookId,
+      target,
+      hasError: response._tag === 'Left',
+    };
+    const resp = await this.prisma.response.create({
+      data: { ...data, id: rsUuid() },
+    });
+    console.log(resp);
   }
 }
