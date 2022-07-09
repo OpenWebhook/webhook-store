@@ -4,7 +4,7 @@ import { Webhook } from '@prisma/client';
 @ObjectType()
 export class WebhookModel implements Partial<Webhook> {
   @Field(() => ID)
-  id!: number;
+  id!: string;
 
   @Field()
   path!: string;

@@ -9,6 +9,7 @@ import { pathToSearchablePath } from '../../helpers/parse-searchable-path/parse-
 
 jest.mock('../../helpers/get-hostname/get-hostname.helper');
 import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.helper';
+import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 
 const hostname = 'webhook-reception.service.e2e.spec';
 (getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
@@ -70,6 +71,7 @@ describe('AppController (e2e)', () => {
 
   it('Does not delete webhooks from other hosts', async () => {
     const webhookNotLocalhost: Prisma.WebhookCreateInput = {
+      id: whUuid(),
       host: 'not_localhost',
       path: '/somepath',
       body: {},
@@ -79,6 +81,7 @@ describe('AppController (e2e)', () => {
     };
 
     const webhook: Prisma.WebhookCreateInput = {
+      id: whUuid(),
       host: hostname,
       path: '/somepath',
       body: {},

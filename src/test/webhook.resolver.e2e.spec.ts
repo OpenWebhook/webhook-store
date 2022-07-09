@@ -11,6 +11,7 @@ import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-sea
 
 jest.mock('../helpers/get-hostname/get-hostname.helper');
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { whUuid } from '../helpers/uuid-generator/uuid-generator.helper';
 
 const hostname = 'webhook.resolver.e2e.spec';
 (getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
@@ -52,6 +53,7 @@ describe('CustomerResolver (e2e)', () => {
 
     it('should get empty array with webhooks from other hosts in database', async () => {
       const webhook: Prisma.WebhookCreateInput = {
+        id: whUuid(),
         host: 'not_localhost',
         path: '/somepath',
         body: {},
@@ -60,6 +62,7 @@ describe('CustomerResolver (e2e)', () => {
         searchablePath: pathToSearchablePath('/somepath'),
       };
       await prismaService.webhook.create({ data: webhook });
+
       const res = await request(app.getHttpServer())
         .post(gql)
         .send({
