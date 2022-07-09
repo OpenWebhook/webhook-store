@@ -1,5 +1,5 @@
 import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
-import { AppService } from '../application/app.service';
+import { AppService } from '../application/webhook/webhook.service';
 import { pubSub } from '../infrastructure/pubsub';
 import { Hostname } from './decorators/hostname.decorator';
 import { WebhookModel } from './webhook.model';
