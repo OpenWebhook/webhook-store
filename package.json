@@ -43,6 +43,7 @@
     "@prisma/client": "^4.0.0",
     "apollo-server-express": "3.9.0",
     "axios": "^0.27.2",
+    "fp-ts": "^2.12.1",
     "graphql": "16.5",
     "graphql-subscriptions": "^2.0.0",
     "reflect-metadata": "^0.1.13",

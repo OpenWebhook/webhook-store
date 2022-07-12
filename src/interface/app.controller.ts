@@ -14,9 +14,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
-import { AppService } from '../application/app.service';
+import { ProxyService } from '../application/proxy-response/proxy.service';
+import { AppService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
-import { ProxyService } from '../infrastructure/proxy.service';
 
 @Controller()
 export class AppController {
@@ -40,7 +40,7 @@ export class AppController {
   }
 
   @Post('/*')
-  async createWebhookWithoutPath(
+  async createWebhook(
     @Body() body: any,
     @Ip() ip: string,
     @Headers() headers: Record<string, string>,
@@ -54,19 +54,25 @@ export class AppController {
       return next();
     }
     console.log(`Webhook received on ${path}`);
-    if (this.proxyTargets) {
-      this.proxyTargets.forEach((target) => {
-        this.proxyService.sendWebhook(target, body, headers, path);
-      });
-    }
+    const host = getHostnameOrLocalhost(req.hostname);
 
     const webhook = await this.appService.addWebhook({
       body,
       headers,
       ip,
       path,
-      host: getHostnameOrLocalhost(req.hostname),
+      host,
     });
+    if (this.proxyTargets) {
+      this.proxyService.sendAndStoreWebhookToTargets(
+        this.proxyTargets,
+        body,
+        headers,
+        path,
+        webhook.id,
+        host,
+      );
+    }
     return res.send(webhook);
   }
 

@@ -4,14 +4,14 @@ import { Prisma, Webhook } from '@prisma/client';
 import {
   pathIsValid,
   pathToSearchablePath,
-} from '../helpers/parse-searchable-path/parse-searchable-path.helper';
-import { PrismaService } from '../infrastructure/prisma.service';
-import { pubSub } from '../infrastructure/pubsub';
-import { mapWebhookSchemaToModel } from '../interface/webhook.mapper';
-import { WebhookModel } from '../interface/webhook.model';
-import { WebhookCreatedEvent } from './webhook/events/webhook-created.event';
-import { WebhooksQueryArgs } from '../interface/webhooks.query-args';
-import { whUuid } from '../helpers/uuid-generator/uuid-generator.helper';
+} from '../../helpers/parse-searchable-path/parse-searchable-path.helper';
+import { PrismaService } from '../../infrastructure/prisma.service';
+import { pubSub } from '../../infrastructure/pubsub';
+import { mapWebhookSchemaToModel } from '../../interface/webhook.mapper';
+import { WebhookModel } from '../../interface/webhook.model';
+import { WebhookCreatedEvent } from './events/webhook-created.event';
+import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
+import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 
 type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,

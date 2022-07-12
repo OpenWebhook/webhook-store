@@ -9,13 +9,25 @@ datasource db {
 }
 
 model Webhook {
-  id             String   @id
+  id             String     @id
   body           Json
   headers        Json
   ip             String
   path           String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   host           String
   searchablePath String
+  Response       Response[]
+}
+
+model Response {
+  id        String   @id
+  webhook   Webhook  @relation(fields: [webhookId], references: [id])
+  webhookId String
+  hasError  Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  target    String
+  host      String
 }

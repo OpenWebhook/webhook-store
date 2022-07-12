@@ -7,14 +7,16 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './interface/app.controller';
-import { AppService } from './application/app.service';
+import { AppService } from './application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from './helpers/get-hostname/get-hostname.helper';
 import { PrismaService } from './infrastructure/prisma.service';
 import { WebhookResolver } from './interface/webhook.resolver';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { WebhookReceptionService } from './application/webhook/webhook-reception.service';
-import { ProxyService } from './infrastructure/proxy.service';
+import { SendWebhookService } from './infrastructure/send-webhook.service';
 import { HttpModule } from '@nestjs/axios';
+import { ProxyResponseService } from './application/proxy-response/proxy-response.service';
+import { ProxyService } from './application/proxy-response/proxy.service';
 
 @Module({
   imports: [
@@ -54,9 +56,11 @@ import { HttpModule } from '@nestjs/axios';
   providers: [
     PrismaService,
     AppService,
-    ProxyService,
+    ProxyResponseService,
+    SendWebhookService,
     WebhookResolver,
     WebhookReceptionService,
+    ProxyService,
   ],
 })
 export class AppModule {}
