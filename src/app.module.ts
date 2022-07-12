@@ -17,6 +17,7 @@ import { SendWebhookService } from './infrastructure/send-webhook.service';
 import { HttpModule } from '@nestjs/axios';
 import { ProxyResponseService } from './application/proxy-response/proxy-response.service';
 import { ProxyService } from './application/proxy-response/proxy.service';
+import { WebhookPathResolver } from './interface/webhook-path.resolver';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { ProxyService } from './application/proxy-response/proxy.service';
     ProxyResponseService,
     SendWebhookService,
     WebhookResolver,
+    WebhookPathResolver,
     WebhookReceptionService,
     ProxyService,
   ],
