@@ -15,10 +15,12 @@ export class ProxyResponseService {
     webhookId: Webhook['id'],
     response: ProxyResponse,
     target: string,
+    host: Webhook['host'],
   ): Promise<void> {
     const data: CreateResponseInput = {
       webhookId,
       target,
+      host,
       hasError: response._tag === 'Left',
     };
     await this.prisma.response.create({

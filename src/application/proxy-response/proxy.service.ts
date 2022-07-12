@@ -16,6 +16,7 @@ export class ProxyService {
     headers: Readonly<Record<string, string>>,
     path: string,
     webhookId: Webhook['id'],
+    host: Webhook['host'],
   ): void {
     targets.forEach(async (target) => {
       const proxyResponse = await this.sendWebhookService.sendWebhook(
@@ -24,7 +25,12 @@ export class ProxyService {
         headers,
         path,
       );
-      this.proxyResponseService.storeResponse(webhookId, proxyResponse, target);
+      this.proxyResponseService.storeResponse(
+        webhookId,
+        proxyResponse,
+        target,
+        host,
+      );
     });
   }
 }

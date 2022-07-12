@@ -29,4 +29,5 @@ model Response {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   target    String
+  host      String
 }

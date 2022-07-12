@@ -54,13 +54,14 @@ export class AppController {
       return next();
     }
     console.log(`Webhook received on ${path}`);
+    const host = getHostnameOrLocalhost(req.hostname);
 
     const webhook = await this.appService.addWebhook({
       body,
       headers,
       ip,
       path,
-      host: getHostnameOrLocalhost(req.hostname),
+      host,
     });
 
     if (this.proxyTargets) {
@@ -70,6 +71,7 @@ export class AppController {
         headers,
         path,
         webhook.id,
+        host,
       );
     }
     return res.send(webhook);
