@@ -63,7 +63,6 @@ export class AppController {
       path,
       host,
     });
-
     if (this.proxyTargets) {
       this.proxyService.sendAndStoreWebhookToTargets(
         this.proxyTargets,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Webhook } from '@prisma/client';
+import { Prisma, Webhook, Response } from '@prisma/client';
 import { Either } from 'fp-ts/lib/Either';
 import { rsUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { PrismaService } from '../../infrastructure/prisma.service';
@@ -16,15 +16,16 @@ export class ProxyResponseService {
     response: ProxyResponse,
     target: string,
     host: Webhook['host'],
-  ): Promise<void> {
+  ): Promise<Response> {
     const data: CreateResponseInput = {
       webhookId,
       target,
       host,
       hasError: response._tag === 'Left',
     };
-    await this.prisma.response.create({
+    const storedResponse = await this.prisma.response.create({
       data: { ...data, id: rsUuid() },
     });
+    return storedResponse;
   }
 }
