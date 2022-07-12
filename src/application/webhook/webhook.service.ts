@@ -45,6 +45,17 @@ export class AppService {
     return webhooksCount;
   }
 
+  async getWebhooksPath(host: string): Promise<{ path: string }[]> {
+    const webhookSearchablePaths = await this.prisma.webhook.groupBy({
+      where: { host },
+      by: ['searchablePath'],
+    });
+    const webhookPaths = webhookSearchablePaths.map((obj) => {
+      return { path: obj.searchablePath };
+    });
+    return webhookPaths;
+  }
+
   async addWebhook(webhookInput: CreateWebhookInput): Promise<Webhook> {
     const data = Object.assign({}, webhookInput, {
       searchablePath: pathToSearchablePath(webhookInput.path),
