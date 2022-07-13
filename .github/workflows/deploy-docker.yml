@@ -26,6 +26,8 @@ jobs:
       - name: Git Semantic Version
         id: version-bump
         uses: PaulHatch/semantic-version@v5.0.0-alpha2
+        with: 
+          bump_each_commit: true
 
       - name: Output Step                             # Optional: Prints the new version
         env:
