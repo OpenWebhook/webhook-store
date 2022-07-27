@@ -17,7 +17,7 @@ export class SendWebhookService {
   ): Promise<ProxyResponse> {
     try {
       const safeHeaders = copySafeHeaders(headers);
-      console.log(`Sending webhook to proxy ${targetUrl} ${path}`);
+      console.log(`Sending webhook to proxy ${targetUrl}${path}`);
       const response = await firstValueFrom(
         this.httpService.post(path, body, {
           headers: safeHeaders,
