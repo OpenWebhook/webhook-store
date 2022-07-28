@@ -10,8 +10,11 @@ import {
   Post,
   Req,
   Res,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
@@ -40,8 +43,10 @@ export class AppController {
   }
 
   @Post('/*')
+  @UseInterceptors(AnyFilesInterceptor())
   async createWebhook(
     @Body() body: any,
+    @UploadedFiles() files: Array<Express.Multer.File>,
     @Ip() ip: string,
     @Headers() headers: Record<string, string>,
     @Param() params: string[],
@@ -57,7 +62,8 @@ export class AppController {
     const host = getHostnameOrLocalhost(req.hostname);
 
     const webhook = await this.appService.addWebhook({
-      body,
+      // @TODO parse only if body is not well formated
+      body: JSON.parse(JSON.stringify(body)),
       headers,
       ip,
       path,
