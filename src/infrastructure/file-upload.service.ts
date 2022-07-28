@@ -1,10 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config/dist/config.service';
 import * as S3 from 'aws-sdk/clients/s3';
+import { Either, left, right } from 'fp-ts/lib/Either';
+
+type FileUploadResult = Either<unknown, { fileLocation: string }>;
 
 @Injectable()
 export class FileUploadService {
   private readonly s3: S3;
+  private readonly prexifxPath: string | undefined | null;
+  private readonly bucketName: string;
+
   constructor(configService: ConfigService) {
     const { accessKeyId, secretAccessKey, endpoint } = configService.get(
       's3BucketCredentials',
@@ -14,22 +20,26 @@ export class FileUploadService {
       secretAccessKey,
       endpoint,
     });
+    this.prexifxPath = configService.get('s3BucketPrefixPath');
+    // @Samox TODO handle case for no S3 configured
+    this.bucketName = configService.get('s3BucketName') || 'no-bucket';
   }
 
-  public async uploadRequestFile(file: Express.Multer.File): Promise<any> {
+  public async uploadRequestFile(
+    file: Express.Multer.File,
+  ): Promise<FileUploadResult> {
     try {
       const unixTime = Math.floor(+new Date() / 1000);
       const params = {
-        Bucket: 'webhook-store',
-        Key: `${process.env.S3_BUCKET_PREFIX_PATH}${unixTime}_${file.originalname}`, // file name with timestamp
+        Bucket: this.bucketName,
+        Key: `${this.prexifxPath}${unixTime}_${file.originalname}`,
         Body: file.buffer,
-        ACL: 'public-read', // public read policy
+        ACL: 'public-read',
         ContentType: file.mimetype,
       };
 
-      // Uploading files to the bucket
-      try {
-        const result = await new Promise((resolve, reject) => {
+      const result = await new Promise<S3.ManagedUpload.SendData>(
+        (resolve, reject) => {
           this.s3.upload(
             params,
             (err?: any, data?: S3.ManagedUpload.SendData) => {
@@ -37,14 +47,13 @@ export class FileUploadService {
               data && resolve(data);
             },
           );
-        });
-
-        console.log(result);
-      } catch (err) {
-        console.error(err);
-      }
-    } catch (err) {
+        },
+      );
+      console.log(result);
+      return right({ fileLocation: result.Location });
+    } catch (err: unknown) {
       console.error(err);
+      return left(err);
     }
   }
 }

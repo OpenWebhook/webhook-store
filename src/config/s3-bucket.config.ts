@@ -4,6 +4,6 @@ export default () => ({
     secretAccessKey: process.env.S3_BUCKET_SECRET_ACCESS_KEY,
     endpoint: process.env.S3_BUCKET_ENDPOINT,
   },
-  prefixPath: process.env.S3_BUCKET_PREFIX_PATH,
-  bucket: process.env.S3_BUCKET_NAME,
+  s3BucketPrefixPath: process.env.S3_BUCKET_PREFIX_PATH,
+  s3BucketName: process.env.S3_BUCKET_NAME,
 });
