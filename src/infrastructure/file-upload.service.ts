@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import * as S3 from 'aws-sdk/clients/s3';
 
 const s3 = new S3({
@@ -34,3 +35,8 @@ export const uploadRequestFile = async (file: Express.Multer.File) => {
     console.error(err);
   }
 };
+
+@Injectable()
+export class FileUploadService {
+  public uploadRequestFile = uploadRequestFile;
+}

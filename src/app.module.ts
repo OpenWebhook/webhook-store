@@ -18,6 +18,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ProxyResponseService } from './application/proxy-response/proxy-response.service';
 import { ProxyService } from './application/proxy-response/proxy.service';
 import { WebhookPathResolver } from './interface/webhook-path.resolver';
+import { FileUploadService } from './infrastructure/file-upload.service';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { WebhookPathResolver } from './interface/webhook-path.resolver';
   controllers: [AppController],
   providers: [
     PrismaService,
+    FileUploadService,
     AppService,
     ProxyResponseService,
     SendWebhookService,

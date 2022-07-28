@@ -20,7 +20,7 @@ import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
 import { AppService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
-import { uploadRequestFile } from '../infrastructure/file-upload.service';
+import { FileUploadService } from '../infrastructure/file-upload.service';
 
 @Controller()
 export class AppController {
@@ -28,6 +28,7 @@ export class AppController {
   constructor(
     private readonly appService: AppService,
     private readonly proxyService: ProxyService,
+    private readonly fileUploadService: FileUploadService,
     configService: ConfigService,
   ) {
     this.proxyTargets = configService.get('defaultHost') || null;
@@ -62,7 +63,7 @@ export class AppController {
     console.log(`Webhook received on ${path}`);
     const host = getHostnameOrLocalhost(req.hostname);
 
-    files && files[0] && uploadRequestFile(files[0]);
+    files && files[0] && this.fileUploadService.uploadRequestFile(files[0]);
 
     const webhook = await this.appService.addWebhook({
       body: Object.assign({}, body),
