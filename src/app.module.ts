@@ -19,6 +19,7 @@ import { ProxyResponseService } from './application/proxy-response/proxy-respons
 import { ProxyService } from './application/proxy-response/proxy.service';
 import { WebhookPathResolver } from './interface/webhook-path.resolver';
 import { FileUploadService } from './infrastructure/file-upload.service';
+import { WebhookBodyService } from './application/webhook/webhook-body.service';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { FileUploadService } from './infrastructure/file-upload.service';
     PrismaService,
     FileUploadService,
     WebhookService,
+    WebhookBodyService,
     ProxyResponseService,
     SendWebhookService,
     WebhookResolver,

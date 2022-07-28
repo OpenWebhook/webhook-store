@@ -13,7 +13,7 @@ import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
 import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 
-type CreateWebhookInput = Pick<
+export type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
   'body' | 'headers' | 'host' | 'path' | 'ip'
 >;

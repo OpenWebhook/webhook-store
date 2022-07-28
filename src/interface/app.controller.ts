@@ -18,9 +18,9 @@ import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
+import { WebhookBodyService } from '../application/webhook/webhook-body.service';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
-import { FileUploadService } from '../infrastructure/file-upload.service';
 
 @Controller()
 export class AppController {
@@ -28,7 +28,7 @@ export class AppController {
   constructor(
     private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
-    private readonly fileUploadService: FileUploadService,
+    private readonly webhookBodyService: WebhookBodyService,
     configService: ConfigService,
   ) {
     this.proxyTargets = configService.get('defaultHost') || null;
@@ -48,7 +48,7 @@ export class AppController {
   @UseInterceptors(AnyFilesInterceptor())
   async createWebhook(
     @Body() body: any,
-    @UploadedFiles() files: Array<Express.Multer.File>,
+    @UploadedFiles() files: Array<Express.Multer.File> | undefined,
     @Ip() ip: string,
     @Headers() headers: Record<string, string>,
     @Param() params: string[],
@@ -63,10 +63,13 @@ export class AppController {
     console.log(`Webhook received on ${path}`);
     const host = getHostnameOrLocalhost(req.hostname);
 
-    files && files[0] && this.fileUploadService.uploadRequestFile(files[0]);
+    const bodyWithFiles = await this.webhookBodyService.buildBodyWithFiles(
+      body,
+      files || [],
+    );
 
     const webhook = await this.webhookService.addWebhook({
-      body: Object.assign({}, body),
+      body: bodyWithFiles,
       headers,
       ip,
       path,
