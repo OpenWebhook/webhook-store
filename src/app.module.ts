@@ -2,7 +2,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import webhookConfig from './config/webhook.config';
-
+import s3BucketConfig from './config/s3-bucket.config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
@@ -50,7 +50,7 @@ import { FileUploadService } from './infrastructure/file-upload.service';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
-    ConfigModule.forRoot({ load: [webhookConfig] }),
+    ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig] }),
     EventEmitterModule.forRoot(),
     HttpModule,
   ],
