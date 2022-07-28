@@ -80,4 +80,11 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect(`There are 0 webhooks on ${hostname}!`);
   });
+
+  it('/* (POST) a multipart form data', () => {
+    return request(app.getHttpServer())
+      .post('/multipart-form-data')
+      .field('api_key', 'abcd')
+      .expect(201);
+  });
 });

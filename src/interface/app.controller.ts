@@ -62,8 +62,7 @@ export class AppController {
     const host = getHostnameOrLocalhost(req.hostname);
 
     const webhook = await this.appService.addWebhook({
-      // @TODO parse only if body is not well formated
-      body: JSON.parse(JSON.stringify(body)),
+      body: Object.assign({}, body),
       headers,
       ip,
       path,
