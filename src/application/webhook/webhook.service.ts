@@ -19,7 +19,7 @@ type CreateWebhookInput = Pick<
 >;
 
 @Injectable()
-export class AppService {
+export class WebhookService {
   constructor(
     private prisma: PrismaService,
     private eventEmitter: EventEmitter2,

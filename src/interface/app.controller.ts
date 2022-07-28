@@ -18,7 +18,7 @@ import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
-import { AppService } from '../application/webhook/webhook.service';
+import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 import { FileUploadService } from '../infrastructure/file-upload.service';
 
@@ -26,7 +26,7 @@ import { FileUploadService } from '../infrastructure/file-upload.service';
 export class AppController {
   private readonly proxyTargets: [string] | null;
   constructor(
-    private readonly appService: AppService,
+    private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
     private readonly fileUploadService: FileUploadService,
     configService: ConfigService,
@@ -36,12 +36,12 @@ export class AppController {
 
   @Get('/hello')
   getHello(@Req() req: any): Promise<string> {
-    return this.appService.getCount(getHostnameOrLocalhost(req.hostname));
+    return this.webhookService.getCount(getHostnameOrLocalhost(req.hostname));
   }
 
   @Get('/webhooks-per-host')
   getWebhooksGroupByHosts(): Promise<any> {
-    return this.appService.getWebhooksPerHosts();
+    return this.webhookService.getWebhooksPerHosts();
   }
 
   @Post('/*')
@@ -65,7 +65,7 @@ export class AppController {
 
     files && files[0] && this.fileUploadService.uploadRequestFile(files[0]);
 
-    const webhook = await this.appService.addWebhook({
+    const webhook = await this.webhookService.addWebhook({
       body: Object.assign({}, body),
       headers,
       ip,
@@ -87,6 +87,8 @@ export class AppController {
 
   @Delete()
   deleteWebhooks(@Req() req: any): Promise<{ count: number }> {
-    return this.appService.deleteWebhooks(getHostnameOrLocalhost(req.hostname));
+    return this.webhookService.deleteWebhooks(
+      getHostnameOrLocalhost(req.hostname),
+    );
   }
 }
