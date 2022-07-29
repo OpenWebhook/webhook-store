@@ -4,7 +4,7 @@ import * as S3 from 'aws-sdk/clients/s3';
 import { Either, left, right } from 'fp-ts/lib/Either';
 import s3BucketConfig from '../config/s3-bucket.config';
 
-type FileUploadResult = Either<unknown, { fileLocation: string }>;
+export type FileUploadResult = Either<unknown, { fileLocation: string }>;
 
 @Injectable()
 export class FileUploadService {
