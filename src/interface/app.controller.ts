@@ -18,7 +18,6 @@ import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
-import { WebhookBodyService } from '../application/webhook/webhook-body.service';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 
