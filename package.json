@@ -32,7 +32,7 @@
     "@nestjs/apollo": "^10.0.19",
     "@nestjs/axios": "^0.1.0",
     "@nestjs/common": "^9.0.5",
-    "@nestjs/config": "^2.1.0",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.5",
     "@nestjs/event-emitter": "^1.1.1",
     "@nestjs/graphql": "^10.0.16",
