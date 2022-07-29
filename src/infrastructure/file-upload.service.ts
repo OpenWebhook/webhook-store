@@ -29,15 +29,7 @@ export class FileUploadService {
     file: Express.Multer.File,
   ): Promise<FileUploadResult> {
     try {
-      const unixTime = Math.floor(+new Date() / 1000);
-      const params = {
-        Bucket: this.bucketName,
-        Key: `${this.prexifxPath}${unixTime}_${file.originalname}`,
-        Body: file.buffer,
-        ACL: 'public-read',
-        ContentType: file.mimetype,
-      };
-
+      const params = this.putObjectRequestParamFactory(file);
       const result = await new Promise<S3.ManagedUpload.SendData>(
         (resolve, reject) => {
           this.s3.upload(
@@ -49,11 +41,23 @@ export class FileUploadService {
           );
         },
       );
-      console.log(result);
       return right({ fileLocation: result.Location });
     } catch (err: unknown) {
-      console.error(err);
       return left(err);
     }
+  }
+
+  private putObjectRequestParamFactory(
+    file: Express.Multer.File,
+  ): S3.Types.PutObjectRequest {
+    const unixTime = Math.floor(+new Date() / 1000);
+    const params = {
+      Bucket: this.bucketName,
+      Key: `${this.prexifxPath}${unixTime}_${file.originalname}`,
+      Body: file.buffer,
+      ACL: 'public-read',
+      ContentType: file.mimetype,
+    };
+    return params;
   }
 }
