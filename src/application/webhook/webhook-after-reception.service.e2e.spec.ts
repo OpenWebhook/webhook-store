@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../app.module';
 import { Prisma, Webhook } from '@prisma/client';
-import { WebhookReceptionService } from './webhook-reception.service';
+import { WebhookAfterReceptionService } from './webhook-after-reception.service';
 import { PrismaService } from '../../infrastructure/prisma.service';
 import { pathToSearchablePath } from '../../helpers/parse-searchable-path/parse-searchable-path.helper';
 
@@ -17,7 +17,7 @@ const hostname = 'webhook-reception.service.e2e.spec';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let prismaService: PrismaService;
-  let webhookReceptionService: WebhookReceptionService;
+  let webhookReceptionService: WebhookAfterReceptionService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,7 +26,7 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     prismaService = app.get(PrismaService);
-    webhookReceptionService = app.get(WebhookReceptionService);
+    webhookReceptionService = app.get(WebhookAfterReceptionService);
     await app.init();
     await prismaService.webhook.deleteMany({ where: { host: hostname } });
   });

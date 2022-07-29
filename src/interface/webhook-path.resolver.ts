@@ -1,12 +1,12 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { AppService } from '../application/webhook/webhook.service';
+import { WebhookService } from '../application/webhook/webhook.service';
 import { Hostname } from './decorators/hostname.decorator';
 import { WebhookPathModel } from './webhook-path.model';
 import { WebhookModel } from './webhook.model';
 
 @Resolver(() => WebhookModel)
 export class WebhookPathResolver {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: WebhookService) {}
 
   @Query(() => [WebhookPathModel])
   async webhookPaths(

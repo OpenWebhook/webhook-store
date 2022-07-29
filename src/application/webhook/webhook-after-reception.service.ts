@@ -6,7 +6,7 @@ import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class WebhookReceptionService {
+export class WebhookAfterReceptionService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,

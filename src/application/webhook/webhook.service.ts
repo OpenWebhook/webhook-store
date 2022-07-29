@@ -12,17 +12,19 @@ import { WebhookModel } from '../../interface/webhook.model';
 import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
 import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
+import { WebhookBodyService } from './webhook-body.service';
 
-type CreateWebhookInput = Pick<
+export type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
   'body' | 'headers' | 'host' | 'path' | 'ip'
 >;
 
 @Injectable()
-export class AppService {
+export class WebhookService {
   constructor(
     private prisma: PrismaService,
     private eventEmitter: EventEmitter2,
+    private readonly webhookBodyService: WebhookBodyService,
   ) {}
 
   async getCount(host: string): Promise<string> {
@@ -54,6 +56,29 @@ export class AppService {
       return { path: obj.searchablePath };
     });
     return webhookPaths;
+  }
+
+  async handleIncomingWebhook(
+    body: any,
+    files: Array<Express.Multer.File>,
+    headers: Record<string, string>,
+    ip: string,
+    path: string,
+    host: string,
+  ): Promise<Webhook> {
+    const bodyWithFiles = await this.webhookBodyService.buildBodyWithFiles(
+      body,
+      files || [],
+    );
+
+    const webhook = await this.addWebhook({
+      body: bodyWithFiles,
+      headers,
+      ip,
+      path,
+      host,
+    });
+    return webhook;
   }
 
   async addWebhook(webhookInput: CreateWebhookInput): Promise<Webhook> {
