@@ -748,19 +748,19 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@nestjs/apollo@^10.0.16":
-  version "10.0.16"
-  resolved "https://registry.yarnpkg.com/@nestjs/apollo/-/apollo-10.0.16.tgz#deade3456e8619d4c1d03efbcc5975be44f705d3"
-  integrity sha512-aN9jR0Y3F9wWxQ3qiVLbJ9GIKnqrG9QbztQbjIv1ODByKEXJnhvqXlCDTDj32DFYkZudsUjQEbdOda3EQNR5DQ==
+"@nestjs/apollo@^10.0.19":
+  version "10.0.19"
+  resolved "https://registry.yarnpkg.com/@nestjs/apollo/-/apollo-10.0.19.tgz#782509ac307255dfe83d9fcd39b19ed99dc1ec67"
+  integrity sha512-uj10uZOQYBeUMYnKma0gpBSFDubZnXp4mqIRMJFNTF/0lEywFUEmdIc4IiRFSN3C4SY4EDIbUyDAMDRE3Ablew==
   dependencies:
     iterall "1.3.0"
     lodash.omit "4.5.0"
     tslib "2.4.0"
 
-"@nestjs/axios@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/axios/-/axios-0.0.8.tgz#4e321e36b6bc3ab0f02d80bafe04ae39edfdcacf"
-  integrity sha512-oJyfR9/h9tVk776il0829xyj3b2e81yTu6HjPraxynwNtMNGqZBHHmAQL24yMB3tVbBM0RvG3eUXH8+pRCGwlg==
+"@nestjs/axios@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/axios/-/axios-0.1.0.tgz#6cf93df11ef93b598b3c7411adb980eedd13b3e3"
+  integrity sha512-b2TT2X6BFbnNoeteiaxCIiHaFcSbVW+S5yygYqiIq5i6H77yIU3IVuLdpQkHq8/EqOWFwMopLN8jdkUT71Am9w==
   dependencies:
     axios "0.27.2"
 

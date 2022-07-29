@@ -29,8 +29,8 @@
     "test:ci": "dotenv -e .env.test -- jest --silent --coverage"
   },
   "dependencies": {
-    "@nestjs/apollo": "^10.0.16",
-    "@nestjs/axios": "^0.0.8",
+    "@nestjs/apollo": "^10.0.19",
+    "@nestjs/axios": "^0.1.0",
     "@nestjs/common": "^9.0.5",
     "@nestjs/config": "^2.1.0",
     "@nestjs/core": "^9.0.5",
