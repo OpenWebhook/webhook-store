@@ -12,7 +12,7 @@ import { getHostnameOrLocalhost } from './helpers/get-hostname/get-hostname.help
 import { PrismaService } from './infrastructure/prisma.service';
 import { WebhookResolver } from './interface/webhook.resolver';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { WebhookReceptionService } from './application/webhook/webhook-reception.service';
+import { WebhookAfterReceptionService } from './application/webhook/webhook-after-reception.service';
 import { SendWebhookService } from './infrastructure/send-webhook.service';
 import { HttpModule } from '@nestjs/axios';
 import { ProxyResponseService } from './application/proxy-response/proxy-response.service';
@@ -65,7 +65,7 @@ import { WebhookBodyService } from './application/webhook/webhook-body.service';
     SendWebhookService,
     WebhookResolver,
     WebhookPathResolver,
-    WebhookReceptionService,
+    WebhookAfterReceptionService,
     ProxyService,
   ],
 })
