@@ -28,7 +28,6 @@ export class AppController {
   constructor(
     private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
-    private readonly webhookBodyService: WebhookBodyService,
     configService: ConfigService,
   ) {
     this.proxyTargets = configService.get('defaultHost') || null;
@@ -62,19 +61,14 @@ export class AppController {
     }
     console.log(`Webhook received on ${path}`);
     const host = getHostnameOrLocalhost(req.hostname);
-
-    const bodyWithFiles = await this.webhookBodyService.buildBodyWithFiles(
+    const webhook = await this.webhookService.handleIncomingWebhook(
       body,
       files || [],
-    );
-
-    const webhook = await this.webhookService.addWebhook({
-      body: bodyWithFiles,
       headers,
       ip,
       path,
       host,
-    });
+    );
     if (this.proxyTargets) {
       this.proxyService.sendAndStoreWebhookToTargets(
         this.proxyTargets,
