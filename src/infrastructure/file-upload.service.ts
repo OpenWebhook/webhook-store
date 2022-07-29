@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config/dist/config.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 import * as S3 from 'aws-sdk/clients/s3';
 import { Either, left, right } from 'fp-ts/lib/Either';
+import s3BucketConfig from '../config/s3-bucket.config';
 
 type FileUploadResult = Either<unknown, { fileLocation: string }>;
 
@@ -11,18 +12,21 @@ export class FileUploadService {
   private readonly prexifxPath: string | undefined | null;
   private readonly bucketName: string;
 
-  constructor(configService: ConfigService) {
-    const { accessKeyId, secretAccessKey, endpoint } = configService.get(
-      's3BucketCredentials',
-    );
+  constructor(
+    @Inject(s3BucketConfig.KEY)
+    dbConfig: ConfigType<typeof s3BucketConfig>,
+  ) {
+    const { accessKeyId, secretAccessKey, endpoint } =
+      dbConfig.s3BucketCredentials;
+
     this.s3 = new S3({
       accessKeyId,
       secretAccessKey,
       endpoint,
     });
-    this.prexifxPath = configService.get('s3BucketPrefixPath');
+    this.prexifxPath = dbConfig.s3BucketPrefixPath;
     // @Samox TODO handle case for no S3 configured
-    this.bucketName = configService.get('s3BucketName') || 'no-bucket';
+    this.bucketName = dbConfig.s3BucketName || 'no-bucket';
   }
 
   public async uploadRequestFile(
