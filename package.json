@@ -38,7 +38,7 @@
     "@nestjs/graphql": "^10.0.21",
     "@nestjs/platform-express": "^9.0.5",
     "@nestjs/platform-ws": "^9.0.5",
-    "@nestjs/serve-static": "^2.2.2",
+    "@nestjs/serve-static": "^3.0.0",
     "@nestjs/websockets": "^9.0.5",
     "@prisma/client": "^4.0.0",
     "apollo-server-express": "3.9.0",
