@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import * as S3 from 'aws-sdk/clients/s3';
-import { Either, left, right } from 'fp-ts/lib/Either';
+import { either } from 'fp-ts';
 import s3BucketConfig from '../config/s3-bucket.config';
 
-export type FileUploadResult = Either<unknown, { fileLocation: string }>;
+export type FileUploadResult = either.Either<unknown, { fileLocation: string }>;
 
 @Injectable()
 export class FileUploadService {
@@ -45,9 +45,9 @@ export class FileUploadService {
           );
         },
       );
-      return right({ fileLocation: result.Location });
+      return either.right({ fileLocation: result.Location });
     } catch (err: unknown) {
-      return left(err);
+      return either.left(err);
     }
   }
 

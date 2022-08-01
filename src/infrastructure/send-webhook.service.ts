@@ -1,12 +1,12 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { TaskEither, tryCatch } from 'fp-ts/TaskEither';
+import { taskEither } from 'fp-ts';
 
 import { firstValueFrom } from 'rxjs';
 import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.helper';
 
-export type ProxyResponse = TaskEither<Error, string>;
+export type ProxyResponse = taskEither.TaskEither<Error, string>;
 
 @Injectable()
 export class SendWebhookService {
@@ -17,7 +17,7 @@ export class SendWebhookService {
     headers: Readonly<Record<string, string>>,
     path: string,
   ): ProxyResponse {
-    return tryCatch<Error, string>(
+    return taskEither.tryCatch<Error, string>(
       async () => {
         const safeHeaders = copySafeHeaders(headers);
         console.log(`Sending webhook to proxy ${targetUrl}${path}`);

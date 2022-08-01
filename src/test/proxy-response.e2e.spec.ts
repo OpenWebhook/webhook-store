@@ -1,3 +1,9 @@
+jest.mock('../helpers/get-hostname/get-hostname.helper');
+import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+
+jest.mock('../config/webhook.config');
+import config from '../config/webhook.config';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -5,18 +11,12 @@ import { AppModule } from '../app.module';
 import { PrismaService } from '../infrastructure/prisma.service';
 import { SendWebhookService } from '../infrastructure/send-webhook.service';
 import { ProxyResponseService } from '../application/proxy-response/proxy-response.service';
-import { left, right } from 'fp-ts/lib/Either';
-
-jest.mock('../helpers/get-hostname/get-hostname.helper');
-import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { either } from 'fp-ts';
+import { none, some } from 'fp-ts/lib/Option';
+import { ProxyService } from '../application/proxy-response/proxy.service';
 
 const hostname = 'proxy-response.e2e.spec';
 (getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
-
-jest.mock('../config/webhook.config');
-import config from '../config/webhook.config';
-import { ProxyService } from '../application/proxy-response/proxy.service';
-import { none, some } from 'fp-ts/lib/Option';
 
 (config as unknown as jest.Mock).mockReturnValue({
   maxStoredWebhookPerHost: none,
@@ -61,7 +61,7 @@ describe('Proxy service (e2e)', () => {
   });
 
   it('Stores a response with hasError false if there are no errors', async () => {
-    const proxyResponse = right('OK');
+    const proxyResponse = either.right('OK');
     const webhook = await request(app.getHttpServer())
       .post('/any-path/path-to/webhook')
       .expect(201);
@@ -78,7 +78,7 @@ describe('Proxy service (e2e)', () => {
   });
 
   it('Stores a response with hasError false if there are no errors', async () => {
-    const proxyResponse = left(new Error('err'));
+    const proxyResponse = either.left(new Error('err'));
     const webhook = await request(app.getHttpServer())
       .post('/any-path/path-to/webhook')
       .expect(201);

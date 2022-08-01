@@ -1,6 +1,6 @@
 import { ConfigModule, registerAs } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
-import { right, left } from 'fp-ts/lib/Either';
+import { either } from 'fp-ts';
 import { FileUploadService } from './file-upload.service';
 
 const mockedPutObject = jest.fn();
@@ -47,7 +47,7 @@ describe('fileUploadService', () => {
     });
     const file = { originalname: 'coucou.test' } as Express.Multer.File;
     const result = await fileUploadService.uploadRequestFile(file);
-    expect(result).toEqual(right({ fileLocation: 'fileLocation' }));
+    expect(result).toEqual(either.right({ fileLocation: 'fileLocation' }));
   });
 
   it('should return result in left Either if there is an error', async () => {
@@ -56,6 +56,6 @@ describe('fileUploadService', () => {
     });
     const file = { originalname: 'coucou.test' } as Express.Multer.File;
     const result = await fileUploadService.uploadRequestFile(file);
-    expect(result).toEqual(left(new Error('Cannot upload file')));
+    expect(result).toEqual(either.left(new Error('Cannot upload file')));
   });
 });

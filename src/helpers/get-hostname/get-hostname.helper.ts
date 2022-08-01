@@ -1,6 +1,6 @@
-import { Option } from 'fp-ts/Option';
+import { option } from 'fp-ts';
 
-export const getHostnameOrLocalhost = (host: Option<string>): string => {
+export const getHostnameOrLocalhost = (host: option.Option<string>): string => {
   if (host._tag === 'None') {
     return 'localhost';
   } else {

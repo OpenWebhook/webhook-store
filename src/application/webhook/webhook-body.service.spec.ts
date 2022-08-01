@@ -1,5 +1,5 @@
 import { Test } from '@nestjs/testing';
-import { left, right } from 'fp-ts/lib/Either';
+import { either } from 'fp-ts';
 import {
   FileUploadResult,
   FileUploadService,
@@ -40,7 +40,7 @@ describe('WebhookBodyService', () => {
 
   it('should handle empty body and 1 files and upload succeeds', async () => {
     uploadRequestFile.mockResolvedValueOnce(
-      right({ fileLocation: 'fileLocation' }),
+      either.right({ fileLocation: 'fileLocation' }),
     );
 
     const body = await webhookBodyService.buildBodyWithFiles({}, [
@@ -50,7 +50,9 @@ describe('WebhookBodyService', () => {
   });
 
   it('should handle empty body and 1 files and upload fails', async () => {
-    uploadRequestFile.mockResolvedValueOnce(left(new Error('Upload failed')));
+    uploadRequestFile.mockResolvedValueOnce(
+      either.left(new Error('Upload failed')),
+    );
 
     const body = await webhookBodyService.buildBodyWithFiles({}, [
       { originalname: 'coucou.test' } as Express.Multer.File,

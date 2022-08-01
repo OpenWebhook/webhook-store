@@ -23,7 +23,7 @@ import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 import { Request } from 'express';
 import webhookConfig from '../config/webhook.config';
-import { fromNullable } from 'fp-ts/Option';
+import { option } from 'fp-ts';
 
 @Controller()
 export class AppController {
@@ -61,7 +61,7 @@ export class AppController {
       return next();
     }
     console.log(`Webhook received on ${path}`);
-    const host = getHostnameOrLocalhost(fromNullable(req.hostname));
+    const host = getHostnameOrLocalhost(option.fromNullable(req.hostname));
     const webhook = await this.webhookService.handleIncomingWebhook(
       body,
       files || [],
@@ -86,7 +86,7 @@ export class AppController {
   @Delete()
   deleteWebhooks(@Req() req: Request): Promise<{ count: number }> {
     return this.webhookService.deleteWebhooks(
-      getHostnameOrLocalhost(fromNullable(req.hostname)),
+      getHostnameOrLocalhost(option.fromNullable(req.hostname)),
     );
   }
 }
