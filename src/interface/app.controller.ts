@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Headers,
+  Inject,
   Ip,
   Next,
   Param,
@@ -13,7 +14,7 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
@@ -21,16 +22,18 @@ import { ProxyService } from '../application/proxy-response/proxy.service';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 import { Request } from 'express';
+import webhookConfig from '../config/webhook.config';
 
 @Controller()
 export class AppController {
-  private readonly proxyTargets: [string] | null;
+  private readonly proxyTargets: string[] | null;
   constructor(
     private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
-    configService: ConfigService,
+    @Inject(webhookConfig.KEY)
+    webhookStoreConfig: ConfigType<typeof webhookConfig>,
   ) {
-    this.proxyTargets = configService.get('defaultHost') || null;
+    this.proxyTargets = webhookStoreConfig.defaultHost;
   }
 
   @Get('/hello')
