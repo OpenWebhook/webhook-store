@@ -5,7 +5,7 @@ import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.
 import { WsContext } from '../context.type';
 import { Request } from 'express';
 
-export const HostnameHttp = createParamDecorator(
+export const HostnameGqlHttp = createParamDecorator(
   (_data: unknown, executionContext: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(executionContext);
     const request = ctx.getContext<Request>();

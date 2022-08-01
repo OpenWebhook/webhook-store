@@ -1,7 +1,7 @@
 import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { pubSub } from '../infrastructure/pubsub';
-import { HostnameHttp, HostnameWs } from './decorators/hostname.decorator';
+import { HostnameGqlHttp, HostnameWs } from './decorators/hostname.decorator';
 import { WebhookModel } from './webhook.model';
 import { WebhooksQueryArgs } from './webhooks.query-args';
 
@@ -12,7 +12,7 @@ export class WebhookResolver {
   @Query(() => [WebhookModel])
   webhooks(
     @Args() webhooksQueryArgs: WebhooksQueryArgs,
-    @HostnameHttp() hostname: string,
+    @HostnameGqlHttp() hostname: string,
   ): Promise<WebhookModel[]> {
     return this.webhookService.getWebhooks(hostname, webhooksQueryArgs);
   }
