@@ -2,17 +2,21 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { option } from 'fp-ts';
 import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.helper';
+import { WsContext } from '../context.type';
+import { Request } from 'express';
 
-export const Hostname = createParamDecorator(
+export const HostnameHttp = createParamDecorator(
   (_data: unknown, executionContext: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(executionContext);
-    const context = ctx.getContext<{
-      extractedHost: string | null | undefined;
-      req: { hostname: string | null | undefined };
-    }>();
-    if (context && context.extractedHost) {
-      return getHostnameOrLocalhost(option.fromNullable(context.extractedHost));
-    }
-    return getHostnameOrLocalhost(option.fromNullable(context.req.hostname));
+    const request = ctx.getContext<Request>();
+    return getHostnameOrLocalhost(option.fromNullable(request.hostname));
+  },
+);
+
+export const HostnameWs = createParamDecorator(
+  (_data: unknown, executionContext: ExecutionContext) => {
+    const ctx = GqlExecutionContext.create(executionContext);
+    const context = ctx.getContext<WsContext>();
+    return context.extractedHost;
   },
 );

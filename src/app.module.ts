@@ -21,6 +21,7 @@ import { WebhookPathResolver } from './interface/webhook-path.resolver';
 import { FileUploadService } from './infrastructure/file-upload.service';
 import { WebhookBodyService } from './application/webhook/webhook-body.service';
 import { option } from 'fp-ts';
+import { WsContext } from './interface/context.type';
 
 @Module({
   imports: [
@@ -43,7 +44,7 @@ import { option } from 'fp-ts';
         },
         'subscriptions-transport-ws': true,
       },
-      context: ({ extra }) => {
+      context: ({ extra }): WsContext | void => {
         if (extra) {
           return { extractedHost: extra.extractedHost };
         }
