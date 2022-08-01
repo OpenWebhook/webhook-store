@@ -69,7 +69,7 @@ export class WebhookService {
     const bodyWithFiles = await this.webhookBodyService.buildBodyWithFiles(
       body,
       files || [],
-    );
+    )();
 
     const webhook = await this.addWebhook({
       body: bodyWithFiles,
