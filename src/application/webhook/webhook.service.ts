@@ -14,6 +14,7 @@ import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
 import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { WebhookBodyService } from './webhook-body.service';
 import { task } from 'fp-ts';
+import { pipe } from 'fp-ts/function';
 
 export type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
@@ -67,18 +68,11 @@ export class WebhookService {
     path: string,
     host: string,
   ): Promise<Webhook> {
-    const bodyWithFiles = await this.webhookBodyService.buildBodyWithFiles(
-      body,
-      files || [],
+    const webhook = await pipe(
+      this.webhookBodyService.buildBodyWithFiles(body, files || []),
+      task.chain((body) => this.addWebhook({ body, headers, ip, path, host })),
     )();
 
-    const webhook = await this.addWebhook({
-      body: bodyWithFiles,
-      headers,
-      ip,
-      path,
-      host,
-    })();
     return webhook;
   }
 
