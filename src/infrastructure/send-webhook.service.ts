@@ -1,10 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { left, right } from 'fp-ts/lib/Either';
+import { Either, left, right } from 'fp-ts/lib/Either';
 import { firstValueFrom } from 'rxjs';
-import { ProxyResponse } from '../application/proxy-response/proxy-response.service';
 import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.helper';
+
+export type ProxyResponse = Either<Error, 'OK'>;
 
 @Injectable()
 export class SendWebhookService {
@@ -31,10 +32,10 @@ export class SendWebhookService {
         console.error(
           new Error('Could not send the webhook: ' + error.message),
         );
-        return left('err');
+        return left(Error(String(error.message)));
       } else {
         console.error(new Error('Could not send the webhook: ' + error));
-        return left('err');
+        return left(Error(String(error)));
       }
     }
   }

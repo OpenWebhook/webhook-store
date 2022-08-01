@@ -41,13 +41,15 @@ describe('proxy.service.ts', () => {
       mockPostToTrhowError(new AxiosError('Page not found'));
       const res = await proxyService.sendWebhook('unkownUrl', {}, {}, '');
       expect(httpService.post).toHaveBeenCalled();
-      expect(res).toEqual(left('err'));
+      expect(res).toEqual(left(new Error('Page not found')));
     });
 
     it('should not throw if post fails with random error', async () => {
-      mockPostToTrhowError(new Error("Network error can't connect to server"));
+      mockPostToTrhowError("Network error can't connect to server");
       const res = await proxyService.sendWebhook('invalidurl', {}, {}, '');
-      expect(res).toEqual(left('err'));
+      expect(res).toEqual(
+        left(new Error("Network error can't connect to server")),
+      );
     });
   });
 });

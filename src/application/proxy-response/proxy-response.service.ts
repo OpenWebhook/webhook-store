@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Webhook, Response } from '@prisma/client';
-import { Either } from 'fp-ts/lib/Either';
 import { rsUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { PrismaService } from '../../infrastructure/prisma.service';
-
-export type ProxyResponse = Either<'err', 'OK'>;
+import { ProxyResponse } from '../../infrastructure/send-webhook.service';
 
 type CreateResponseInput = Omit<Prisma.ResponseUncheckedCreateInput, 'id'>;
 
