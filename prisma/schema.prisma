@@ -23,7 +23,7 @@ model Webhook {
 
 model Response {
   id        String   @id
-  webhook   Webhook  @relation(fields: [webhookId], references: [id])
+  webhook   Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
   webhookId String
   hasError  Boolean
   createdAt DateTime @default(now())
