@@ -10,7 +10,7 @@ export class WebhookPathResolver {
 
   @Query(() => [WebhookPathModel])
   async webhookPaths(
-    @Hostname() hostname: string,
+    @Hostname.fromGqlHttp() hostname: string,
   ): Promise<WebhookPathModel[]> {
     const webhookPaths = await this.appService.getWebhooksPath(hostname);
     return webhookPaths;

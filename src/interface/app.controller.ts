@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Headers,
+  Inject,
   Ip,
   Next,
   Param,
@@ -13,28 +14,28 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
 import { WebhookService } from '../application/webhook/webhook.service';
-import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { Request } from 'express';
+import webhookConfig from '../config/webhook.config';
+import { Hostname } from './decorators/hostname.decorator';
 
 @Controller()
 export class AppController {
-  private readonly proxyTargets: [string] | null;
   constructor(
     private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
-    configService: ConfigService,
-  ) {
-    this.proxyTargets = configService.get('defaultHost') || null;
-  }
+    @Inject(webhookConfig.KEY)
+    private webhookStoreConfig: ConfigType<typeof webhookConfig>,
+  ) {}
 
   @Get('/hello')
-  getHello(@Req() req: any): Promise<string> {
-    return this.webhookService.getCount(getHostnameOrLocalhost(req.hostname));
+  getHello(@Hostname.fromRequest() hostname: string): Promise<string> {
+    return this.webhookService.getCount(hostname);
   }
 
   @Get('/webhooks-per-host')
@@ -52,14 +53,14 @@ export class AppController {
     @Param() params: string[],
     @Next() next: NextFunction,
     @Res() res: any,
-    @Req() req: any,
+    @Req() req: Request,
+    @Hostname.fromRequest() host: string,
   ): Promise<Webhook | void> {
     const path = params['0'] ? `/${params['0']}` : '/';
     if (path === '/graphql') {
       return next();
     }
     console.log(`Webhook received on ${path}`);
-    const host = getHostnameOrLocalhost(req.hostname);
     const webhook = await this.webhookService.handleIncomingWebhook(
       body,
       files || [],
@@ -68,9 +69,9 @@ export class AppController {
       path,
       host,
     );
-    if (this.proxyTargets) {
+    if (this.webhookStoreConfig.defaultHost._tag === 'Some') {
       this.proxyService.sendAndStoreWebhookToTargets(
-        this.proxyTargets,
+        this.webhookStoreConfig.defaultHost.value,
         body,
         headers,
         path,
@@ -82,9 +83,9 @@ export class AppController {
   }
 
   @Delete()
-  deleteWebhooks(@Req() req: any): Promise<{ count: number }> {
-    return this.webhookService.deleteWebhooks(
-      getHostnameOrLocalhost(req.hostname),
-    );
+  deleteWebhooks(
+    @Hostname.fromRequest() host: string,
+  ): Promise<{ count: number }> {
+    return this.webhookService.deleteWebhooks(host);
   }
 }

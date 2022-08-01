@@ -24,7 +24,7 @@ export class ProxyService {
         body,
         headers,
         path,
-      );
+      )();
       this.proxyResponseService.storeResponse(
         webhookId,
         proxyResponse,

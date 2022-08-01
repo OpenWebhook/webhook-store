@@ -1,24 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { WebhookModel } from '../../interface/webhook.model';
 import { PrismaService } from '../../infrastructure/prisma.service';
 import { WebhookCreatedEvent } from './events/webhook-created.event';
-import { ConfigService } from '@nestjs/config';
+import webhookConfig from '../../config/webhook.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class WebhookAfterReceptionService {
   constructor(
     private prisma: PrismaService,
-    private configService: ConfigService,
+    @Inject(webhookConfig.KEY)
+    private webhookStoreConfig: ConfigType<typeof webhookConfig>,
   ) {}
 
   @OnEvent(WebhookCreatedEvent.name)
   async afterWebhookCreated(payload: WebhookCreatedEvent) {
-    const storageLimitOfWebhook = this.configService.get(
-      'maxStoredWebhookPerHost',
-    );
-    if (storageLimitOfWebhook) {
-      await this.deleteOldWebhooks(payload.host, storageLimitOfWebhook);
+    const storageLimitOfWebhook =
+      this.webhookStoreConfig.maxStoredWebhookPerHost;
+    if (storageLimitOfWebhook._tag === 'Some') {
+      await this.deleteOldWebhooks(payload.host, storageLimitOfWebhook.value);
     }
   }
 

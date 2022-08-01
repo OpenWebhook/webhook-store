@@ -12,13 +12,13 @@ export class WebhookResolver {
   @Query(() => [WebhookModel])
   webhooks(
     @Args() webhooksQueryArgs: WebhooksQueryArgs,
-    @Hostname() hostname: string,
+    @Hostname.fromGqlHttp() hostname: string,
   ): Promise<WebhookModel[]> {
     return this.webhookService.getWebhooks(hostname, webhooksQueryArgs);
   }
 
   @Subscription(() => WebhookModel)
-  webhookAdded(@Hostname() hostname: string) {
+  webhookAdded(@Hostname.fromGqlWs() hostname: string) {
     return pubSub.asyncIterator(`webhookAdded_${hostname}`);
   }
 }
