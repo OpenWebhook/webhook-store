@@ -20,6 +20,7 @@ import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
+import { Request } from 'express';
 
 @Controller()
 export class AppController {
@@ -52,7 +53,7 @@ export class AppController {
     @Param() params: string[],
     @Next() next: NextFunction,
     @Res() res: any,
-    @Req() req: any,
+    @Req() req: Request,
   ): Promise<Webhook | void> {
     const path = params['0'] ? `/${params['0']}` : '/';
     if (path === '/graphql') {
