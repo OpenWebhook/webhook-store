@@ -13,6 +13,7 @@ import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
 import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { WebhookBodyService } from './webhook-body.service';
+import { task } from 'fp-ts';
 
 export type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
@@ -77,26 +78,28 @@ export class WebhookService {
       ip,
       path,
       host,
-    });
+    })();
     return webhook;
   }
 
-  async addWebhook(webhookInput: CreateWebhookInput): Promise<Webhook> {
-    const data = Object.assign({}, webhookInput, {
-      searchablePath: pathToSearchablePath(webhookInput.path),
-      id: whUuid(),
-    });
-    const webhook = await this.prisma.webhook.create({ data });
-    pubSub.publish(`webhookAdded_${webhook.host}`, {
-      webhookAdded: mapWebhookSchemaToModel(webhook),
-    });
+  private addWebhook(webhookInput: CreateWebhookInput): task.Task<Webhook> {
+    return async () => {
+      const data = Object.assign({}, webhookInput, {
+        searchablePath: pathToSearchablePath(webhookInput.path),
+        id: whUuid(),
+      });
+      const webhook = await this.prisma.webhook.create({ data });
+      pubSub.publish(`webhookAdded_${webhook.host}`, {
+        webhookAdded: mapWebhookSchemaToModel(webhook),
+      });
 
-    this.eventEmitter.emit(
-      WebhookCreatedEvent.name,
-      new WebhookCreatedEvent(webhook.id, webhook.host),
-    );
+      this.eventEmitter.emit(
+        WebhookCreatedEvent.name,
+        new WebhookCreatedEvent(webhook.id, webhook.host),
+      );
 
-    return webhook;
+      return webhook;
+    };
   }
 
   async getWebhooks(
