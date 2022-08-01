@@ -18,8 +18,8 @@ export class WebhookAfterReceptionService {
   async afterWebhookCreated(payload: WebhookCreatedEvent) {
     const storageLimitOfWebhook =
       this.webhookStoreConfig.maxStoredWebhookPerHost;
-    if (storageLimitOfWebhook) {
-      await this.deleteOldWebhooks(payload.host, storageLimitOfWebhook);
+    if (storageLimitOfWebhook._tag === 'Some') {
+      await this.deleteOldWebhooks(payload.host, storageLimitOfWebhook.value);
     }
   }
 

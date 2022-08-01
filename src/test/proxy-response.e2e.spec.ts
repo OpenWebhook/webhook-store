@@ -19,10 +19,11 @@ const hostname = 'proxy-response.e2e.spec';
 jest.mock('../config/webhook.config');
 import config from '../config/webhook.config';
 import { ProxyService } from '../application/proxy-response/proxy.service';
+import { none, some } from 'fp-ts/lib/Option';
 
 (config as unknown as jest.Mock).mockReturnValue({
-  maxStoredWebhookPerHost: null,
-  defaultHost: ['target1'],
+  maxStoredWebhookPerHost: none,
+  defaultHost: some(['target1']),
 });
 
 describe('Proxy service (e2e)', () => {

@@ -26,15 +26,12 @@ import webhookConfig from '../config/webhook.config';
 
 @Controller()
 export class AppController {
-  private readonly proxyTargets: string[] | null;
   constructor(
     private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
     @Inject(webhookConfig.KEY)
-    webhookStoreConfig: ConfigType<typeof webhookConfig>,
-  ) {
-    this.proxyTargets = webhookStoreConfig.defaultHost;
-  }
+    private webhookStoreConfig: ConfigType<typeof webhookConfig>,
+  ) {}
 
   @Get('/hello')
   getHello(@Req() req: any): Promise<string> {
@@ -72,9 +69,9 @@ export class AppController {
       path,
       host,
     );
-    if (this.proxyTargets) {
+    if (this.webhookStoreConfig.defaultHost._tag === 'Some') {
       this.proxyService.sendAndStoreWebhookToTargets(
-        this.proxyTargets,
+        this.webhookStoreConfig.defaultHost.value,
         body,
         headers,
         path,
