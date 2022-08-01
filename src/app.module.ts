@@ -20,6 +20,7 @@ import { ProxyService } from './application/proxy-response/proxy.service';
 import { WebhookPathResolver } from './interface/webhook-path.resolver';
 import { FileUploadService } from './infrastructure/file-upload.service';
 import { WebhookBodyService } from './application/webhook/webhook-body.service';
+import { fromNullable } from 'fp-ts/Option';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { WebhookBodyService } from './application/webhook/webhook-body.service';
           onConnect: (context: any) => {
             const { extra } = context;
             extra.extractedHost = getHostnameOrLocalhost(
-              extra?.request?.headers?.host,
+              fromNullable(extra?.request?.headers?.host),
             );
             return extra;
           },

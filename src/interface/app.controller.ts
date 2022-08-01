@@ -23,6 +23,7 @@ import { WebhookService } from '../application/webhook/webhook.service';
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 import { Request } from 'express';
 import webhookConfig from '../config/webhook.config';
+import { fromNullable } from 'fp-ts/Option';
 
 @Controller()
 export class AppController {
@@ -60,7 +61,7 @@ export class AppController {
       return next();
     }
     console.log(`Webhook received on ${path}`);
-    const host = getHostnameOrLocalhost(req.hostname);
+    const host = getHostnameOrLocalhost(fromNullable(req.hostname));
     const webhook = await this.webhookService.handleIncomingWebhook(
       body,
       files || [],
