@@ -3,10 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../app.module';
 import { PrismaService } from '../infrastructure/prisma.service';
-import {
-  ProxyResponse,
-  SendWebhookService,
-} from '../infrastructure/send-webhook.service';
+import { SendWebhookService } from '../infrastructure/send-webhook.service';
 import { ProxyResponseService } from '../application/proxy-response/proxy-response.service';
 import { left, right } from 'fp-ts/lib/Either';
 
@@ -64,7 +61,7 @@ describe('Proxy service (e2e)', () => {
   });
 
   it('Stores a response with hasError false if there are no errors', async () => {
-    const proxyResponse: ProxyResponse = right('OK');
+    const proxyResponse = right('OK');
     const webhook = await request(app.getHttpServer())
       .post('/any-path/path-to/webhook')
       .expect(201);
@@ -81,7 +78,7 @@ describe('Proxy service (e2e)', () => {
   });
 
   it('Stores a response with hasError false if there are no errors', async () => {
-    const proxyResponse: ProxyResponse = left(new Error('err'));
+    const proxyResponse = left(new Error('err'));
     const webhook = await request(app.getHttpServer())
       .post('/any-path/path-to/webhook')
       .expect(201);

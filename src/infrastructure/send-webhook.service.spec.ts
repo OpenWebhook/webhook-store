@@ -24,7 +24,7 @@ describe('proxy.service.ts', () => {
       };
       jest.spyOn(httpService, 'post').mockImplementationOnce(() => of(result));
       expect(proxyService).toBeDefined();
-      const res = await proxyService.sendWebhook('', {}, {}, '');
+      const res = await proxyService.sendWebhook('', {}, {}, '')();
       expect(httpService.post).toHaveBeenCalled();
       expect(res).toEqual(right('OK'));
     });
@@ -39,14 +39,14 @@ describe('proxy.service.ts', () => {
 
     it('should not throw if post fails with axios error', async () => {
       mockPostToTrhowError(new AxiosError('Page not found'));
-      const res = await proxyService.sendWebhook('unkownUrl', {}, {}, '');
+      const res = await proxyService.sendWebhook('unkownUrl', {}, {}, '')();
       expect(httpService.post).toHaveBeenCalled();
       expect(res).toEqual(left(new Error('Page not found')));
     });
 
     it('should not throw if post fails with random error', async () => {
       mockPostToTrhowError("Network error can't connect to server");
-      const res = await proxyService.sendWebhook('invalidurl', {}, {}, '');
+      const res = await proxyService.sendWebhook('invalidurl', {}, {}, '')();
       expect(res).toEqual(
         left(new Error("Network error can't connect to server")),
       );
