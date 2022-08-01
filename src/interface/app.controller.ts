@@ -34,7 +34,7 @@ export class AppController {
   ) {}
 
   @Get('/hello')
-  getHello(@Hostname() hostname: string): Promise<string> {
+  getHello(@Hostname.fromRequest() hostname: string): Promise<string> {
     return this.webhookService.getCount(hostname);
   }
 
@@ -54,7 +54,7 @@ export class AppController {
     @Next() next: NextFunction,
     @Res() res: any,
     @Req() req: Request,
-    @Hostname() host: string,
+    @Hostname.fromRequest() host: string,
   ): Promise<Webhook | void> {
     const path = params['0'] ? `/${params['0']}` : '/';
     if (path === '/graphql') {
@@ -83,7 +83,9 @@ export class AppController {
   }
 
   @Delete()
-  deleteWebhooks(@Hostname() host: string): Promise<{ count: number }> {
+  deleteWebhooks(
+    @Hostname.fromRequest() host: string,
+  ): Promise<{ count: number }> {
     return this.webhookService.deleteWebhooks(host);
   }
 }
