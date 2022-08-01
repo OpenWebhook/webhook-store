@@ -20,10 +20,9 @@ import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
 import { WebhookService } from '../application/webhook/webhook.service';
-import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 import { Request } from 'express';
 import webhookConfig from '../config/webhook.config';
-import { option } from 'fp-ts';
+import { Hostname } from './decorators/hostname.decorator';
 
 @Controller()
 export class AppController {
@@ -35,8 +34,8 @@ export class AppController {
   ) {}
 
   @Get('/hello')
-  getHello(@Req() req: any): Promise<string> {
-    return this.webhookService.getCount(getHostnameOrLocalhost(req.hostname));
+  getHello(@Hostname() hostname: string): Promise<string> {
+    return this.webhookService.getCount(hostname);
   }
 
   @Get('/webhooks-per-host')
@@ -55,13 +54,13 @@ export class AppController {
     @Next() next: NextFunction,
     @Res() res: any,
     @Req() req: Request,
+    @Hostname() host: string,
   ): Promise<Webhook | void> {
     const path = params['0'] ? `/${params['0']}` : '/';
     if (path === '/graphql') {
       return next();
     }
     console.log(`Webhook received on ${path}`);
-    const host = getHostnameOrLocalhost(option.fromNullable(req.hostname));
     const webhook = await this.webhookService.handleIncomingWebhook(
       body,
       files || [],
@@ -84,9 +83,7 @@ export class AppController {
   }
 
   @Delete()
-  deleteWebhooks(@Req() req: Request): Promise<{ count: number }> {
-    return this.webhookService.deleteWebhooks(
-      getHostnameOrLocalhost(option.fromNullable(req.hostname)),
-    );
+  deleteWebhooks(@Hostname() host: string): Promise<{ count: number }> {
+    return this.webhookService.deleteWebhooks(host);
   }
 }
