@@ -60,20 +60,18 @@ export class WebhookService {
     return webhookPaths;
   }
 
-  async handleIncomingWebhook(
+  handleIncomingWebhook(
     body: any,
     files: Array<Express.Multer.File>,
     headers: Record<string, string>,
     ip: string,
     path: string,
     host: string,
-  ): Promise<Webhook> {
-    const webhook = await pipe(
+  ): task.Task<Webhook> {
+    return pipe(
       this.webhookBodyService.buildBodyWithFiles(body, files || []),
       task.chain((body) => this.addWebhook({ body, headers, ip, path, host })),
-    )();
-
-    return webhook;
+    );
   }
 
   private addWebhook(webhookInput: CreateWebhookInput): task.Task<Webhook> {

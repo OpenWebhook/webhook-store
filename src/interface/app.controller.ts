@@ -68,7 +68,7 @@ export class AppController {
       ip,
       path,
       host,
-    );
+    )();
     if (this.webhookStoreConfig.defaultHost._tag === 'Some') {
       this.proxyService.sendAndStoreWebhookToTargets(
         this.webhookStoreConfig.defaultHost.value,
