@@ -13,7 +13,7 @@ import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
 import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { WebhookBodyService } from './webhook-body.service';
-import { task } from 'fp-ts';
+import { array, task } from 'fp-ts';
 import { pipe } from 'fp-ts/function';
 
 export type CreateWebhookInput = Pick<
@@ -111,13 +111,13 @@ export class WebhookService {
         };
       };
 
-    const temp = pipe(
+    const webhooks = await pipe(
       whereConditionFactory(host, path),
       findManyWebhook(offset, first),
-    );
+      task.map(array.map(mapWebhookSchemaToModel)),
+    )();
 
-    const webhooks = await temp();
-    return webhooks.map(mapWebhookSchemaToModel);
+    return webhooks;
   }
 
   async deleteWebhooks(host: string) {
