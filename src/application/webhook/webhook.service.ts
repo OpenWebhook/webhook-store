@@ -94,26 +94,26 @@ export class WebhookService {
     };
   }
 
+  private findManyWebhook =
+    (skip: number | undefined, take: number | undefined) =>
+    (where: Prisma.WebhookWhereInput): task.Task<Webhook[]> => {
+      return () => {
+        return this.prisma.webhook.findMany({
+          skip,
+          take,
+          orderBy: { createdAt: 'desc' },
+          where,
+        });
+      };
+    };
+
   async getWebhooks(
     host: string,
     { first, offset, path }: WebhooksQueryArgs,
   ): Promise<WebhookModel[]> {
-    const findManyWebhook =
-      (skip: number | undefined, take: number | undefined) =>
-      (where: Prisma.WebhookWhereInput): task.Task<Webhook[]> => {
-        return () => {
-          return this.prisma.webhook.findMany({
-            skip,
-            take,
-            orderBy: { createdAt: 'desc' },
-            where,
-          });
-        };
-      };
-
     const webhooks = await pipe(
       whereConditionFactory(host, path),
-      findManyWebhook(offset, first),
+      this.findManyWebhook(offset, first),
       task.map(array.map(mapWebhookSchemaToModel)),
     )();
 
