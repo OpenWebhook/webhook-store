@@ -13,8 +13,6 @@ import { WebhookCreatedEvent } from './events/webhook-created.event';
 import { WebhooksQueryArgs } from '../../interface/webhooks.query-args';
 import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { WebhookBodyService } from './webhook-body.service';
-import { array, task } from 'fp-ts';
-import { pipe } from 'fp-ts/function';
 
 export type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
@@ -60,66 +58,65 @@ export class WebhookService {
     return webhookPaths;
   }
 
-  handleIncomingWebhook(
+  async handleIncomingWebhook(
     body: any,
     files: Array<Express.Multer.File>,
     headers: Record<string, string>,
     ip: string,
     path: string,
     host: string,
-  ): task.Task<Webhook> {
-    return pipe(
-      this.webhookBodyService.buildBodyWithFiles(body, files || []),
-      task.chain((body) => this.addWebhook({ body, headers, ip, path, host })),
+  ): Promise<Webhook> {
+    const bodyWithFiles = await this.webhookBodyService.buildBodyWithFiles(
+      body,
+      files || [],
     );
+
+    const webhook = await this.addWebhook({
+      body: bodyWithFiles,
+      headers,
+      ip,
+      path,
+      host,
+    });
+    return webhook;
   }
 
-  private addWebhook(webhookInput: CreateWebhookInput): task.Task<Webhook> {
-    return async () => {
-      const data = Object.assign({}, webhookInput, {
-        searchablePath: pathToSearchablePath(webhookInput.path),
-        id: whUuid(),
-      });
-      const webhook = await this.prisma.webhook.create({ data });
-      pubSub.publish(`webhookAdded_${webhook.host}`, {
-        webhookAdded: mapWebhookSchemaToModel(webhook),
-      });
+  async addWebhook(webhookInput: CreateWebhookInput): Promise<Webhook> {
+    const data = Object.assign({}, webhookInput, {
+      searchablePath: pathToSearchablePath(webhookInput.path),
+      id: whUuid(),
+    });
+    const webhook = await this.prisma.webhook.create({ data });
+    pubSub.publish(`webhookAdded_${webhook.host}`, {
+      webhookAdded: mapWebhookSchemaToModel(webhook),
+    });
 
-      this.eventEmitter.emit(
-        WebhookCreatedEvent.name,
-        new WebhookCreatedEvent(webhook.id, webhook.host),
-      );
+    this.eventEmitter.emit(
+      WebhookCreatedEvent.name,
+      new WebhookCreatedEvent(webhook.id, webhook.host),
+    );
 
-      return webhook;
-    };
+    return webhook;
   }
 
-  private findManyWebhook =
-    (skip: number | undefined, take: number | undefined) =>
-    (where: Prisma.WebhookWhereInput): task.Task<Webhook[]> =>
-    () =>
-      this.prisma.webhook.findMany({
-        skip,
-        take,
-        orderBy: { createdAt: 'desc' },
-        where,
-      });
-
-  getWebhooks(
+  async getWebhooks(
     host: string,
-    { first, offset, path }: WebhooksQueryArgs,
-  ): task.Task<WebhookModel[]> {
-    return pipe(
-      whereConditionFactory(host, path),
-      this.findManyWebhook(offset, first),
-      task.map(array.map(mapWebhookSchemaToModel)),
-    );
+    queryArgs: WebhooksQueryArgs,
+  ): Promise<WebhookModel[]> {
+    const { first, offset, path } = queryArgs;
+    const where = whereConditionFactory(host, path);
+    const webhooks = await this.prisma.webhook.findMany({
+      skip: offset,
+      take: first,
+      orderBy: { createdAt: 'desc' },
+      where,
+    });
+    return webhooks.map(mapWebhookSchemaToModel);
   }
 
-  deleteWebhooks =
-    (host: string): task.Task<Prisma.BatchPayload> =>
-    () =>
-      this.prisma.webhook.deleteMany({ where: { host } });
+  async deleteWebhooks(host: string) {
+    return this.prisma.webhook.deleteMany({ where: { host } });
+  }
 }
 
 const whereConditionFactory = (
