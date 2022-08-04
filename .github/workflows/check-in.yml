@@ -1,0 +1,24 @@
+name: Check in
+
+on:
+  push:
+    branches: [ k6test/** ]    
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  build:
+    name: Run k6 test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run k6 local test
+        uses: grafana/k6-action@v0.2.0
+        with:
+          filename: load-test/get-100-webhooks.js
+          flags: --vus 50 --duration 10s
+      - name: Check in honey badger
+        uses: wei/curl@master
+        with:
+          args: https://api.honeybadger.io/v1/check_in/83IjDY
