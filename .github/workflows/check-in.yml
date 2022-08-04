@@ -17,12 +17,12 @@ jobs:
         uses: grafana/k6-action@v0.2.0
         with:
           filename: load-test/get-100-webhooks.js
-          flags: --vus 50 --duration 10s
+          flags: --vus 50 --iterations 2000
       - name: Run k6 post webhooks
         uses: grafana/k6-action@v0.2.0
         with:
           filename: load-test/send-webhooks.js
-          flags: --vus 50 --duration 10s
+          flags: --vus 50 --iterations 2000
       - name: Check in honey badger
         uses: wei/curl@master
         with:
