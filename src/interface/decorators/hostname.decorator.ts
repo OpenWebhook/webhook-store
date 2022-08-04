@@ -3,7 +3,6 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { option } from 'fp-ts';
 import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.helper';
 import { WsContext } from '../context.type';
-import { Request } from 'express';
 
 export const Hostname = {
   fromRequest: createParamDecorator(
@@ -16,8 +15,13 @@ export const Hostname = {
   fromGqlHttp: createParamDecorator(
     (_data: unknown, executionContext: ExecutionContext) => {
       const ctx = GqlExecutionContext.create(executionContext);
-      const request = ctx.getContext<Request>();
-      return getHostnameOrLocalhost(option.fromNullable(request.hostname));
+      const context = ctx.getContext();
+      if (context && context.extractedHost) {
+        return getHostnameOrLocalhost(
+          option.fromNullable(context.extractedHost),
+        );
+      }
+      return getHostnameOrLocalhost(option.fromNullable(context.req.hostname));
     },
   ),
 
