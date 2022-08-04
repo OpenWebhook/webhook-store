@@ -34,3 +34,32 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "webhook-store-demo" #Must be unique in Heroku
           heroku_email: "sammy.teillet@gmail.com"
+
+  deploy-prod:
+    runs-on: ubuntu-latest                            # GitHub Runner OS
+    environment:
+      name: "webhook-store"
+    steps:
+      - name: Checkout source code                     # Checksout the repository in the GitHub runner
+        uses: 'actions/checkout@v2'
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+          fetch-depth: 0
+
+      - name: Git Semantic Version
+        id: version-bump
+        uses: PaulHatch/semantic-version@v5.0.0-alpha2
+        with: 
+          bump_each_commit: true
+
+      - name: Output Step                             # Optional: Prints the new version
+        env:
+          NEW_TAG: ${{ steps.version-bump.outputs.version }}
+        run: echo "new tag $NEW_TAG"
+
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "webhook-store" #Must be unique in Heroku
+          heroku_email: "sammy.teillet@gmail.com"
