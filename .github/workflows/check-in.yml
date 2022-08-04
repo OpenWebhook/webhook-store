@@ -6,8 +6,14 @@ on:
     - cron: '*/5 * * * *'
 
 jobs:
-  test_schedule:
+  build:
+    name: Run k6 test
     runs-on: ubuntu-latest
     steps:
-      - name: Every time
-        run: echo "This step will always run"
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run k6 local test
+        uses: grafana/k6-action@v0.2.0
+        with:
+          filename: load-test/get-100-webhooks.js
+          flags: --vus 50 --duration 10s
