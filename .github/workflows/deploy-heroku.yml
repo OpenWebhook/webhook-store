@@ -1,5 +1,7 @@
 name: Deploy Heroku                                           # Name of the workflow
 on:
+  push:
+    branches: [ hotfix/** ]    
   workflow_run:
     workflows: [Webhook Store Test]
     types: [completed]
