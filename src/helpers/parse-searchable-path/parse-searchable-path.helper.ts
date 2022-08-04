@@ -1,30 +1,22 @@
 import { pipe } from 'fp-ts/function';
+import { string } from 'fp-ts';
 
-function removeTrailingSlash(str: string): string {
-  return str.replace(/\/+$/, '');
-}
+const uuidRegexp =
+  /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\//g;
 
-function removeUuids(str: string): string {
-  return str.replace(
-    /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\//g,
-    '/:id/',
-  );
-}
-
-function removeNumeralIds(str: string): string {
-  return str.replace(/\/[0-9]*\//g, '/:id/');
-}
+const numeralIdRegexp = /\/[0-9]*\//g;
 
 function addTrailingSlash(str: string): string {
   return str[str.length - 1] === '/' ? str : `${str}/`;
 }
+const removeTrailingSlash: (str: string) => string = string.replace(/\/+$/, '');
 
 export const pathToSearchablePath = (path: string): string => {
   return pipe(
     path,
     addTrailingSlash,
-    removeUuids,
-    removeNumeralIds,
+    string.replace(uuidRegexp, '/:id/'),
+    string.replace(numeralIdRegexp, '/:id/'),
     removeTrailingSlash,
   );
 };
