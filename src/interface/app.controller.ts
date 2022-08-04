@@ -68,7 +68,7 @@ export class AppController {
       ip,
       path,
       host,
-    );
+    )();
     if (this.webhookStoreConfig.defaultHost._tag === 'Some') {
       this.proxyService.sendAndStoreWebhookToTargets(
         this.webhookStoreConfig.defaultHost.value,
@@ -86,6 +86,6 @@ export class AppController {
   deleteWebhooks(
     @Hostname.fromRequest() host: string,
   ): Promise<{ count: number }> {
-    return this.webhookService.deleteWebhooks(host);
+    return this.webhookService.deleteWebhooks(host)();
   }
 }

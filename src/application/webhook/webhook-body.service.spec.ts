@@ -34,7 +34,7 @@ describe('WebhookBodyService', () => {
   });
 
   it('should handle empty body and no files', async () => {
-    const body = await webhookBodyService.buildBodyWithFiles({}, []);
+    const body = await webhookBodyService.buildBodyWithFiles({}, [])();
     expect(body).toEqual({});
   });
 
@@ -45,7 +45,7 @@ describe('WebhookBodyService', () => {
 
     const body = await webhookBodyService.buildBodyWithFiles({}, [
       { originalname: 'coucou.test' } as Express.Multer.File,
-    ]);
+    ])();
     expect(body).toEqual({ 'coucou.test': 'fileLocation' });
   });
 
@@ -56,7 +56,7 @@ describe('WebhookBodyService', () => {
 
     const body = await webhookBodyService.buildBodyWithFiles({}, [
       { originalname: 'coucou.test' } as Express.Multer.File,
-    ]);
+    ])();
     expect(body).toEqual({ 'coucou.test': 'Could not upload file' });
   });
 });
