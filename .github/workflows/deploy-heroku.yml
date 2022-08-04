@@ -1,0 +1,36 @@
+name: Deploy Heroku                                           # Name of the workflow
+on:
+  workflow_run:
+    workflows: [Webhook Store Test]
+    types: [completed]
+    branches: [main]                            # Workflow to run only when changes are made to `main` branch
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest                            # GitHub Runner OS
+    environment:
+      name: "webhook-store-demo"
+    steps:
+      - name: Checkout source code                     # Checksout the repository in the GitHub runner
+        uses: 'actions/checkout@v2'
+        with:
+          ref: ${{ github.ref }}
+          submodules: true
+          fetch-depth: 0
+
+      - name: Git Semantic Version
+        id: version-bump
+        uses: PaulHatch/semantic-version@v5.0.0-alpha2
+        with: 
+          bump_each_commit: true
+
+      - name: Output Step                             # Optional: Prints the new version
+        env:
+          NEW_TAG: ${{ steps.version-bump.outputs.version }}
+        run: echo "new tag $NEW_TAG"
+
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "webhook-store-demo" #Must be unique in Heroku
+          heroku_email: "sammy.teillet@gmail.com"
