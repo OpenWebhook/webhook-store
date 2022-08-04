@@ -14,7 +14,7 @@ export class WebhookResolver {
     @Args() webhooksQueryArgs: WebhooksQueryArgs,
     @Hostname.fromGqlHttp() hostname: string,
   ): Promise<WebhookModel[]> {
-    return this.webhookService.getWebhooks(hostname, webhooksQueryArgs)();
+    return this.webhookService.getWebhooks(hostname, webhooksQueryArgs);
   }
 
   @Subscription(() => WebhookModel)
