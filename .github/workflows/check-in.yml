@@ -21,4 +21,4 @@ jobs:
       - name: Check in honey badger
         uses: wei/curl@master
         with:
-          args: https://api.honeybadger.io/v1/check_in/83IjDY
+          args: https://api.honeybadger.io/v1/check_in/EWIxea
