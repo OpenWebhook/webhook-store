@@ -2,6 +2,7 @@ name: Check in
 
 on:
   push:
+    branches: [ k6test/** ]    
   schedule:
     - cron: '*/5 * * * *'
 
