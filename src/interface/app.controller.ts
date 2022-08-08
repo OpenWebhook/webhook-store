@@ -9,7 +9,6 @@ import {
   Next,
   Param,
   Post,
-  Req,
   Res,
   UploadedFiles,
   UseInterceptors,
@@ -20,7 +19,7 @@ import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
 import { ProxyService } from '../application/proxy-response/proxy.service';
 import { WebhookService } from '../application/webhook/webhook.service';
-import { Request } from 'express';
+import { Response } from 'express';
 import webhookConfig from '../config/webhook.config';
 import { Hostname } from './decorators/hostname.decorator';
 
@@ -52,10 +51,9 @@ export class AppController {
     @Headers() headers: Record<string, string>,
     @Param() params: string[],
     @Next() next: NextFunction,
-    @Res() res: any,
-    @Req() req: Request,
+    @Res() res: Response,
     @Hostname.fromRequest() host: string,
-  ): Promise<Webhook | void> {
+  ): Promise<Response<Webhook> | void> {
     const path = params['0'] ? `/${params['0']}` : '/';
     if (path === '/graphql') {
       return next();
