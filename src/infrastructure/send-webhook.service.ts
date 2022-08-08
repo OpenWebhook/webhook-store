@@ -32,7 +32,7 @@ export class SendWebhookService {
       },
       (error) => {
         if (axios.isAxiosError(error)) {
-          console.error(
+          console.warn(
             new Error('Could not send the webhook: ' + error.message),
           );
           return Error(String(error.message));
