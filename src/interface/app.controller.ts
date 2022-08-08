@@ -6,6 +6,7 @@ import {
   Headers,
   Inject,
   Ip,
+  Logger,
   Next,
   Param,
   Post,
@@ -26,6 +27,8 @@ import { Hostname } from './decorators/hostname.decorator';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
+
   constructor(
     private readonly webhookService: WebhookService,
     private readonly proxyService: ProxyService,
@@ -60,7 +63,7 @@ export class AppController {
     if (path === '/graphql') {
       return next();
     }
-    console.log(`Webhook received on ${path}`);
+    this.logger.log(`Webhook received on ${path}`);
     const webhook = await this.webhookService.handleIncomingWebhook(
       body,
       files || [],
