@@ -2,13 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { FileUploadService } from '../../infrastructure/file-upload.service';
 import { CreateWebhookInput } from './webhook.service';
 import { task } from 'fp-ts';
+import { Json, JsonRecord } from 'fp-ts/lib/Json';
+
+type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
 @Injectable()
 export class WebhookBodyService {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
   public buildBodyWithFiles(
-    body: any,
+    body: Json,
     files: Array<Express.Multer.File>,
   ): task.Task<CreateWebhookInput['body']> {
     return async () => {
@@ -26,7 +29,7 @@ export class WebhookBodyService {
           }
           return acc;
         },
-        Promise.resolve({} as Record<string, string>),
+        Promise.resolve({} as Writeable<JsonRecord>),
       );
 
       return Object.assign({}, body, filenamesWithLocations);
