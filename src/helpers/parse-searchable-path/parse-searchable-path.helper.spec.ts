@@ -27,4 +27,33 @@ describe('pathToSearchablePath', () => {
       '/:id',
     );
   });
+
+  it('Should replace branded uuids with :id', () => {
+    expect(
+      pathToSearchablePath(
+        '/croute/wh-0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/lol',
+      ),
+    ).toBe('/croute/wh-:id/lol');
+    expect(
+      pathToSearchablePath(
+        '/croute/wh-0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/lol/',
+      ),
+    ).toBe('/croute/wh-:id/lol');
+    expect(
+      pathToSearchablePath('/wh-0059b14c-5b01-47ac-8e65-c82fdb4fc6e2'),
+    ).toBe('/wh-:id');
+    expect(
+      pathToSearchablePath('/wh-0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/'),
+    ).toBe('/wh-:id');
+  });
+
+  it('Should handle mutliple /', () => {
+    expect(pathToSearchablePath('/croute/lol/////')).toBe('/croute/lol');
+    expect(pathToSearchablePath('/croute///lol/////')).toBe('/croute/lol');
+  });
+
+  it('Should handle empty path', () => {
+    expect(pathToSearchablePath('')).toBe('/');
+    expect(pathToSearchablePath('//////')).toBe('/');
+  });
 });
