@@ -15,6 +15,7 @@ import { whUuid } from '../../helpers/uuid-generator/uuid-generator.helper';
 import { WebhookBodyService } from './webhook-body.service';
 import { array, task } from 'fp-ts';
 import { pipe } from 'fp-ts/function';
+import { Json } from 'fp-ts/lib/Json';
 
 export type CreateWebhookInput = Pick<
   Prisma.WebhookCreateInput,
@@ -61,7 +62,7 @@ export class WebhookService {
   }
 
   handleIncomingWebhook(
-    body: any,
+    body: Json,
     files: Array<Express.Multer.File>,
     headers: Record<string, string>,
     ip: string,

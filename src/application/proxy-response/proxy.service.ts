@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Webhook } from '@prisma/client';
+import { Json } from 'fp-ts/lib/Json';
 import { SendWebhookService } from '../../infrastructure/send-webhook.service';
 import { ProxyResponseService } from './proxy-response.service';
 
@@ -12,7 +13,7 @@ export class ProxyService {
 
   public sendAndStoreWebhookToTargets(
     targets: string[],
-    body: Readonly<Record<string, any>>,
+    body: Readonly<Json>,
     headers: Readonly<Record<string, string>>,
     path: string,
     webhookId: Webhook['id'],

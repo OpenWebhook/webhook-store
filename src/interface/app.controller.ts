@@ -23,6 +23,7 @@ import { WebhookService } from '../application/webhook/webhook.service';
 import { Response } from 'express';
 import webhookConfig from '../config/webhook.config';
 import { Hostname } from './decorators/hostname.decorator';
+import { Json } from 'fp-ts/lib/Json';
 
 @Controller()
 export class AppController {
@@ -48,7 +49,7 @@ export class AppController {
   @Post('/*')
   @UseInterceptors(AnyFilesInterceptor())
   async createWebhook(
-    @Body() body: any,
+    @Body() body: Json,
     @UploadedFiles() files: Array<Express.Multer.File> | undefined,
     @Ip() ip: string,
     @Headers() headers: Record<string, string>,

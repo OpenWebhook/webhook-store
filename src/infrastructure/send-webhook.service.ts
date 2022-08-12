@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { taskEither } from 'fp-ts';
+import { Json } from 'fp-ts/lib/Json';
 
 import { firstValueFrom } from 'rxjs';
 import { copySafeHeaders } from '../helpers/copy-safe-headers/copy-safe-headers.helper';
@@ -14,7 +15,7 @@ export class SendWebhookService {
   constructor(private readonly httpService: HttpService) {}
   sendWebhook(
     targetUrl: string,
-    body: Readonly<Record<string, any>>,
+    body: Readonly<Json>,
     headers: Readonly<Record<string, string>>,
     path: string,
   ): ProxyResponse {
