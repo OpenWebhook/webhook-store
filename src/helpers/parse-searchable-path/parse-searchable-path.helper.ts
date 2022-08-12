@@ -1,10 +1,10 @@
 import { pipe } from 'fp-ts/function';
 import { string, array } from 'fp-ts';
 
-const uuidRegexp =
+const uuidRegex =
   /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
 
-const numeralIdRegexp = /^[0-9]+$/g;
+const numeralIdRegex = /^[0-9]+$/g;
 
 const randomCharIdRegex = /(?=.*?[A-Z])(?=.*?[0-9])[a-zA-Z0-9]{10,}/g;
 
@@ -25,8 +25,8 @@ export const pathToSearchablePath = (path: string): string => {
     path,
     parsePathOnSlash,
     array.filter(stringIsNotEmpty),
-    array.map(string.replace(uuidRegexp, ':id')),
-    array.map(string.replace(numeralIdRegexp, ':id')),
+    array.map(string.replace(uuidRegex, ':id')),
+    array.map(string.replace(numeralIdRegex, ':id')),
     array.map(string.replace(randomCharIdRegex, ':id')),
     joinPathWithSlash,
   );
