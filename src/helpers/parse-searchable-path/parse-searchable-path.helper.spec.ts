@@ -51,6 +51,14 @@ describe('pathToSearchablePath', () => {
     ).toBe('/wh-:id');
   });
 
+  it('Should replace random char ids with :id', () => {
+    expect(
+      pathToSearchablePath(
+        '/pathWithStripeId/sk_test_4eC39HqLyjWDarjtT1zdp7dc/',
+      ),
+    ).toBe('/pathWithStripeId/sk_test_:id');
+  });
+
   it('Should handle mutliple /', () => {
     expect(pathToSearchablePath('/croute/lol/////')).toBe('/croute/lol');
     expect(pathToSearchablePath('/croute///lol/////')).toBe('/croute/lol');

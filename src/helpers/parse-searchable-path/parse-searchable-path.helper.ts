@@ -6,6 +6,8 @@ const uuidRegexp =
 
 const numeralIdRegexp = /^[0-9]+$/g;
 
+const randomCharIdRegex = /(?=.*?[A-Z])(?=.*?[0-9])[a-zA-Z0-9]{10,}/g;
+
 const parsePathOnSlash = (path: string): string[] => {
   return path.split('/');
 };
@@ -25,6 +27,7 @@ export const pathToSearchablePath = (path: string): string => {
     array.filter(stringIsNotEmpty),
     array.map(string.replace(uuidRegexp, ':id')),
     array.map(string.replace(numeralIdRegexp, ':id')),
+    array.map(string.replace(randomCharIdRegex, ':id')),
     joinPathWithSlash,
   );
 };
