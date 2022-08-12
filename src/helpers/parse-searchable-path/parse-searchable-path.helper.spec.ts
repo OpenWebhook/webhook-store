@@ -13,6 +13,10 @@ describe('pathToSearchablePath', () => {
     expect(pathToSearchablePath('/yolo/1234985/')).toBe('/yolo/:id');
   });
 
+  it('Should not replace path with numbers', () => {
+    expect(pathToSearchablePath('/yolo/w3ird-path/')).toBe('/yolo/w3ird-path');
+  });
+
   it('Should replace uuids with :id', () => {
     expect(
       pathToSearchablePath('/croute/0059b14c-5b01-47ac-8e65-c82fdb4fc6e2/lol'),

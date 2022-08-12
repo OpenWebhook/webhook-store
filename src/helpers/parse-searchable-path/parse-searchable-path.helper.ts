@@ -4,7 +4,7 @@ import { string, array } from 'fp-ts';
 const uuidRegexp =
   /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g;
 
-const numeralIdRegexp = /[0-9]+/g;
+const numeralIdRegexp = /^[0-9]+$/g;
 
 const parsePathOnSlash = (path: string): string[] => {
   return path.split('/');
