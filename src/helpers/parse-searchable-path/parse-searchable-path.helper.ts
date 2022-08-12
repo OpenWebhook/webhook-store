@@ -10,20 +10,22 @@ const parsePathOnSlash = (path: string): string[] => {
   return path.split('/');
 };
 
-const joinPath = (paths: string[]): string => {
+const joinPathWithSlash = (paths: string[]): string => {
   return '/' + paths.join('/');
+};
+
+const stringIsNotEmpty = (s: string): boolean => {
+  return !string.isEmpty(s);
 };
 
 export const pathToSearchablePath = (path: string): string => {
   return pipe(
     path,
     parsePathOnSlash,
-    array.filter((s): boolean => {
-      return !string.isEmpty(s);
-    }),
+    array.filter(stringIsNotEmpty),
     array.map(string.replace(uuidRegexp, ':id')),
     array.map(string.replace(numeralIdRegexp, ':id')),
-    joinPath,
+    joinPathWithSlash,
   );
 };
 
