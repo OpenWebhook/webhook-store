@@ -27,4 +27,8 @@ describe('pathToSearchablePath', () => {
       '/:id',
     );
   });
+
+  it('Should handle mutliple /', () => {
+    expect(pathToSearchablePath('/croute/lol/////')).toBe('/croute/lol');
+  });
 });

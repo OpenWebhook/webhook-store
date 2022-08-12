@@ -4,7 +4,7 @@ import { string } from 'fp-ts';
 const uuidRegexp =
   /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\//g;
 
-const numeralIdRegexp = /\/[0-9]*\//g;
+const numeralIdRegexp = /\/[0-9]+\//g;
 
 function addTrailingSlash(str: string): string {
   return str[str.length - 1] === '/' ? str : `${str}/`;
