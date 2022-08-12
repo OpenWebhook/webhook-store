@@ -30,5 +30,11 @@ describe('pathToSearchablePath', () => {
 
   it('Should handle mutliple /', () => {
     expect(pathToSearchablePath('/croute/lol/////')).toBe('/croute/lol');
+    expect(pathToSearchablePath('/croute///lol/////')).toBe('/croute/lol');
+  });
+
+  it('Should handle empty path', () => {
+    expect(pathToSearchablePath('')).toBe('/');
+    expect(pathToSearchablePath('//////')).toBe('/');
   });
 });
