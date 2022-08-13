@@ -28,16 +28,17 @@ describe('replay-webhook.resolver', () => {
 
   const gql = '/graphql';
 
-  it('should return a 200', async () => {
-    await request(app.getHttpServer())
+  it('should return a 200 with errors', async () => {
+    const res = await request(app.getHttpServer())
       .post(gql)
       .send({
         query: `mutation {replayWebhook(webhookId:"wh-croute", target: "coucou.lafrite") {id}}`,
       })
       .expect(200);
+    expect(res.error).toBeDefined();
   });
 
-  xit('should return a 200', async () => {
+  it('should return a 200', async () => {
     const testRequest = request(app.getHttpServer()).post(
       '/any-path/path-to/webhook',
     );
@@ -47,12 +48,13 @@ describe('replay-webhook.resolver', () => {
     const res = await request(app.getHttpServer())
       .post(gql)
       .send({
-        query: `mutation {replayWebhooks(webhookIds:["${newWebhookId}"]) {webhookId}}`,
+        query: `mutation {replayWebhook(webhookId:"${newWebhookId}", target: "coucou.lafrite") {webhookId, id}}`,
       })
       .expect(200);
-    console.log(res);
-    // create a webhook
-    // call mutation to replay the webhook on the proxy target
-    // check that a Response was created and return response status and id
+
+    expect(res.body.data.replayWebhook.webhookId).toBe(newWebhookId);
+    const responseId: string = res.body.data.replayWebhook.id;
+    expect(responseId).toBeDefined();
+    expect(responseId.startsWith('rs-')).toBeTruthy();
   });
 });
