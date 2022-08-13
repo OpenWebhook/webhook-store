@@ -26,12 +26,12 @@ export class ProxyService {
         headers,
         path,
       )();
-      this.proxyResponseService.storeResponse(
+      await this.proxyResponseService.storeResponse(
         webhookId,
         proxyResponse,
         target,
         host,
-      );
+      )();
     });
   }
 }
