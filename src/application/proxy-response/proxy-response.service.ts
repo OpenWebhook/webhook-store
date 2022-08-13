@@ -29,13 +29,14 @@ export class ProxyResponseService {
         });
         return storedResponse;
       },
-      (error: unknown) => {
-        if (error instanceof Error) {
-          this.logger.error(error);
-          return error;
-        }
-        this.logger.error(String(error));
-        return new Error(String(error));
+      (unkownError: unknown) => {
+        const error =
+          unkownError instanceof Error
+            ? unkownError
+            : new Error(String(unkownError));
+
+        this.logger.error(error);
+        return error;
       },
     );
   }
