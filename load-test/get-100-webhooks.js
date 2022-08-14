@@ -25,6 +25,6 @@ export default function () {
 export const options = {
   thresholds: {
     // fail the test if 95th percentile response goes above 500ms
-    http_req_duration: ['p(95)<1000'],
+    http_req_duration: ['p(95)<2000'],
   },
 };
