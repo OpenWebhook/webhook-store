@@ -23,7 +23,7 @@ import { WebhookBodyService } from './application/webhook/webhook-body.service';
 import { option } from 'fp-ts';
 import { WsContext } from './interface/context.type';
 import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './application/auth/auth.module';
 
 @Module({
   imports: [
