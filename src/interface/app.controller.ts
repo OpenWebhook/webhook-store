@@ -38,8 +38,13 @@ export class AppController {
     private webhookStoreConfig: ConfigType<typeof webhookConfig>,
   ) {}
 
-  @Get('/hello')
+  @Get('/hello-protected')
   @UseGuards(AuthGuard('jwt'))
+  getHelloProtected(@Hostname.fromRequest() hostname: string): Promise<string> {
+    return this.webhookService.getCount(hostname);
+  }
+
+  @Get('/hello')
   getHello(@Hostname.fromRequest() hostname: string): Promise<string> {
     return this.webhookService.getCount(hostname);
   }
