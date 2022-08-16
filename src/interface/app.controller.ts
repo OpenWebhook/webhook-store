@@ -12,9 +12,11 @@ import {
   Post,
   Res,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { AuthGuard } from '@nestjs/passport';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
@@ -35,6 +37,12 @@ export class AppController {
     @Inject(webhookConfig.KEY)
     private webhookStoreConfig: ConfigType<typeof webhookConfig>,
   ) {}
+
+  @Get('/hello-protected')
+  @UseGuards(AuthGuard('jwt'))
+  getHelloProtected(@Hostname.fromRequest() hostname: string): Promise<string> {
+    return this.webhookService.getCount(hostname);
+  }
 
   @Get('/hello')
   getHello(@Hostname.fromRequest() hostname: string): Promise<string> {
