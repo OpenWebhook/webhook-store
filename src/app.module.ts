@@ -23,6 +23,7 @@ import { WebhookBodyService } from './application/webhook/webhook-body.service';
 import { option } from 'fp-ts';
 import { WsContext } from './interface/context.type';
 import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
     ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig] }),
     EventEmitterModule.forRoot(),
     HttpModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
