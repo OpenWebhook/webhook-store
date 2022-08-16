@@ -117,6 +117,16 @@ export class WebhookService {
     );
   }
 
+  public async getWebhookById(
+    webhookId: string,
+    host: string,
+  ): Promise<Webhook | null> {
+    const webhook = await this.prisma.webhook.findFirst({
+      where: { id: webhookId, host },
+    });
+    return webhook;
+  }
+
   deleteWebhooks =
     (host: string): task.Task<Prisma.BatchPayload> =>
     () =>

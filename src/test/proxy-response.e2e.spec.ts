@@ -66,15 +66,20 @@ describe('Proxy service (e2e)', () => {
       .post('/any-path/path-to/webhook')
       .expect(201);
 
-    const response = await proxyResponseService.storeResponse(
+    const result = await proxyResponseService.storeResponse(
       webhook.body.id,
       proxyResponse,
       'target1',
       hostname,
-    );
+    )();
 
-    expect(response?.id).toBeDefined();
-    expect(response?.hasError).toBeFalsy();
+    if (result._tag === 'Left') {
+      throw result.left;
+    }
+
+    const response = result.right;
+    expect(response.id).toBeDefined();
+    expect(response.hasError).toBeFalsy();
   });
 
   it('Stores a response with hasError false if there are no errors', async () => {
@@ -83,14 +88,19 @@ describe('Proxy service (e2e)', () => {
       .post('/any-path/path-to/webhook')
       .expect(201);
 
-    const response = await proxyResponseService.storeResponse(
+    const result = await proxyResponseService.storeResponse(
       webhook.body.id,
       proxyResponse,
       'target1',
       hostname,
-    );
+    )();
 
-    expect(response?.id).toBeDefined();
-    expect(response?.hasError).toBeTruthy();
+    if (result._tag === 'Left') {
+      throw result.left;
+    }
+
+    const response = result.right;
+    expect(response.id).toBeDefined();
+    expect(response.hasError).toBeTruthy();
   });
 });

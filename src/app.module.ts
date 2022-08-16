@@ -22,6 +22,7 @@ import { FileUploadService } from './infrastructure/file-upload.service';
 import { WebhookBodyService } from './application/webhook/webhook-body.service';
 import { option } from 'fp-ts';
 import { WsContext } from './interface/context.type';
+import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { WsContext } from './interface/context.type';
     WebhookPathResolver,
     WebhookAfterReceptionService,
     ProxyService,
+    ReplayWebhookResolver,
   ],
 })
 export class AppModule {}

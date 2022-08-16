@@ -11,6 +11,29 @@ export class ProxyService {
     private readonly proxyResponseService: ProxyResponseService,
   ) {}
 
+  public async sendAndStoreWebhookToTarget(
+    target: string,
+    body: Readonly<Json>,
+    headers: Readonly<Record<string, string>>,
+    path: string,
+    webhookId: Webhook['id'],
+    host: Webhook['host'],
+  ) {
+    const proxyResponse = await this.sendWebhookService.sendWebhook(
+      target,
+      body,
+      headers,
+      path,
+    )();
+    const response = await this.proxyResponseService.storeResponse(
+      webhookId,
+      proxyResponse,
+      target,
+      host,
+    )();
+    return response;
+  }
+
   public sendAndStoreWebhookToTargets(
     targets: string[],
     body: Readonly<Json>,
@@ -20,16 +43,12 @@ export class ProxyService {
     host: Webhook['host'],
   ): void {
     targets.forEach(async (target) => {
-      const proxyResponse = await this.sendWebhookService.sendWebhook(
+      await this.sendAndStoreWebhookToTarget(
         target,
         body,
         headers,
         path,
-      )();
-      this.proxyResponseService.storeResponse(
         webhookId,
-        proxyResponse,
-        target,
         host,
       );
     });
