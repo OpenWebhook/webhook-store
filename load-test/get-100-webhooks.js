@@ -21,10 +21,3 @@ export default function () {
   check(body.data.webhooks.length, 100);
   sleep(0.2);
 }
-
-export const options = {
-  thresholds: {
-    // fail the test if 95th percentile response goes above 500ms
-    http_req_duration: ['p(95)<2000'],
-  },
-};
