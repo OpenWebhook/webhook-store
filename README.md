@@ -6,7 +6,7 @@
 
 Checkout the [demo](https://demo.openwebhook.io/).
 
-Join the beta-tester list by sending an email to contact@openwebhook.io.
+Join the beta-tester list by sending an email to sammy.teillet@gmail.com.
 
 ## Usage
 
