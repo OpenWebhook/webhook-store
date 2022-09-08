@@ -128,9 +128,12 @@ export class WebhookService {
   }
 
   deleteWebhooks =
-    (host: string): task.Task<Prisma.BatchPayload> =>
+    (host: string): task.Task<Prisma.BatchPayload[]> =>
     () =>
-      this.prisma.webhook.deleteMany({ where: { host } });
+      Promise.all([
+        this.prisma.webhook.deleteMany({ where: { host } }),
+        this.prisma.response.deleteMany({ where: { host } }),
+      ]);
 }
 
 const whereConditionFactory = (

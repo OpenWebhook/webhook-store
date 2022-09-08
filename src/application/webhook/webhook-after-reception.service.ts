@@ -24,14 +24,23 @@ export class WebhookAfterReceptionService {
   }
 
   async deleteOldWebhooks(host: WebhookModel['host'], limitToKeep: number) {
-    const ids = await this.prisma.webhook.findMany({
+    const webhookIdsToKeep = await this.prisma.webhook.findMany({
       select: { id: true },
       where: { host },
       take: limitToKeep,
       orderBy: { createdAt: 'desc' },
     });
     await this.prisma.webhook.deleteMany({
-      where: { id: { notIn: ids.map((webhook) => webhook.id) }, host },
+      where: {
+        id: { notIn: webhookIdsToKeep.map((webhook) => webhook.id) },
+        host,
+      },
+    });
+    await this.prisma.response.deleteMany({
+      where: {
+        webhookId: { notIn: webhookIdsToKeep.map((webhook) => webhook.id) },
+        host,
+      },
     });
   }
 }

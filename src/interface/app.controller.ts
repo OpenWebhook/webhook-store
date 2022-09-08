@@ -95,7 +95,7 @@ export class AppController {
   @Delete()
   deleteWebhooks(
     @Hostname.fromRequest() host: string,
-  ): Promise<{ count: number }> {
+  ): Promise<{ count: number }[]> {
     return this.webhookService.deleteWebhooks(host)();
   }
 }
