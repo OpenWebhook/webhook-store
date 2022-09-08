@@ -17,12 +17,13 @@ export class ProxyResponseService {
   ): taskEither.TaskEither<Error, Response> {
     return taskEither.tryCatch(
       async () => {
+        const hasError = either.isLeft(response);
         const data = {
           id: rsUuid(),
           webhookId,
           target,
           host,
-          hasError: response._tag === 'Left',
+          hasError,
         };
         const storedResponse = await this.prisma.response.create({
           data,

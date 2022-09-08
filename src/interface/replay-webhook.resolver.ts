@@ -1,5 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { either } from 'fp-ts';
 import { JsonRecord } from 'fp-ts/lib/Json';
 import { ProxyService } from '../application/proxy-response/proxy.service';
 import { WebhookService } from '../application/webhook/webhook.service';
@@ -34,7 +35,7 @@ export class ReplayWebhookResolver {
       webhook.id,
       hostname,
     );
-    if (response._tag === 'Left') {
+    if (either.isLeft(response)) {
       throw response.left;
     }
     return { id: response.right.id, webhookId };
