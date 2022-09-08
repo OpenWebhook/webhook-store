@@ -53,6 +53,7 @@
     "fp-ts": "^2.12.1",
     "graphql": "16.5",
     "graphql-subscriptions": "^2.0.0",
+    "io-ts": "^2.2.18",
     "jwks-rsa": "^2.1.4",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
