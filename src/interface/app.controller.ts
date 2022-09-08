@@ -26,6 +26,7 @@ import { Response } from 'express';
 import webhookConfig from '../config/webhook.config';
 import { Hostname } from './decorators/hostname.decorator';
 import { Json } from 'fp-ts/lib/Json';
+import { option } from 'fp-ts';
 
 @Controller()
 export class AppController {
@@ -79,7 +80,7 @@ export class AppController {
       path,
       host,
     )();
-    if (this.webhookStoreConfig.defaultHost._tag === 'Some') {
+    if (option.isSome(this.webhookStoreConfig.defaultHost)) {
       this.proxyService.sendAndStoreWebhookToTargets(
         this.webhookStoreConfig.defaultHost.value,
         body,

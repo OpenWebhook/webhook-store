@@ -73,7 +73,7 @@ describe('Proxy service (e2e)', () => {
       hostname,
     )();
 
-    if (result._tag === 'Left') {
+    if (either.isLeft(result)) {
       throw result.left;
     }
 
@@ -95,7 +95,7 @@ describe('Proxy service (e2e)', () => {
       hostname,
     )();
 
-    if (result._tag === 'Left') {
+    if (either.isLeft(result)) {
       throw result.left;
     }
 

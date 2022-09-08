@@ -1,7 +1,7 @@
 import { option } from 'fp-ts';
 
 export const getHostnameOrLocalhost = (host: option.Option<string>): string => {
-  if (host._tag === 'None') {
+  if (option.isNone(host)) {
     return 'localhost';
   } else {
     if (host.value.includes('localhost:')) {

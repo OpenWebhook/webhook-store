@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FileUploadService } from '../../infrastructure/file-upload.service';
 import { CreateWebhookInput } from './webhook.service';
-import { task } from 'fp-ts';
+import { task, either } from 'fp-ts';
 import { Json, JsonRecord } from 'fp-ts/lib/Json';
 
 type Writeable<T> = { -readonly [P in keyof T]: T[P] };
@@ -21,10 +21,10 @@ export class WebhookBodyService {
           const uploadedFile = await this.fileUploadService.uploadRequestFile(
             file,
           );
-          if (uploadedFile._tag === 'Right') {
+          if (either.isRight(uploadedFile)) {
             acc[file.originalname] = uploadedFile.right.fileLocation;
           }
-          if (uploadedFile._tag === 'Left') {
+          if (either.isLeft(uploadedFile)) {
             acc[file.originalname] = 'Could not upload file';
           }
           return acc;

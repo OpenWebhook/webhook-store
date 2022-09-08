@@ -5,6 +5,7 @@ import { PrismaService } from '../../infrastructure/prisma.service';
 import { WebhookCreatedEvent } from './events/webhook-created.event';
 import webhookConfig from '../../config/webhook.config';
 import { ConfigType } from '@nestjs/config';
+import { option } from 'fp-ts';
 
 @Injectable()
 export class WebhookAfterReceptionService {
@@ -18,7 +19,7 @@ export class WebhookAfterReceptionService {
   async afterWebhookCreated(payload: WebhookCreatedEvent) {
     const storageLimitOfWebhook =
       this.webhookStoreConfig.maxStoredWebhookPerHost;
-    if (storageLimitOfWebhook._tag === 'Some') {
+    if (option.isSome(storageLimitOfWebhook)) {
       await this.deleteOldWebhooks(payload.host, storageLimitOfWebhook.value);
     }
   }
