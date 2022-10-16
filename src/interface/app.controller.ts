@@ -16,7 +16,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { AuthGuard } from '@nestjs/passport';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { Webhook } from '@prisma/client';
 import { NextFunction } from 'express';
@@ -27,6 +26,7 @@ import webhookConfig from '../config/webhook.config';
 import { Hostname } from './decorators/hostname.decorator';
 import { Json } from 'fp-ts/lib/Json';
 import { option } from 'fp-ts';
+import { AuthGuard } from './auth.guard';
 
 @Controller()
 export class AppController {
@@ -40,7 +40,7 @@ export class AppController {
   ) {}
 
   @Get('/hello-protected')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard)
   getHelloProtected(@Hostname.fromRequest() hostname: string): Promise<string> {
     return this.webhookService.getCount(hostname);
   }

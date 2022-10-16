@@ -24,6 +24,7 @@ import { option } from 'fp-ts';
 import { WsContext } from './interface/context.type';
 import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
 import { AuthModule } from './application/auth/auth.module';
+import authConfig from './config/auth.config';
 
 @Module({
   imports: [
@@ -55,7 +56,7 @@ import { AuthModule } from './application/auth/auth.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
-    ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig] }),
+    ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig, authConfig] }),
     EventEmitterModule.forRoot(),
     HttpModule,
     AuthModule,
