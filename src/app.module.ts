@@ -24,6 +24,8 @@ import { option } from 'fp-ts';
 import { WsContext } from './interface/context.type';
 import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
 import { AuthModule } from './application/auth/auth.module';
+import authConfig from './config/auth.config';
+import { GqlAuthGuard } from './interface/gql-auth.guard';
 
 @Module({
   imports: [
@@ -46,16 +48,15 @@ import { AuthModule } from './application/auth/auth.module';
         },
         'subscriptions-transport-ws': true,
       },
-      context: ({ extra }): WsContext | void => {
-        if (extra) {
-          return { extractedHost: extra.extractedHost };
-        }
+      context: ({ extra, ...rest }): WsContext | void | any => {
+        const extractedHost = extra ? extra.extractedHost : '';
+        return { extractedHost, ...rest };
       },
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
     }),
-    ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig] }),
+    ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig, authConfig] }),
     EventEmitterModule.forRoot(),
     HttpModule,
     AuthModule,
@@ -73,6 +74,7 @@ import { AuthModule } from './application/auth/auth.module';
     WebhookAfterReceptionService,
     ProxyService,
     ReplayWebhookResolver,
+    GqlAuthGuard,
   ],
 })
 export class AppModule {}
