@@ -1,7 +1,9 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { pubSub } from '../infrastructure/pubsub';
 import { Hostname } from './decorators/hostname.decorator';
+import { GqlAuthGuard } from './gql-auth.guard';
 import { WebhookModel } from './webhook.model';
 import { WebhooksQueryArgs } from './webhooks.query-args';
 
@@ -10,6 +12,7 @@ export class WebhookResolver {
   constructor(private readonly webhookService: WebhookService) {}
 
   @Query(() => [WebhookModel])
+  @UseGuards(GqlAuthGuard)
   webhooks(
     @Args() webhooksQueryArgs: WebhooksQueryArgs,
     @Hostname.fromGqlHttp() hostname: string,
