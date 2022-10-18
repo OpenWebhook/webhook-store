@@ -23,7 +23,6 @@ COPY --from=builder /usr/build/app/package.json ./
 COPY --from=ts-node-module-prod /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/build/app/prisma ./prisma
 RUN yarn prisma generate
-COPY client ../client
 
 COPY --from=builder /usr/build/app/dist ./
 
