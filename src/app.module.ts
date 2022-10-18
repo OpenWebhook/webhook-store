@@ -4,7 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import webhookConfig from './config/webhook.config';
 import s3BucketConfig from './config/s3-bucket.config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './interface/app.controller';
 import { WebhookService } from './application/webhook/webhook.service';
@@ -52,9 +51,6 @@ import { GqlAuthGuard } from './interface/gql-auth.guard';
         const extractedHost = extra ? extra.extractedHost : '';
         return { extractedHost, ...rest };
       },
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
     }),
     ConfigModule.forRoot({ load: [webhookConfig, s3BucketConfig, authConfig] }),
     EventEmitterModule.forRoot(),
