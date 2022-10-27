@@ -26,7 +26,7 @@ sequenceDiagram
 
 # Deployment
 
-Documentation for self [hosted webhook store](https://www.openwebhook.io/docs/install-webhook-store).
+Documentation for self [hosted webhook store](https://www.openwebhook.io/docs/self-hosting/install-store-heroku).
 
 # Development
 
