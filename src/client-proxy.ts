@@ -4,7 +4,14 @@ const CLIENT_URL =
   process.env.CLIENT_URL || 'https://demo.openwebhook.io/releases/v1';
 
 const pathFilter = function (path: string, req: any) {
-  return req.method === 'GET' && path !== '/graphql' && path !== '/playground';
+  return (
+    req.method === 'GET' &&
+    path !== '/graphql' &&
+    path !== '/playground' &&
+    path !== '/hello-protected' &&
+    path !== '/hello' &&
+    path !== '/webhooks-per-host'
+  );
 };
 
 export const clientProxy = createProxyMiddleware(pathFilter, {
