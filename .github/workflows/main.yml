@@ -5,8 +5,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: "yarn"
@@ -32,15 +32,15 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/grading-app
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: "yarn"
       - run: yarn
       - run: yarn test:ci
       - name: Code Climate Coverage Action
-        uses: paambaati/codeclimate-action@v3.0.0
+        uses: paambaati/codeclimate-action@v3.2.0
         with:
           coverageLocations: |
             ${{github.workspace}}/*.lcov:lcov
