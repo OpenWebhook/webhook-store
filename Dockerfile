@@ -16,6 +16,8 @@ RUN yarn cache clean
 
 FROM node:16 as ts-node-module-prod
 WORKDIR /usr/src/app
+RUN chown node:node /usr/src/app
+USER node
 COPY --from=builder /tmp/build/app/package.json ./
 COPY --from=builder /tmp/build/app/yarn.lock ./
 RUN yarn install --frozen-lockfile
@@ -23,6 +25,8 @@ RUN yarn cache clean
 
 FROM --platform=linux/amd64 node:16
 WORKDIR /usr/src/app
+RUN chown node:node /usr/src/app
+USER node
 COPY --from=builder /tmp/build/app/package.json ./
 COPY --from=ts-node-module-prod /usr/src/app/node_modules ./node_modules
 COPY --from=builder /tmp/build/app/prisma ./prisma
