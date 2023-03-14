@@ -1,12 +1,12 @@
 import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 import { userStrayegyName } from '../application/auth/jwt.strategy';
 import authConfig from '../config/auth.config';
 
 @Injectable()
-export class UserGuard extends PassportAuthGuard(userStrayegyName) {
+export class UserGuard extends AuthGuard(userStrayegyName) {
   private readonly isProtected: boolean;
   constructor(
     @Inject(authConfig.KEY)
