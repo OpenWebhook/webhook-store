@@ -6,7 +6,7 @@ import { userStrayegyName } from '../application/auth/jwt.strategy';
 import authConfig from '../config/auth.config';
 
 @Injectable()
-export class AuthGuard extends PassportAuthGuard(userStrayegyName) {
+export class UserGuard extends PassportAuthGuard(userStrayegyName) {
   private readonly isProtected: boolean;
   constructor(
     @Inject(authConfig.KEY)
