@@ -2,8 +2,8 @@ import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import { userStrayegyName } from '../application/auth/jwt.strategy';
-import authConfig from '../config/auth.config';
+import { userStrayegyName } from '../../application/auth/jwt.strategy';
+import authConfig from '../../config/auth.config';
 
 @Injectable()
 export class UserGuard extends AuthGuard(userStrayegyName) {
