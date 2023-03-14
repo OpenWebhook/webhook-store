@@ -27,6 +27,7 @@ import { Hostname } from './decorators/hostname.decorator';
 import { Json } from 'fp-ts/lib/Json';
 import { option } from 'fp-ts';
 import { AuthGuard } from './auth.guard';
+import { AdminGuard } from './basic-auth.guard';
 
 @Controller()
 export class AppController {
@@ -51,6 +52,7 @@ export class AppController {
   }
 
   @Get('/webhooks-per-host')
+  @UseGuards(AdminGuard)
   getWebhooksGroupByHosts(): Promise<any> {
     return this.webhookService.getWebhooksPerHosts();
   }
