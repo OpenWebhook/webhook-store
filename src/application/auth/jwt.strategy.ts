@@ -5,8 +5,10 @@ import * as jwksRsa from 'jwks-rsa';
 import authConfig from '../../config/auth.config';
 import { ConfigType } from '@nestjs/config';
 
+export const userStrayegyName = 'user-jwt';
+
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, userStrayegyName) {
   constructor(
     @Inject(authConfig.KEY)
     dbConfig: ConfigType<typeof authConfig>,
