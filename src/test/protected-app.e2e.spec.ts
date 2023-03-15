@@ -44,7 +44,7 @@ describe('CustomerResolver (e2e)', () => {
   const gql = '/graphql';
 
   describe('getWebhooks', () => {
-    it.only('should get an error if un authenticated', () => {
+    it('should get an error if un authenticated', () => {
       return request(app.getHttpServer())
         .post(gql)
         .send({
@@ -55,6 +55,17 @@ describe('CustomerResolver (e2e)', () => {
           expect(Array.isArray(res.body.data)).toBeFalsy();
           expect(res.body.errors[0].message).toBe('Unauthorized');
         });
+    });
+
+    it('/webhooks-per-host (GET) returns an error if not admin', async () => {
+      return request(app.getHttpServer()).get('/webhooks-per-host').expect(401);
+    });
+
+    it('/webhooks-per-host (GET) returns an error if not admin', async () => {
+      request(app.getHttpServer())
+        .get('/webhooks-per-host')
+        .set('Authorization', 'Basic admin:adminPassword')
+        .expect(201);
     });
   });
 });

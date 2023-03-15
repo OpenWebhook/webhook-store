@@ -6,22 +6,12 @@ import { PrismaService } from '../infrastructure/prisma.service';
 import { Prisma, Webhook } from '@prisma/client';
 import { pathToSearchablePath } from '../helpers/parse-searchable-path/parse-searchable-path.helper';
 
-jest.mock('../config/auth.config');
-import authConfig from '../config/auth.config';
 jest.mock('../helpers/get-hostname/get-hostname.helper');
 import { getHostnameOrLocalhost } from '../helpers/get-hostname/get-hostname.helper';
 import { whUuid } from '../helpers/uuid-generator/uuid-generator.helper';
 
 const hostname = 'app.e2e.spec';
 (getHostnameOrLocalhost as jest.Mock).mockImplementation(() => hostname);
-
-(authConfig as unknown as jest.Mock).mockReturnValue({
-  jwksUri:
-    process.env.JWKS_URI ||
-    `https://openwebhook-auth.herokuapp.com/.well-known/jwks.json`,
-  isProtected: process.env.IS_PROTECTED === 'true' || false,
-  adminPassword: 'adminPassword',
-});
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -95,17 +85,6 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .post('/multipart-form-data')
       .field('api_key', 'abcd')
-      .expect(201);
-  });
-
-  it('/webhooks-per-host (GET) returns an error if not admin', async () => {
-    return request(app.getHttpServer()).get('/webhooks-per-host').expect(401);
-  });
-
-  it('/webhooks-per-host (GET) returns an error if not admin', async () => {
-    request(app.getHttpServer())
-      .get('/webhooks-per-host')
-      .set('Authorization', 'Basic admin:adminPassword')
       .expect(201);
   });
 });
