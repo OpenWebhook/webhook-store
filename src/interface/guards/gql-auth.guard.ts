@@ -2,9 +2,9 @@ import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
-import authConfig from '../config/auth.config';
+import authConfig from '../../config/auth.config';
 import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
-import { userPassportStrayegyName } from '../application/auth/jwt.strategy';
+import { userPassportStrayegyName } from '../../application/auth/jwt.strategy';
 
 @Injectable()
 export class GqlAuthGuard extends PassportAuthGuard(userPassportStrayegyName) {

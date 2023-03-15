@@ -24,7 +24,7 @@ import { WsContext } from './interface/context.type';
 import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
 import { AuthModule } from './application/auth/auth.module';
 import authConfig from './config/auth.config';
-import { GqlAuthGuard } from './interface/gql-auth.guard';
+import { GqlAuthGuard } from './interface/guards/gql-auth.guard';
 
 @Module({
   imports: [
