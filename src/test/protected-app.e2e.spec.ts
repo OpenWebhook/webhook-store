@@ -44,7 +44,7 @@ describe('CustomerResolver (e2e)', () => {
   const gql = '/graphql';
 
   describe('getWebhooks', () => {
-    it('should get an error if un authenticated', () => {
+    it('should get an error if unauthenticated', () => {
       return request(app.getHttpServer())
         .post(gql)
         .send({
@@ -61,7 +61,7 @@ describe('CustomerResolver (e2e)', () => {
       return request(app.getHttpServer()).get('/webhooks-per-host').expect(401);
     });
 
-    it('/webhooks-per-host (GET) returns an error if not admin', async () => {
+    it('/webhooks-per-host (GET) returns OK if user is admin', async () => {
       request(app.getHttpServer())
         .get('/webhooks-per-host')
         .set('Authorization', 'Basic admin:adminPassword')
