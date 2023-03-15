@@ -4,9 +4,10 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 import authConfig from '../config/auth.config';
 import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
+import { userStrayegyName } from '../application/auth/jwt.strategy';
 
 @Injectable()
-export class GqlAuthGuard extends PassportAuthGuard('jwt') {
+export class GqlAuthGuard extends PassportAuthGuard(userStrayegyName) {
   private readonly isProtected: boolean;
   constructor(
     @Inject(authConfig.KEY)
