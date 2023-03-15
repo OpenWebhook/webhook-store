@@ -1,12 +1,12 @@
 import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { GqlExecutionContext } from '@nestjs/graphql';
+import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
-import authConfig from '../config/auth.config';
-import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
+import { userPassportStrayegyName } from '../../application/auth/jwt.strategy';
+import authConfig from '../../config/auth.config';
 
 @Injectable()
-export class GqlAuthGuard extends PassportAuthGuard('jwt') {
+export class UserGuard extends AuthGuard(userPassportStrayegyName) {
   private readonly isProtected: boolean;
   constructor(
     @Inject(authConfig.KEY)
@@ -23,11 +23,5 @@ export class GqlAuthGuard extends PassportAuthGuard('jwt') {
       return super.canActivate(context);
     }
     return true;
-  }
-
-  getRequest(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context);
-    const req = ctx.getContext().req;
-    return req;
   }
 }

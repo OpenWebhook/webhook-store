@@ -3,7 +3,7 @@ import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { WebhookService } from '../application/webhook/webhook.service';
 import { pubSub } from '../infrastructure/pubsub';
 import { Hostname } from './decorators/hostname.decorator';
-import { GqlAuthGuard } from './gql-auth.guard';
+import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { WebhookModel } from './webhook.model';
 import { WebhooksQueryArgs } from './webhooks.query-args';
 

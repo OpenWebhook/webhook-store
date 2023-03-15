@@ -26,7 +26,8 @@ import webhookConfig from '../config/webhook.config';
 import { Hostname } from './decorators/hostname.decorator';
 import { Json } from 'fp-ts/lib/Json';
 import { option } from 'fp-ts';
-import { AuthGuard } from './auth.guard';
+import { UserGuard } from './guards/user.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 @Controller()
 export class AppController {
@@ -40,7 +41,7 @@ export class AppController {
   ) {}
 
   @Get('/hello-protected')
-  @UseGuards(AuthGuard)
+  @UseGuards(UserGuard)
   getHelloProtected(@Hostname.fromRequest() hostname: string): Promise<string> {
     return this.webhookService.getCount(hostname);
   }
@@ -51,6 +52,7 @@ export class AppController {
   }
 
   @Get('/webhooks-per-host')
+  @UseGuards(AdminGuard)
   getWebhooksGroupByHosts(): Promise<any> {
     return this.webhookService.getWebhooksPerHosts();
   }
