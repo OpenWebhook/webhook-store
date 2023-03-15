@@ -4,12 +4,12 @@ import { PassportStrategy } from '@nestjs/passport';
 import { BasicStrategy } from 'passport-http';
 import authConfig from '../../config/auth.config';
 
-export const adminStrategyName = 'admin-basic';
+export const adminPassportStrategyName = 'admin-basic';
 
 @Injectable()
 export class AdminStrategy extends PassportStrategy(
   BasicStrategy,
-  adminStrategyName,
+  adminPassportStrategyName,
 ) {
   private readonly adminPassword: string | undefined;
   constructor(
