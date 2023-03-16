@@ -47,7 +47,7 @@ import { GqlAuthGuard } from './interface/guards/gql-auth.guard';
         },
         'subscriptions-transport-ws': true,
       },
-      context: ({ extra, ...rest }): WsContext | void | any => {
+      context: ({ extra, ...rest }: { extra: any }): WsContext | void | any => {
         const extractedHost = extra ? extra.extractedHost : '';
         return { extractedHost, ...rest };
       },
