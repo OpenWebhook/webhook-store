@@ -90,3 +90,11 @@ payment-sandbox-webhooks => sandbox-2.org.com
 MAX_STORED_WEBHOOKS_PER_HOST=100                            # Will keep only 100 webhooks (per hosts)
 DEFAULT_TARGETS=production.org.com, preproduction.org.com   # Will send all the webhooks to these urls
 ```
+
+# Using docker
+
+Edit the docker.env
+
+```
+docker run --env-file ./docker.env -p 9000:9000 openwebhook/webhook-store:latest
+```
