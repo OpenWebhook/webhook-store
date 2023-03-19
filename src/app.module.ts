@@ -42,6 +42,11 @@ import { GqlAuthGuard } from './interface/guards/gql-auth.guard';
             extra.extractedHost = getHostnameOrLocalhost(
               option.fromNullable(extra?.request?.headers?.host),
             );
+
+            const accessToken: string | undefined =
+              context.connectionParams?.authToken;
+            extra.accessToken = accessToken;
+
             return extra;
           },
         },
