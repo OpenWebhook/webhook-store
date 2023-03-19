@@ -11,7 +11,7 @@ jobs:
   deploy-dev:
     runs-on: ubuntu-latest                            # GitHub Runner OS
     environment:
-      name: "webhook-store-demo"
+      name: "webhook-store-private"
     steps:
       - name: Checkout source code                     # Checksout the repository in the GitHub runner
         uses: 'actions/checkout@v3'
@@ -34,13 +34,13 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "webhook-store-demo" #Must be unique in Heroku
+          heroku_app_name: "webhook-store-private" #Must be unique in Heroku
           heroku_email: "sammy.teillet@gmail.com"
 
   deploy-prod:
     runs-on: ubuntu-latest                            # GitHub Runner OS
     environment:
-      name: "webhook-store"
+      name: "webhook-store-public"
     steps:
       - name: Checkout source code                     # Checksout the repository in the GitHub runner
         uses: 'actions/checkout@v3'
@@ -63,5 +63,5 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "webhook-store" #Must be unique in Heroku
+          heroku_app_name: "webhook-store-public" #Must be unique in Heroku
           heroku_email: "sammy.teillet@gmail.com"
