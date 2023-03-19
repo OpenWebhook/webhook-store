@@ -7,9 +7,9 @@ import { WsContext } from '../context.type';
 export class WsAuthGuard extends GqlAuthGuard {
   getRequest(executionContext: ExecutionContext) {
     const ctx = GqlExecutionContext.create(executionContext);
-    const req = ctx.getContext<
-      WsContext & { req: { extra: { request: any } } }
-    >().req.extra.request;
-    return req;
+    const accessToken = ctx.getContext<
+      WsContext & { req: { extra: { accessToken?: string } } }
+    >().req.extra.accessToken;
+    return { headers: { authorization: `Bearer ${accessToken}` } };
   }
 }
