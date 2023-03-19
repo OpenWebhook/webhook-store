@@ -8,7 +8,7 @@ on:
     branches: [main]                            # Workflow to run only when changes are made to `main` branch
 
 jobs:
-  deploy-dev:
+  deploy-private-env:
     runs-on: ubuntu-latest                            # GitHub Runner OS
     environment:
       name: "webhook-store-private"
@@ -37,7 +37,7 @@ jobs:
           heroku_app_name: "webhook-store-private" #Must be unique in Heroku
           heroku_email: "sammy.teillet@gmail.com"
 
-  deploy-prod:
+  deploy-public-env:
     runs-on: ubuntu-latest                            # GitHub Runner OS
     environment:
       name: "webhook-store-public"
