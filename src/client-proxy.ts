@@ -9,6 +9,7 @@ const pathFilter = function (path: string, req: any) {
     path !== '/graphql' &&
     path !== '/playground' &&
     path !== '/store-metadata' &&
+    path !== '/auth-metadata' &&
     path !== '/count-webhooks' &&
     path !== '/webhooks-per-host'
   );
