@@ -63,7 +63,7 @@ describe('AppController (e2e)', () => {
     await webhookReceptionService.deleteOldWebhooks(storedWebhook.host, 10);
 
     const { text } = await request(app.getHttpServer())
-      .get('/hello')
+      .get('/count-webhooks')
       .expect(200);
 
     expect(text).toBe(`There are 10 webhooks on ${hostname}!`);

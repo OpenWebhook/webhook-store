@@ -34,7 +34,7 @@ describe('AppController (e2e)', () => {
 
   it('/ (GET)', async () => {
     const { text } = await request(app.getHttpServer())
-      .get('/hello')
+      .get('/count-webhooks')
       .expect(200);
     expect(text).toMatch(/(There are)/i);
     expect(text).toMatch(/(webhooks on)/i);
@@ -76,7 +76,7 @@ describe('AppController (e2e)', () => {
     await prismaService.webhook.create({ data: webhook });
 
     return request(app.getHttpServer())
-      .get('/hello')
+      .get('/count-webhooks')
       .expect(200)
       .expect(`There are 0 webhooks on ${hostname}!`);
   });

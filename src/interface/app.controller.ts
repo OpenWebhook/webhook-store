@@ -42,14 +42,9 @@ export class AppController {
     private readonly authService: AuthService,
   ) {}
 
-  @Get('/hello-protected')
+  @Get('/count-webhooks')
   @UseGuards(UserGuard)
-  getHelloProtected(@Hostname.fromRequest() hostname: string): Promise<string> {
-    return this.webhookService.getCount(hostname);
-  }
-
-  @Get('/hello')
-  getHello(@Hostname.fromRequest() hostname: string): Promise<string> {
+  countWebhooks(@Hostname.fromRequest() hostname: string): Promise<string> {
     return this.webhookService.getCount(hostname);
   }
 
