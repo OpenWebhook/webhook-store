@@ -29,6 +29,10 @@ import { option } from 'fp-ts';
 import { UserGuard } from './guards/user.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { AuthMetadata, AuthService } from '../application/auth/auth.service';
+import {
+  WebhookStoreMetadata,
+  WebhookStoreMetadatService,
+} from '../application/webhook/webhook-store-metadata.service';
 
 @Controller()
 export class AppController {
@@ -40,6 +44,7 @@ export class AppController {
     @Inject(webhookConfig.KEY)
     private webhookStoreConfig: ConfigType<typeof webhookConfig>,
     private readonly authService: AuthService,
+    private readonly webhookStoreMetadatService: WebhookStoreMetadatService,
   ) {}
 
   @Get('/count-webhooks')
@@ -56,10 +61,13 @@ export class AppController {
 
   @Get('/store-metadata')
   getStoreMetadata(): {
-    authMetaData: AuthMetadata;
+    authMetadata: AuthMetadata;
+    webhookStoreMetadata: WebhookStoreMetadata;
   } {
-    const authMetaData = this.authService.getAuthMetadata();
-    return { authMetaData };
+    const authMetadata = this.authService.getAuthMetadata();
+    const webhookStoreMetadata =
+      this.webhookStoreMetadatService.getWebbookStoreMetadata();
+    return { authMetadata, webhookStoreMetadata };
   }
 
   @Post('/*')

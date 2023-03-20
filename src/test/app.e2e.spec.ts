@@ -93,6 +93,6 @@ describe('AppController (e2e)', () => {
       .get('/store-metadata')
       .expect(200);
     console.log(res);
-    expect(res.text).toMatch(/(authMetaData)/i);
+    expect(res.text).toMatch(/(authMetadata)/i);
   });
 });
