@@ -25,6 +25,7 @@ import { ReplayWebhookResolver } from './interface/replay-webhook.resolver';
 import { AuthModule } from './application/auth/auth.module';
 import authConfig from './config/auth.config';
 import { GqlAuthGuard } from './interface/guards/gql-auth.guard';
+import { WebhookStoreMetadatService } from './application/webhook/webhook-store-metadata.service';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { GqlAuthGuard } from './interface/guards/gql-auth.guard';
     FileUploadService,
     WebhookService,
     WebhookBodyService,
+    WebhookStoreMetadatService,
     ProxyResponseService,
     SendWebhookService,
     WebhookResolver,

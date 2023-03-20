@@ -14,9 +14,9 @@ export class JwtStrategy extends PassportStrategy(
 ) {
   constructor(
     @Inject(authConfig.KEY)
-    dbConfig: ConfigType<typeof authConfig>,
+    config: ConfigType<typeof authConfig>,
   ) {
-    const jwksUri = dbConfig.jwksUri;
+    const jwksUri = config.jwksUri;
     const strategyOption: StrategyOptions = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

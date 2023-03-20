@@ -28,6 +28,11 @@ import { Json } from 'fp-ts/lib/Json';
 import { option } from 'fp-ts';
 import { UserGuard } from './guards/user.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { AuthMetadata, AuthService } from '../application/auth/auth.service';
+import {
+  WebhookStoreMetadata,
+  WebhookStoreMetadatService,
+} from '../application/webhook/webhook-store-metadata.service';
 
 @Controller()
 export class AppController {
@@ -38,16 +43,13 @@ export class AppController {
     private readonly proxyService: ProxyService,
     @Inject(webhookConfig.KEY)
     private webhookStoreConfig: ConfigType<typeof webhookConfig>,
+    private readonly authService: AuthService,
+    private readonly webhookStoreMetadatService: WebhookStoreMetadatService,
   ) {}
 
-  @Get('/hello-protected')
+  @Get('/count-webhooks')
   @UseGuards(UserGuard)
-  getHelloProtected(@Hostname.fromRequest() hostname: string): Promise<string> {
-    return this.webhookService.getCount(hostname);
-  }
-
-  @Get('/hello')
-  getHello(@Hostname.fromRequest() hostname: string): Promise<string> {
+  countWebhooks(@Hostname.fromRequest() hostname: string): Promise<string> {
     return this.webhookService.getCount(hostname);
   }
 
@@ -55,6 +57,20 @@ export class AppController {
   @UseGuards(AdminGuard)
   getWebhooksGroupByHosts(): Promise<any> {
     return this.webhookService.getWebhooksPerHosts();
+  }
+
+  @Get('/auth-metadata')
+  getAutheMetadata(): AuthMetadata {
+    const authMetadata = this.authService.getAuthMetadata();
+    return authMetadata;
+  }
+
+  @Get('/store-metadata')
+  @UseGuards(UserGuard)
+  getStoreMetadata(): WebhookStoreMetadata {
+    const webhookStoreMetadata =
+      this.webhookStoreMetadatService.getWebbookStoreMetadata();
+    return webhookStoreMetadata;
   }
 
   @Post('/*')

@@ -34,7 +34,7 @@ describe('AppController (e2e)', () => {
 
   it('/ (GET)', async () => {
     const { text } = await request(app.getHttpServer())
-      .get('/hello')
+      .get('/count-webhooks')
       .expect(200);
     expect(text).toMatch(/(There are)/i);
     expect(text).toMatch(/(webhooks on)/i);
@@ -76,7 +76,7 @@ describe('AppController (e2e)', () => {
     await prismaService.webhook.create({ data: webhook });
 
     return request(app.getHttpServer())
-      .get('/hello')
+      .get('/count-webhooks')
       .expect(200)
       .expect(`There are 0 webhooks on ${hostname}!`);
   });
@@ -86,5 +86,18 @@ describe('AppController (e2e)', () => {
       .post('/multipart-form-data')
       .field('api_key', 'abcd')
       .expect(201);
+  });
+
+  it('/ (GET) store metadata', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/store-metadata')
+      .expect(200);
+    expect(res.text).toMatch(/(maxNumberOfWebhookPerHost)/i);
+  });
+  it('/ (GET) auth metadata', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/auth-metadata')
+      .expect(200);
+    expect(res.text).toMatch(/(protected)/i);
   });
 });
