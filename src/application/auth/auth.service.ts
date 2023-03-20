@@ -41,18 +41,14 @@ export class AuthService {
   ) {
     if (!jwt) throw 'JWT is undefined';
     if (!hostname) throw 'hostname is undefined';
-    try {
-      const encryptedPayload = jwt.split('.')[1];
-      const decryptedStringifiedPayload = Buffer.from(
-        encryptedPayload,
-        'base64',
-      ).toString();
-      const jwtPayload = JSON.parse(decryptedStringifiedPayload);
-      if (jwtPayload.aud != hostname)
-        throw 'JWT audience does not match hostname';
-      return true;
-    } catch {
-      throw 'JWT is malformed';
-    }
+    const encryptedPayload = jwt.split('.')[1];
+    const decryptedStringifiedPayload = Buffer.from(
+      encryptedPayload,
+      'base64',
+    ).toString();
+    const jwtPayload = JSON.parse(decryptedStringifiedPayload);
+    if (jwtPayload.aud != hostname)
+      throw 'JWT audience does not match hostname';
+    return true;
   }
 }

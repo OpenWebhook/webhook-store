@@ -21,20 +21,36 @@ export class UserGuard extends AuthGuard(userPassportStrayegyName) {
       const res = (await super.canActivate(context)) as boolean;
       if (!res) return false;
 
-      const request = context.switchToHttp().getRequest();
-      const user = request.user;
+      const request = this.getRequest(context);
+      const hostname = this.extractHostnameFromContext(context);
 
-      if (!user) return false;
-      if (!user.accessRights) return false;
-      if (!user.accessRights.canRead) return false;
-      if (!user.audience) return false;
-
-      const hostname = extractHostnameFromRequest(null, context);
-
-      if (user.audience != hostname) return false;
-
-      return true;
+      return UserGuard.internalCanActivate(request, hostname);
     }
     return true;
+  }
+
+  static internalCanActivate(
+    request: {
+      user?: { accessRights?: { canRead?: boolean }; audience?: string };
+    },
+    hostname: string,
+  ): boolean {
+    const user = request.user;
+    if (!user) return false;
+    if (!user.accessRights) return false;
+    if (!user.accessRights.canRead) return false;
+    if (!user.audience) return false;
+    if (user.audience != hostname) return false;
+
+    return true;
+  }
+
+  extractHostnameFromContext(context: ExecutionContext) {
+    return extractHostnameFromRequest(null, context);
+  }
+
+  getRequest(context: ExecutionContext) {
+    const req = context.switchToHttp().getRequest();
+    return req;
   }
 }
