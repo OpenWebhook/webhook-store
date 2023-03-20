@@ -28,6 +28,7 @@ import { Json } from 'fp-ts/lib/Json';
 import { option } from 'fp-ts';
 import { UserGuard } from './guards/user.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { AuthMetadata, AuthService } from '../application/auth/auth.service';
 
 @Controller()
 export class AppController {
@@ -38,6 +39,7 @@ export class AppController {
     private readonly proxyService: ProxyService,
     @Inject(webhookConfig.KEY)
     private webhookStoreConfig: ConfigType<typeof webhookConfig>,
+    private readonly authService: AuthService,
   ) {}
 
   @Get('/hello-protected')
@@ -55,6 +57,14 @@ export class AppController {
   @UseGuards(AdminGuard)
   getWebhooksGroupByHosts(): Promise<any> {
     return this.webhookService.getWebhooksPerHosts();
+  }
+
+  @Get('/store-metadata')
+  getStoreMetadata(): {
+    authMetaData: AuthMetadata;
+  } {
+    const authMetaData = this.authService.getAuthMetadata();
+    return { authMetaData };
   }
 
   @Post('/*')
