@@ -1,10 +1,10 @@
 import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Observable } from 'rxjs';
 import authConfig from '../../config/auth.config';
 import { AuthGuard as PassportAuthGuard } from '@nestjs/passport';
 import { userPassportStrayegyName } from '../../application/auth/jwt.strategy';
+import { extractHostnameFromGqlRequest } from '../decorators/hostname.decorator';
 
 @Injectable()
 export class GqlAuthGuard extends PassportAuthGuard(userPassportStrayegyName) {
@@ -17,11 +17,24 @@ export class GqlAuthGuard extends PassportAuthGuard(userPassportStrayegyName) {
     this.isProtected = config.isProtected;
   }
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     if (this.isProtected) {
-      return super.canActivate(context);
+      const res = (await super.canActivate(context)) as boolean;
+      if (!res) return false;
+
+      const request = this.getRequest(context);
+      const user = request.user;
+
+      if (!user) return false;
+      if (!user.accessRights) return false;
+      if (!user.accessRights.canRead) return false;
+      if (!user.audience) return false;
+
+      const hostname = extractHostnameFromGqlRequest(null, context);
+
+      if (user.audience != hostname) return false;
+
+      return true;
     }
     return true;
   }

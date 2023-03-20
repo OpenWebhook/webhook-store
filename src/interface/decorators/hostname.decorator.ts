@@ -11,21 +11,23 @@ export const extractHostnameFromRequest = (
   const request = executionContext.switchToHttp().getRequest();
   return getHostnameOrLocalhost(option.fromNullable(request.hostname));
 };
+
+export const extractHostnameFromGqlRequest = (
+  _data: unknown,
+  executionContext: ExecutionContext,
+) => {
+  const ctx = GqlExecutionContext.create(executionContext);
+  const context = ctx.getContext();
+  if (context && context.extractedHost) {
+    return getHostnameOrLocalhost(option.fromNullable(context.extractedHost));
+  }
+  return getHostnameOrLocalhost(option.fromNullable(context.req.hostname));
+};
+
 export const Hostname = {
   fromRequest: createParamDecorator(extractHostnameFromRequest),
 
-  fromGqlHttp: createParamDecorator(
-    (_data: unknown, executionContext: ExecutionContext) => {
-      const ctx = GqlExecutionContext.create(executionContext);
-      const context = ctx.getContext();
-      if (context && context.extractedHost) {
-        return getHostnameOrLocalhost(
-          option.fromNullable(context.extractedHost),
-        );
-      }
-      return getHostnameOrLocalhost(option.fromNullable(context.req.hostname));
-    },
-  ),
+  fromGqlHttp: createParamDecorator(extractHostnameFromGqlRequest),
 
   fromGqlWs: createParamDecorator(
     (_data: unknown, executionContext: ExecutionContext) => {
