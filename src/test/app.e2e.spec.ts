@@ -87,4 +87,12 @@ describe('AppController (e2e)', () => {
       .field('api_key', 'abcd')
       .expect(201);
   });
+
+  it('/ (GET)', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/store-metadata')
+      .expect(200);
+    console.log(res);
+    expect(res.text).toMatch(/(authMetaData)/i);
+  });
 });

@@ -8,8 +8,7 @@ const pathFilter = function (path: string, req: any) {
     req.method === 'GET' &&
     path !== '/graphql' &&
     path !== '/playground' &&
-    path !== '/hello-protected' &&
-    path !== '/hello' &&
+    path !== '/store-metadata' &&
     path !== '/webhooks-per-host'
   );
 };
