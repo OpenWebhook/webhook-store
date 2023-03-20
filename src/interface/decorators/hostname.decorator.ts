@@ -4,13 +4,15 @@ import { option } from 'fp-ts';
 import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.helper';
 import { WsContext } from '../context.type';
 
+export const extractHostnameFromRequest = (
+  _data: unknown,
+  executionContext: ExecutionContext,
+) => {
+  const request = executionContext.switchToHttp().getRequest();
+  return getHostnameOrLocalhost(option.fromNullable(request.hostname));
+};
 export const Hostname = {
-  fromRequest: createParamDecorator(
-    (_data: unknown, executionContext: ExecutionContext) => {
-      const request = executionContext.switchToHttp().getRequest();
-      return getHostnameOrLocalhost(option.fromNullable(request.hostname));
-    },
-  ),
+  fromRequest: createParamDecorator(extractHostnameFromRequest),
 
   fromGqlHttp: createParamDecorator(
     (_data: unknown, executionContext: ExecutionContext) => {
