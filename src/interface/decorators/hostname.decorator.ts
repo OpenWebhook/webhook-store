@@ -4,26 +4,30 @@ import { option } from 'fp-ts';
 import { getHostnameOrLocalhost } from '../../helpers/get-hostname/get-hostname.helper';
 import { WsContext } from '../context.type';
 
-export const Hostname = {
-  fromRequest: createParamDecorator(
-    (_data: unknown, executionContext: ExecutionContext) => {
-      const request = executionContext.switchToHttp().getRequest();
-      return getHostnameOrLocalhost(option.fromNullable(request.hostname));
-    },
-  ),
+export const extractHostnameFromRequest = (
+  _data: unknown,
+  executionContext: ExecutionContext,
+) => {
+  const request = executionContext.switchToHttp().getRequest();
+  return getHostnameOrLocalhost(option.fromNullable(request.hostname));
+};
 
-  fromGqlHttp: createParamDecorator(
-    (_data: unknown, executionContext: ExecutionContext) => {
-      const ctx = GqlExecutionContext.create(executionContext);
-      const context = ctx.getContext();
-      if (context && context.extractedHost) {
-        return getHostnameOrLocalhost(
-          option.fromNullable(context.extractedHost),
-        );
-      }
-      return getHostnameOrLocalhost(option.fromNullable(context.req.hostname));
-    },
-  ),
+export const extractHostnameFromGqlRequest = (
+  _data: unknown,
+  executionContext: ExecutionContext,
+) => {
+  const ctx = GqlExecutionContext.create(executionContext);
+  const context = ctx.getContext();
+  if (context && context.extractedHost) {
+    return getHostnameOrLocalhost(option.fromNullable(context.extractedHost));
+  }
+  return getHostnameOrLocalhost(option.fromNullable(context.req.hostname));
+};
+
+export const Hostname = {
+  fromRequest: createParamDecorator(extractHostnameFromRequest),
+
+  fromGqlHttp: createParamDecorator(extractHostnameFromGqlRequest),
 
   fromGqlWs: createParamDecorator(
     (_data: unknown, executionContext: ExecutionContext) => {

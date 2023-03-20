@@ -20,8 +20,8 @@ export class AdminStrategy extends PassportStrategy(
     this.adminPassword = config.adminPassword;
   }
 
-  async validate(username: string, password: string): Promise<any> {
-    if (this.adminPassword === undefined) {
+  validate(username: string, password: string): { user: 'admin' } {
+    if (!this.adminPassword) {
       throw new ForbiddenException('Admin password is not defined in config');
     }
     if (username === 'admin' && password === this.adminPassword) {

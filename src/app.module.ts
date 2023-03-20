@@ -26,6 +26,7 @@ import { AuthModule } from './application/auth/auth.module';
 import authConfig from './config/auth.config';
 import { GqlAuthGuard } from './interface/guards/gql-auth.guard';
 import { WebhookStoreMetadatService } from './application/webhook/webhook-store-metadata.service';
+import { AuthService } from './application/auth/auth.service';
 
 @Module({
   imports: [
@@ -47,6 +48,19 @@ import { WebhookStoreMetadatService } from './application/webhook/webhook-store-
             const accessToken: string | undefined =
               context.connectionParams?.authToken;
             extra.accessToken = accessToken;
+
+            if (accessToken) {
+              try {
+                AuthService.assertJwtAudienceAndHostnameMatch(
+                  accessToken,
+                  extra.extractedHost,
+                );
+              } catch (error) {
+                console.error(error);
+                context.extra.socket.close(4401, 'Unauthorized');
+                return {};
+              }
+            }
 
             return extra;
           },
