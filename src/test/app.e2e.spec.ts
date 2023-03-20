@@ -88,11 +88,16 @@ describe('AppController (e2e)', () => {
       .expect(201);
   });
 
-  it('/ (GET)', async () => {
+  it('/ (GET) store metadata', async () => {
     const res = await request(app.getHttpServer())
       .get('/store-metadata')
       .expect(200);
-    console.log(res);
-    expect(res.text).toMatch(/(authMetadata)/i);
+    expect(res.text).toMatch(/(maxNumberOfWebhookPerHost)/i);
+  });
+  it('/ (GET) auth metadata', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/auth-metadata')
+      .expect(200);
+    expect(res.text).toMatch(/(protected)/i);
   });
 });

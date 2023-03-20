@@ -59,15 +59,18 @@ export class AppController {
     return this.webhookService.getWebhooksPerHosts();
   }
 
-  @Get('/store-metadata')
-  getStoreMetadata(): {
-    authMetadata: AuthMetadata;
-    webhookStoreMetadata: WebhookStoreMetadata;
-  } {
+  @Get('/auth-metadata')
+  getAutheMetadata(): AuthMetadata {
     const authMetadata = this.authService.getAuthMetadata();
+    return authMetadata;
+  }
+
+  @Get('/store-metadata')
+  @UseGuards(UserGuard)
+  getStoreMetadata(): WebhookStoreMetadata {
     const webhookStoreMetadata =
       this.webhookStoreMetadatService.getWebbookStoreMetadata();
-    return { authMetadata, webhookStoreMetadata };
+    return webhookStoreMetadata;
   }
 
   @Post('/*')
