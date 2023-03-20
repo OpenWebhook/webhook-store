@@ -1,7 +1,7 @@
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const CLIENT_URL =
-  process.env.CLIENT_URL || 'https://demo.openwebhook.io/releases/v1';
+  process.env.CLIENT_URL || 'https://demo.openwebhook.io/refs/tags/v1.0.4';
 
 const pathFilter = function (path: string, req: any) {
   return (
