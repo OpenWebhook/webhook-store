@@ -4,15 +4,50 @@
 
 [Openwebhook.io](https://www.openwebhook.io/) is an open source project for developpers working with webhooks.
 
-Checkout the [demo](https://demo.openwebhook.io/).
+## WebhookStore
 
-Join the beta-tester list by sending an email to sammy.teillet@gmail.com.
+> "Is the tunnel still up ?" "Did the third party send the webhook ?" "Where do I update the webhook url on this beautiful developer portal ?"
 
-## Usage
+WebhookStore is a solution to debug webhooks on localhost.
+
+### Some handy features:
+
+- Permanent URLs: there are no generated urls, only user defined urls
+- Available: Webhook store is **not a tunnel**, you don't have to run anything on your computer for the webhooks to be received
+- Persistent: Webhooks are stored, and forwarded on localhost on demand. Meaning you can reuse a webhook from a dev session to another, instead of spending 2 minutes triggering the update webhook you need.
+
+|                    | Ngrok / Ultra hook    | RequestBIn       | WebhookStore                                                |
+| ------------------ | --------------------- | ---------------- | ----------------------------------------------------------- |
+| Permanent Url      | Upon Inscription      | Upon Inscription | Yes                                                         |
+| Availability       | When tunnel is Up     | All the time     | All the time                                                |
+| Persistency        | During tunnel session | All the time     | All the time                                                |
+| Debug on localhost | With the cli          | Not possible     | With the cli                                                |
+| Inspect webhooks   | Yes                   | Yes              | Yes                                                         |
+| Authentication     | Yes                   | Yes              | [Yes](https://www.openwebhook.io/docs/intro#authentication) |
+
+The project is inspired from [Yopmail](https://yopmail.com/en/): a Disposable Email Address - Temporary and anonymous inbox. It could have been named **Yophook**...
+
+### How to use it
+
+Way 1:
+
+- Choose a webhook store url matching **`*.webhook.store`**: like `ilovewebhooks.webhook.store`.
+- Use it as a webhook address `ilovewebhooks.webhook.store/send/me-the-webhook`, or send a POST request with a curl
+- Visit the store website `ilovewebhooks.webhook.store` and see your webhook
+- Send that webhook to your localhost by clicking on "Send" (and running the local proxy server)
+- All new webhooks will be forwarded to your localhost automatically
+
+Way 2:
+
+- run `npx webhook-store-cli --port 9000` and it will prompt you a webhook store based on your username.
+
+### Debugging on localhost
 
 ```
 npx webhook-store-cli --port 9000
 ```
+
+Here is a video of the proxy server receiving the webhooks.
 
 ![Demo with cli](demo.gif)
 
