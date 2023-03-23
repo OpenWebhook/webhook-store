@@ -15,6 +15,7 @@ COPY --chown=node:node src ./src
 RUN yarn build
 
 FROM --platform=linux/amd64 node:18.15.0-alpine as ts-node-module-prod
+RUN apk add --update --no-cache openssl1.1-compat
 USER node
 WORKDIR /usr/src/app
 
@@ -25,6 +26,7 @@ COPY --chown=node:node --from=builder /tmp/build/app/node_modules/@prisma ./node
 COPY --chown=node:node --from=builder /tmp/build/app/node_modules/.prisma ./node_modules/.prisma
 
 FROM --platform=linux/amd64 node:18.15.0-alpine
+RUN apk add --update --no-cache openssl1.1-compat
 USER node
 WORKDIR /usr/src/app
 COPY --chown=node:node --from=builder /tmp/build/app/package.json ./
