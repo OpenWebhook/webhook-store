@@ -20,6 +20,6 @@ export const clientProxy = createProxyMiddleware(pathFilter, {
   changeOrigin: true,
   followRedirects: true,
   pathRewrite: {
-    '^(.(?!.*.css$|.*.js.map$|.*.js$|.*.html))*$': '',
+    '^(.(?!.*.css$|.*.js.map$|.*.svg$|.*.ico$|.*.js$|.*.html))*$': '',
   },
 });
