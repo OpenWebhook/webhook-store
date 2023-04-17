@@ -7,6 +7,7 @@ const pathFilter = function (path: string, req: any) {
   return (
     req.method === 'GET' &&
     path !== '/graphql' &&
+    path !== '/health' &&
     path !== '/playground' &&
     path !== '/store-metadata' &&
     path !== '/auth-metadata' &&
