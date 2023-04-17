@@ -73,6 +73,11 @@ export class AppController {
     return webhookStoreMetadata;
   }
 
+  @Get('/heatlth')
+  getHealth(): true {
+    return true;
+  }
+
   @Post('/*')
   @UseInterceptors(AnyFilesInterceptor())
   async createWebhook(
