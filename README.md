@@ -25,7 +25,7 @@ WebhookStore is a solution to debug webhooks on localhost.
 | Inspect webhooks   | Yes                   | Yes              | Yes                                                         |
 | Authentication     | Yes                   | Yes              | [Yes](https://www.openwebhook.io/docs/intro#authentication) |
 
-The project is inspired from [Yopmail](https://yopmail.com/en/): a Disposable Email Address - Temporary and anonymous inbox. It could have been named **Yophook**...
+The project is inspired from [Yopmail](https://yopmail.com/en/): a Disposable Email Address - Temporary and anonymous inbox.
 
 ### How to use it
 
