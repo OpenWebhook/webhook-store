@@ -1,7 +1,7 @@
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const CLIENT_URL =
-  process.env.CLIENT_URL || 'https://openwebhook.github.io/client/refs/tags/v1.0.8';
+  process.env.CLIENT_URL || 'https://openwebhook.github.io/client';
 
 const pathFilter = function (path: string, req: any) {
   return (
@@ -21,6 +21,9 @@ export const clientProxy = createProxyMiddleware(pathFilter, {
   changeOrigin: true,
   followRedirects: true,
   pathRewrite: {
-    '^(.(?!.*.css$|.*.js.map$|.*.svg$|.*.ico$|.*.js$|.*.html))*$': '',
+    // For root path, rewrite to empty string to get the client index
+    '^/$': '',
+    // For paths starting with /client, remove the /client prefix since target already includes it
+    '^/client': '',
   },
 });
